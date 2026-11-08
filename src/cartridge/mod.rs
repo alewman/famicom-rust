@@ -14,6 +14,9 @@ pub mod cony;
 pub mod database;
 pub mod discrete;
 pub mod eeprom;
+pub mod fds;
+pub mod fds_disk;
+pub mod fds_sound;
 pub mod flash;
 pub mod homebrew;
 pub mod ines;
@@ -275,6 +278,49 @@ fn built_elsewhere(mapper: u16, image: RomImage, t: i64) -> Result<Box<dyn Cartr
     Err(format!("mapper {mapper} is not implemented yet"))
 }
 
+/// The FDS BIOS when FAMICOM_FDS_BIOS does not name it: No-Intro's (Rev 1,
+/// CRC32 5E607DCF), under NO_INTRO_DIR.
+pub const FDS_BIOS_IN_NO_INTRO: &str =
+    "Nintendo - Family Computer Disk System (FDS)/[BIOS] Family Computer Disk System (Japan) (En) (Rev 1).zip";
+
+/// The 8 KiB disk system BIOS: the file (or zip) FAMICOM_FDS_BIOS names, else
+/// No-Intro's under NO_INTRO_DIR. Never shipped: it is Nintendo's.
+pub fn fds_bios() -> Result<Vec<u8>, String> {
+    let path = match std::env::var("FAMICOM_FDS_BIOS") {
+        Ok(named) if !named.is_empty() => std::path::PathBuf::from(named),
+        _ => {
+            let no_intro = std::env::var("NO_INTRO_DIR").unwrap_or_else(|_| "No-Intro".into());
+            Path::new(&no_intro).join(FDS_BIOS_IN_NO_INTRO)
+        }
+    };
+    if !path.exists() {
+        return Err(format!(
+            "FDS BIOS not found at {}: set FAMICOM_FDS_BIOS",
+            path.display()
+        ));
+    }
+    let data = read_rom_file(&path, &[".bin", ".rom"])?;
+    if data.len() != 0x2000 {
+        return Err(format!(
+            "{}: an FDS BIOS is 8 KiB, this is {} bytes",
+            path.display(),
+            data.len()
+        ));
+    }
+    Ok(data)
+}
+
+/// How the loader describes a disk image: the RAM adapter, iNES mapper 20,
+/// 32 KiB PRG-RAM, 8 KiB CHR-RAM.
+pub fn fds_board() -> BoardInfo {
+    BoardInfo {
+        mirroring: '1',
+        prg_ram: 0x8000,
+        chr_ram: 0x2000,
+        ..BoardInfo::new(20)
+    }
+}
+
 /// Identify the cartridge in `data` and build its mapper.
 pub fn load(
     data: &[u8],
@@ -282,6 +328,23 @@ pub fn load(
     override_board: Option<BoardInfo>,
     use_database: bool,
 ) -> Result<Loaded, String> {
+    if fds_disk::is_fds(data) || fds_disk::is_qd(data) {
+        let image = RomImage {
+            header: Vec::new(),
+            trainer: Vec::new(),
+            prg: fds_bios()?,
+            chr: Vec::new(),
+            misc: data.to_vec(),
+            board: fds_board(),
+            nes2: false,
+        };
+        return Ok(Loaded {
+            cartridge: Box::new(fds::Fds::new(image.clone(), cpu_cycle_ticks)),
+            image,
+            source: "FDS image",
+            disagreements: Vec::new(),
+        });
+    }
     let image = ines::parse(data)?;
     let header = image.board.clone();
     let header_label = if image.nes2 {
