@@ -1,0 +1,46 @@
+name: CI
+
+# Kept small: main and pull requests, superseded runs cancelled. The reference
+# (famicom-python) and the dumps are local, so the lockstep rungs (2-6) run by
+# hand (README); CI runs the build, the tests and rung 1, nestest against
+# nestest.log from the nes-test-roms collection the reference pins.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    name: fmt, clippy, test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - run: cargo fmt --check
+      - run: cargo clippy --release --all-targets -- -D warnings
+      - run: cargo test --release
+
+  nestest:
+    name: "rung 1: nestest"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Fetch nestest (christopherpow/nes-test-roms, the reference's pin)
+        run: |
+          git init -q roms && cd roms
+          git remote add origin https://github.com/christopherpow/nes-test-roms
+          git sparse-checkout set other
+          git fetch -q --depth 1 origin 95d8f621ae55cee0d09b91519a8989ae0e64753b
+          git checkout -q FETCH_HEAD
+      - run: cargo build --release
+      - run: target/release/nestest roms
