@@ -3,7 +3,10 @@
 //!
 //! The reference's `NESEvent` and `MMC1A` subclass `MMC1` and override
 //! `_update` and `_update_prg`; here one struct carries a [`Kind`] and the
-//! two methods dispatch on it.
+//! two methods dispatch on it. multicart.py's `ResetMMC1` (mapper 374)
+//! overrides `map_prg`, `map_chr` and `chr_bit_is_prg_a18`: [`Kind::Reset`],
+//! and every bank the MMC1 maps goes through [`Mmc1::map_prg`] and
+//! [`Mmc1::map_chr`], which apply that override.
 
 use super::banked::{Banked, HORIZONTAL, SCREEN_A, SCREEN_B, VERTICAL};
 use super::connector::Cartridge;
@@ -31,6 +34,11 @@ pub enum Kind {
     Mmc1a,
     /// Mapper 105: NES-EVENT.
     Event(Event),
+    /// Mapper 374: the reference's `ResetMMC1` (multicart.py), each game an
+    /// MMC1 in 128 KiB of PRG and of CHR; a reset steps `outer`.
+    Reset {
+        outer: i64,
+    },
 }
 
 pub struct Mmc1 {
@@ -57,6 +65,11 @@ impl Mmc1 {
 
     pub fn mmc1a(image: RomImage, cpu_cycle_ticks: i64) -> Mmc1 {
         Mmc1::build(image, cpu_cycle_ticks, Kind::Mmc1a)
+    }
+
+    /// Mapper 374 (multicart.py's `ResetMMC1`).
+    pub fn reset_multicart(image: RomImage, cpu_cycle_ticks: i64) -> Mmc1 {
+        Mmc1::build(image, cpu_cycle_ticks, Kind::Reset { outer: 0 })
     }
 
     pub fn nes_event(image: RomImage, cpu_cycle_ticks: i64) -> Mmc1 {
@@ -120,7 +133,7 @@ impl Mmc1 {
             }
             event.timer_held = held;
             self.mmc1_update();
-            self.b.map_chr(0, 8, 0);
+            self.map_chr(0, 8, 0);
         } else {
             self.mmc1_update();
         }
@@ -131,13 +144,13 @@ impl Mmc1 {
         let control = self.control;
         self.b.set_mirroring(MIRRORING[(control & 3) as usize]);
         if control & 0x10 != 0 {
-            self.b.map_chr(0, 4, self.chr0 as i64);
-            self.b.map_chr(4, 4, self.chr1 as i64);
+            self.map_chr(0, 4, self.chr0 as i64);
+            self.map_chr(4, 4, self.chr1 as i64);
         } else {
-            self.b.map_chr(0, 8, (self.chr0 >> 1) as i64);
+            self.map_chr(0, 8, (self.chr0 >> 1) as i64);
         }
         if self.fixed_32k {
-            self.b.map_prg(0, 32, 0);
+            self.map_prg(0, 32, 0);
         } else {
             self.update_prg(control);
         }
@@ -153,30 +166,57 @@ impl Mmc1 {
         self.b.prg_ram_enabled = enabled;
     }
 
+    /// `MMC1.map_prg`, through `ResetMMC1`'s override.
+    fn map_prg(&mut self, window: usize, size_kib: usize, bank: i64) {
+        if let Kind::Reset { outer } = self.kind {
+            let banks = (128 / size_kib) as i64;
+            self.b
+                .map_prg(window, size_kib, bank.rem_euclid(banks) + outer * banks);
+        } else {
+            self.b.map_prg(window, size_kib, bank);
+        }
+    }
+
+    /// `MMC1.map_chr`, through `ResetMMC1`'s override.
+    fn map_chr(&mut self, window: usize, size_kib: usize, bank: i64) {
+        if let Kind::Reset { outer } = self.kind {
+            let banks = (128 / size_kib) as i64;
+            self.b
+                .map_chr(window, size_kib, bank.rem_euclid(banks) + outer * banks);
+        } else {
+            self.b.map_chr(window, size_kib, bank);
+        }
+    }
+
+    /// `MMC1.chr_bit_is_prg_a18` (`ResetMMC1`: never).
+    fn chr_bit_is_prg_a18(&self) -> bool {
+        !matches!(self.kind, Kind::Reset { .. }) && self.b.prg.len() > 0x40000
+    }
+
     fn update_prg(&mut self, control: u8) {
         if let Kind::Event(event) = &self.kind {
             let unlocked = event.unlocked;
             if !unlocked {
-                self.b.map_prg(0, 32, 0);
+                self.map_prg(0, 32, 0);
             } else if self.chr0 & 0x08 == 0 {
-                self.b.map_prg(0, 32, ((self.chr0 >> 1) & 3) as i64);
+                self.map_prg(0, 32, ((self.chr0 >> 1) & 3) as i64);
             } else {
                 let bank = (8 | (self.prg_bank & 7)) as i64;
                 let mode = (control >> 2) & 3;
                 if mode < 2 {
-                    self.b.map_prg(0, 32, bank >> 1);
+                    self.map_prg(0, 32, bank >> 1);
                 } else if mode == 2 {
-                    self.b.map_prg(0, 16, 8);
-                    self.b.map_prg(2, 16, bank);
+                    self.map_prg(0, 16, 8);
+                    self.map_prg(2, 16, bank);
                 } else {
-                    self.b.map_prg(0, 16, bank);
-                    self.b.map_prg(2, 16, 15);
+                    self.map_prg(0, 16, bank);
+                    self.map_prg(2, 16, 15);
                 }
             }
             return;
         }
         let mmc1a = matches!(self.kind, Kind::Mmc1a);
-        let outer = if self.b.prg.len() > 0x40000 {
+        let outer = if self.chr_bit_is_prg_a18() {
             (self.chr0 & 0x10) as i64
         } else {
             0
@@ -184,7 +224,7 @@ impl Mmc1 {
         let bank = (self.prg_bank & 0x0F) as i64 | outer;
         let mode = (control >> 2) & 3;
         if mode < 2 {
-            self.b.map_prg(0, 32, bank >> 1);
+            self.map_prg(0, 32, bank >> 1);
             return;
         }
         let mut fixed: i64 = if mode == 2 { 0 } else { 0x0F };
@@ -192,11 +232,11 @@ impl Mmc1 {
             fixed = (fixed & 0x07) | (self.prg_bank & 0x08) as i64;
         }
         if mode == 2 {
-            self.b.map_prg(0, 16, outer | fixed);
-            self.b.map_prg(2, 16, bank);
+            self.map_prg(0, 16, outer | fixed);
+            self.map_prg(2, 16, bank);
         } else {
-            self.b.map_prg(0, 16, bank);
-            self.b.map_prg(2, 16, outer | fixed);
+            self.map_prg(0, 16, bank);
+            self.map_prg(2, 16, outer | fixed);
         }
     }
 }
@@ -249,6 +289,9 @@ impl Cartridge for Mmc1 {
         if let Kind::Event(event) = &mut self.kind {
             event.unlocked = false;
             event.saw_running = false;
+            self.update();
+        } else if let Kind::Reset { outer } = &mut self.kind {
+            *outer = (*outer + 1) % (self.b.prg.len() as i64 / 0x20000).max(1);
             self.update();
         }
     }
