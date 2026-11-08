@@ -27,6 +27,7 @@ pub mod mmc2;
 pub mod mmc3;
 pub mod mmc3_clones;
 pub mod mmc5;
+pub mod mmc5_sound;
 pub mod multiasic;
 pub mod multicart;
 pub mod namco;
