@@ -1,0 +1,27 @@
+//! A Rust Famicom/NES board transcribed from
+//! [famicom-python](https://github.com/alewman/famicom-python) at the tag
+//! `famicom-rust-pin-1` (`fe89099`) and proven equivalent to it by a
+//! lockstep gate (scripts/lockstep.py).
+//!
+//! Each module is the transcription of one `famicom_python/*.py` module, with
+//! the same names and the hardware comments' sources carried over (the
+//! reference's comments hold the full reasoning). Where Rust forced a
+//! difference, the module header says so. The CPU is 6502-rust (crate
+//! `sixfiveohtwo`), its RP2A03.
+
+pub mod apu;
+pub mod board;
+pub mod cartridge;
+pub mod joypad;
+pub mod machine;
+pub mod peripherals;
+pub mod ppu;
+pub mod system;
+
+pub use board::Board;
+pub use machine::Machine;
+pub use system::System;
+
+pub(crate) fn peripherals_nes_only(device: u8) -> bool {
+    peripherals::nes_only(device)
+}

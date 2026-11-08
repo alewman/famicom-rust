@@ -1,0 +1,6 @@
+/target
+/external
+*.nes
+*.fds
+*.zip
+__pycache__/

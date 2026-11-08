@@ -1,0 +1,192 @@
+//! What most mappers share: PRG and CHR in windows, PRG-RAM, the CIRAM wiring
+//! (`banked.py`).
+//!
+//! The reference's mappers subclass `Banked`; here a mapper holds a
+//! [`Banked`] and forwards what it does not override (see
+//! [`crate::forward_banked`]).
+
+use super::connector::Cartridge;
+use super::ines::RomImage;
+
+/// CIRAM A10 per nametable arrangement: horizontal mirroring takes PPU A11,
+/// vertical takes A10, single-screen a constant.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Mirroring {
+    Horizontal,
+    Vertical,
+    ScreenA,
+    ScreenB,
+}
+pub use Mirroring::{
+    Horizontal as HORIZONTAL, ScreenA as SCREEN_A, ScreenB as SCREEN_B, Vertical as VERTICAL,
+};
+
+/// PRG in four 8 KiB windows at $8000, CHR in eight 1 KiB windows, PRG-RAM at $6000.
+pub struct Banked {
+    pub image: RomImage,
+    pub cpu_cycle_ticks: i64,
+    pub prg: Vec<u8>,
+    pub chr_writable: bool,
+    pub chr: Vec<u8>,
+    pub prg_ram: Vec<u8>,
+    pub prg_ram_enabled: bool,
+    pub prg_ram_writable: bool,
+    pub prg_ram_offset: usize,
+    pub prg_ram_mask: usize,
+    pub battery: bool,
+    pub prg_offsets: [usize; 4],
+    pub chr_offsets: [usize; 8],
+    pub four_screen: bool,
+    pub vram: Vec<u8>,
+    pub mirroring: Mirroring,
+}
+
+impl Banked {
+    pub fn new(image: RomImage, cpu_cycle_ticks: i64) -> Banked {
+        let board = image.board.clone();
+        let mut prg = image.prg.clone();
+        if !prg.is_empty() && prg.len() < 0x2000 {
+            prg = prg.repeat(0x2000 / prg.len());
+        }
+        let chr_ram = board.chr_ram + board.chr_nvram;
+        let chr_writable = image.chr.is_empty();
+        let chr = if image.chr.is_empty() {
+            vec![0; if chr_ram != 0 { chr_ram } else { 0x2000 }]
+        } else {
+            image.chr.clone()
+        };
+        let ram_size = board.prg_ram + board.prg_nvram;
+        let four_screen = board.mirroring == '4';
+        let mut banked = Banked {
+            image,
+            cpu_cycle_ticks,
+            prg,
+            chr_writable,
+            chr,
+            prg_ram: vec![0; ram_size],
+            prg_ram_enabled: ram_size > 0,
+            prg_ram_writable: true,
+            prg_ram_offset: 0,
+            prg_ram_mask: ram_size.min(0x2000).wrapping_sub(1),
+            battery: board.battery || board.prg_nvram > 0,
+            prg_offsets: [0; 4],
+            chr_offsets: [0; 8],
+            four_screen,
+            vram: vec![0; if four_screen { 0x1000 } else { 0 }],
+            mirroring: HORIZONTAL,
+        };
+        banked.set_mirroring(if board.mirroring == 'V' {
+            VERTICAL
+        } else {
+            HORIZONTAL
+        });
+        banked
+    }
+
+    // -- banking helpers ---------------------------------------------------
+
+    /// Point `size_kib` KiB of CPU space from 8 KiB window `window` at `bank`.
+    pub fn map_prg(&mut self, window: usize, size_kib: usize, bank: usize) {
+        let base = bank * size_kib * 1024;
+        let len = self.prg.len().max(1);
+        for i in 0..size_kib / 8 {
+            self.prg_offsets[window + i] = (base + i * 0x2000) % len;
+        }
+    }
+
+    /// Point `size_kib` KiB of PPU space from 1 KiB window `window` at `bank`.
+    pub fn map_chr(&mut self, window: usize, size_kib: usize, bank: usize) {
+        let base = bank * size_kib * 1024;
+        let len = self.chr.len().max(1);
+        for i in 0..size_kib {
+            self.chr_offsets[window + i] = (base + i * 0x400) % len;
+        }
+    }
+
+    pub fn set_mirroring(&mut self, mode: Mirroring) {
+        self.mirroring = mode;
+    }
+
+    /// An AND-type bus conflict: the ROM drives the byte at `address` as the CPU writes.
+    pub fn bus_conflict(&self, address: u16, value: u8) -> u8 {
+        value
+            & self.prg[self.prg_offsets[(address as usize >> 13) & 3] + (address as usize & 0x1FFF)]
+    }
+
+    /// The inverse of `battery_ram`, for data of its length.
+    pub fn restore(&mut self, data: &[u8]) {
+        self.prg_ram.copy_from_slice(data);
+    }
+}
+
+impl Cartridge for Banked {
+    fn cpu_read(&mut self, address: u16, _t: i64) -> Option<u16> {
+        let a = address as usize;
+        if address >= 0x8000 {
+            return Some(self.prg[self.prg_offsets[(a >> 13) & 3] + (a & 0x1FFF)] as u16);
+        }
+        if address >= 0x6000 && self.prg_ram_enabled {
+            return Some(self.prg_ram[self.prg_ram_offset + (a & self.prg_ram_mask)] as u16);
+        }
+        None
+    }
+
+    fn cpu_write(&mut self, address: u16, value: u8, _t: i64) {
+        if (0x6000..0x8000).contains(&address) && self.prg_ram_enabled && self.prg_ram_writable {
+            let a = address as usize;
+            self.prg_ram[self.prg_ram_offset + (a & self.prg_ram_mask)] = value;
+        }
+    }
+
+    fn ciram_a10(&mut self, address: u16) -> Option<u8> {
+        if self.four_screen {
+            return None;
+        }
+        Some(match self.mirroring {
+            VERTICAL => ((address >> 10) & 1) as u8,
+            HORIZONTAL => ((address >> 11) & 1) as u8,
+            SCREEN_A => 0,
+            SCREEN_B => 1,
+        })
+    }
+
+    fn ppu_read(&mut self, address: u16, _t: i64) -> Option<u8> {
+        let a = address as usize;
+        if address < 0x2000 {
+            return Some(self.chr[self.chr_offsets[a >> 10] + (a & 0x3FF)]);
+        }
+        if self.four_screen {
+            return Some(self.vram[a & 0x0FFF]);
+        }
+        None
+    }
+
+    fn ppu_write(&mut self, address: u16, value: u8, _t: i64) {
+        let a = address as usize;
+        if address < 0x2000 {
+            if self.chr_writable {
+                self.chr[self.chr_offsets[a >> 10] + (a & 0x3FF)] = value;
+            }
+        } else if self.four_screen {
+            self.vram[a & 0x0FFF] = value;
+        }
+    }
+
+    fn battery_ram(&self) -> Option<Vec<u8>> {
+        if self.battery {
+            Some(self.prg_ram.clone())
+        } else {
+            None
+        }
+    }
+
+    fn restore_battery(&mut self, data: &[u8]) -> bool {
+        match self.battery_ram() {
+            Some(saved) if saved.len() == data.len() => {
+                self.restore(data);
+                true
+            }
+            _ => false,
+        }
+    }
+}

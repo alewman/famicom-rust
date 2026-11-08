@@ -1,0 +1,3 @@
+# frame pad buttons(hex): AccuracyCoin run-all, as testrom.run_accuracycoin presses it
+60 0 08
+64 0 00
