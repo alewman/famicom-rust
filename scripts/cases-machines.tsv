@@ -1,0 +1,26 @@
+# PAL and Dendy rows
+pal_apu_tests/01.len_ctr-pal	600	$NES_TEST_ROMS/nes-test-roms/pal_apu_tests/01.len_ctr.nes	--machine pal
+pal_apu_tests/01.len_ctr-dendy	600	$NES_TEST_ROMS/nes-test-roms/pal_apu_tests/01.len_ctr.nes	--machine dendy
+pal_apu_tests/07.irq_flag_timing-pal	600	$NES_TEST_ROMS/nes-test-roms/pal_apu_tests/07.irq_flag_timing.nes	--machine pal
+pal_apu_tests/07.irq_flag_timing-dendy	600	$NES_TEST_ROMS/nes-test-roms/pal_apu_tests/07.irq_flag_timing.nes	--machine dendy
+pal_apu_tests/08.irq_timing-pal	600	$NES_TEST_ROMS/nes-test-roms/pal_apu_tests/08.irq_timing.nes	--machine pal
+pal_apu_tests/08.irq_timing-dendy	600	$NES_TEST_ROMS/nes-test-roms/pal_apu_tests/08.irq_timing.nes	--machine dendy
+nmi_sync/demo_pal-pal	600	$NES_TEST_ROMS/nes-test-roms/nmi_sync/demo_pal.nes	--machine pal
+nmi_sync/demo_pal-dendy	600	$NES_TEST_ROMS/nes-test-roms/nmi_sync/demo_pal.nes	--machine dendy
+window5/colorwin_pal-pal	600	$NES_TEST_ROMS/nes-test-roms/window5/colorwin_pal.nes	--machine pal
+window5/colorwin_pal-dendy	600	$NES_TEST_ROMS/nes-test-roms/window5/colorwin_pal.nes	--machine dendy
+other/window2_pal-pal	600	$NES_TEST_ROMS/nes-test-roms/other/window2_pal.nes	--machine pal
+other/window2_pal-dendy	600	$NES_TEST_ROMS/nes-test-roms/other/window2_pal.nes	--machine dendy
+nes15-1.0.0/nes15-PAL-pal	600	$NES_TEST_ROMS/nes-test-roms/nes15-1.0.0/nes15-PAL.nes	--machine pal
+nes15-1.0.0/nes15-PAL-dendy	600	$NES_TEST_ROMS/nes-test-roms/nes15-1.0.0/nes15-PAL.nes	--machine dendy
+other/oc-pal	600	$NES_TEST_ROMS/nes-test-roms/other/oc.nes	--machine pal
+other/oc-dendy	600	$NES_TEST_ROMS/nes-test-roms/other/oc.nes	--machine dendy
+ppu_vbl_nmi/rom_singles/05-nmi_timing-pal	600	$NES_TEST_ROMS/nes-test-roms/ppu_vbl_nmi/rom_singles/05-nmi_timing.nes	--machine pal
+ppu_vbl_nmi/rom_singles/05-nmi_timing-dendy	600	$NES_TEST_ROMS/nes-test-roms/ppu_vbl_nmi/rom_singles/05-nmi_timing.nes	--machine dendy
+sprite_hit_tests_2005.10.05/09.timing_basics-pal	600	$NES_TEST_ROMS/nes-test-roms/sprite_hit_tests_2005.10.05/09.timing_basics.nes	--machine pal
+sprite_hit_tests_2005.10.05/09.timing_basics-dendy	600	$NES_TEST_ROMS/nes-test-roms/sprite_hit_tests_2005.10.05/09.timing_basics.nes	--machine dendy
+accuracycoin-pal	1500	$NES_TEST_ROMS/AccuracyCoin/AccuracyCoin.nes	--input $INPUTS/accuracycoin-run-all.txt --machine pal
+accuracycoin-famicom	3000	$NES_TEST_ROMS/AccuracyCoin/AccuracyCoin.nes	--input $INPUTS/accuracycoin-run-all.txt --machine famicom
+accuracycoin-nes101	1500	$NES_TEST_ROMS/AccuracyCoin/AccuracyCoin.nes	--input $INPUTS/accuracycoin-run-all.txt --machine nes-101
+accuracycoin-avfamicom	1500	$NES_TEST_ROMS/AccuracyCoin/AccuracyCoin.nes	--input $INPUTS/accuracycoin-run-all.txt --machine av-famicom
+accuracycoin-dendy	1500	$NES_TEST_ROMS/AccuracyCoin/AccuracyCoin.nes	--input $INPUTS/accuracycoin-run-all.txt --machine dendy

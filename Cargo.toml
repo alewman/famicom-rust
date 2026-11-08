@@ -20,6 +20,7 @@ zip = { version = "2", default-features = false, features = ["deflate"] }
 crc32fast = "1"
 sha1 = "0.10"
 serde_json = "1"
+flate2 = "1"
 
 [profile.release]
 debug = 1

@@ -18,6 +18,7 @@ pub mod peripherals;
 pub mod ppu;
 pub mod system;
 pub mod testrom;
+pub mod video;
 
 pub use board::Board;
 pub use machine::Machine;
