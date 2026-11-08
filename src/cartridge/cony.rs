@@ -108,6 +108,7 @@ impl Cony {
         }
         self.b
             .set_mirroring([VERTICAL, HORIZONTAL, SCREEN_A, SCREEN_B][(self.mode & 3) as usize]);
+        #[allow(clippy::needless_range_loop)] // window is the bank number too
         for window in 0..8 {
             let bank = if self.two_kib_chr {
                 self.chr_regs[TWO_KIB_CHR[window]] as i64 * 2 + (window as i64 & 1)
