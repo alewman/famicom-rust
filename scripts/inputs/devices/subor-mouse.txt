@@ -1,0 +1,387 @@
+# Subor Keyboard and mouse: motion, buttons, keys
+60 set 1 move 1 0
+60 set 1 left 1
+63 set 1 left 0
+60 set 1 right 1
+64 set 1 right 0
+66 set 1 move 0 1
+72 set 1 move -1 0
+78 set 1 move 0 -1
+84 set 1 move 5 3
+90 set 1 move -7 2
+96 set 1 move 40 -30
+102 set 1 move -90 70
+102 set 1 left 1
+105 set 1 left 0
+108 set 1 move 2 -2
+114 set 1 move 0 0
+120 set 1 move 1 0
+126 set 1 move 0 1
+126 set 1 right 1
+130 set 1 right 0
+132 set 1 move -1 0
+138 set 1 move 0 -1
+144 set 1 move 5 3
+144 set 1 left 1
+147 set 1 left 0
+150 set 1 move -7 2
+156 set 1 move 40 -30
+162 set 1 move -90 70
+168 set 1 move 2 -2
+174 set 1 move 0 0
+180 set 1 move 1 0
+186 set 1 move 0 1
+186 set 1 left 1
+189 set 1 left 0
+192 set 1 move -1 0
+192 set 1 right 1
+196 set 1 right 0
+198 set 1 move 0 -1
+204 set 1 move 5 3
+210 set 1 move -7 2
+216 set 1 move 40 -30
+222 set 1 move -90 70
+228 set 1 move 2 -2
+228 set 1 left 1
+231 set 1 left 0
+234 set 1 move 0 0
+240 set 1 move 1 0
+246 set 1 move 0 1
+252 set 1 move -1 0
+258 set 1 move 0 -1
+258 set 1 right 1
+262 set 1 right 0
+264 set 1 move 5 3
+270 set 1 move -7 2
+270 set 1 left 1
+273 set 1 left 0
+276 set 1 move 40 -30
+282 set 1 move -90 70
+288 set 1 move 2 -2
+294 set 1 move 0 0
+300 set 1 move 1 0
+306 set 1 move 0 1
+312 set 1 move -1 0
+312 set 1 left 1
+315 set 1 left 0
+318 set 1 move 0 -1
+324 set 1 move 5 3
+324 set 1 right 1
+328 set 1 right 0
+330 set 1 move -7 2
+336 set 1 move 40 -30
+342 set 1 move -90 70
+348 set 1 move 2 -2
+354 set 1 move 0 0
+354 set 1 left 1
+357 set 1 left 0
+360 set 1 move 1 0
+366 set 1 move 0 1
+372 set 1 move -1 0
+378 set 1 move 0 -1
+384 set 1 move 5 3
+390 set 1 move -7 2
+390 set 1 right 1
+394 set 1 right 0
+396 set 1 move 40 -30
+396 set 1 left 1
+399 set 1 left 0
+402 set 1 move -90 70
+408 set 1 move 2 -2
+414 set 1 move 0 0
+420 set 1 move 1 0
+426 set 1 move 0 1
+432 set 1 move -1 0
+438 set 1 move 0 -1
+438 set 1 left 1
+441 set 1 left 0
+444 set 1 move 5 3
+450 set 1 move -7 2
+456 set 1 move 40 -30
+456 set 1 right 1
+460 set 1 right 0
+462 set 1 move -90 70
+468 set 1 move 2 -2
+474 set 1 move 0 0
+480 set 1 move 1 0
+480 set 1 left 1
+483 set 1 left 0
+486 set 1 move 0 1
+492 set 1 move -1 0
+498 set 1 move 0 -1
+504 set 1 move 5 3
+510 set 1 move -7 2
+516 set 1 move 40 -30
+522 set 1 move -90 70
+522 set 1 left 1
+525 set 1 left 0
+522 set 1 right 1
+526 set 1 right 0
+528 set 1 move 2 -2
+534 set 1 move 0 0
+540 set 1 move 1 0
+546 set 1 move 0 1
+552 set 1 move -1 0
+558 set 1 move 0 -1
+564 set 1 move 5 3
+564 set 1 left 1
+567 set 1 left 0
+570 set 1 move -7 2
+576 set 1 move 40 -30
+582 set 1 move -90 70
+588 set 1 move 2 -2
+588 set 1 right 1
+592 set 1 right 0
+594 set 1 move 0 0
+600 set 1 move 1 0
+606 set 1 move 0 1
+606 set 1 left 1
+609 set 1 left 0
+612 set 1 move -1 0
+618 set 1 move 0 -1
+624 set 1 move 5 3
+630 set 1 move -7 2
+636 set 1 move 40 -30
+642 set 1 move -90 70
+648 set 1 move 2 -2
+648 set 1 left 1
+651 set 1 left 0
+654 set 1 move 0 0
+654 set 1 right 1
+658 set 1 right 0
+660 set 1 move 1 0
+666 set 1 move 0 1
+672 set 1 move -1 0
+678 set 1 move 0 -1
+684 set 1 move 5 3
+690 set 1 move -7 2
+690 set 1 left 1
+693 set 1 left 0
+696 set 1 move 40 -30
+702 set 1 move -90 70
+708 set 1 move 2 -2
+714 set 1 move 0 0
+720 set 1 move 1 0
+720 set 1 right 1
+724 set 1 right 0
+726 set 1 move 0 1
+732 set 1 move -1 0
+732 set 1 left 1
+735 set 1 left 0
+738 set 1 move 0 -1
+744 set 1 move 5 3
+750 set 1 move -7 2
+756 set 1 move 40 -30
+762 set 1 move -90 70
+768 set 1 move 2 -2
+774 set 1 move 0 0
+774 set 1 left 1
+777 set 1 left 0
+780 set 1 move 1 0
+786 set 1 move 0 1
+786 set 1 right 1
+790 set 1 right 0
+792 set 1 move -1 0
+798 set 1 move 0 -1
+804 set 1 move 5 3
+810 set 1 move -7 2
+816 set 1 move 40 -30
+816 set 1 left 1
+819 set 1 left 0
+822 set 1 move -90 70
+828 set 1 move 2 -2
+834 set 1 move 0 0
+840 set 1 move 1 0
+846 set 1 move 0 1
+852 set 1 move -1 0
+852 set 1 right 1
+856 set 1 right 0
+858 set 1 move 0 -1
+858 set 1 left 1
+861 set 1 left 0
+864 set 1 move 5 3
+870 set 1 move -7 2
+876 set 1 move 40 -30
+882 set 1 move -90 70
+888 set 1 move 2 -2
+894 set 1 move 0 0
+900 set 1 move 1 0
+900 set 1 left 1
+903 set 1 left 0
+906 set 1 move 0 1
+912 set 1 move -1 0
+918 set 1 move 0 -1
+918 set 1 right 1
+922 set 1 right 0
+924 set 1 move 5 3
+930 set 1 move -7 2
+936 set 1 move 40 -30
+942 set 1 move -90 70
+942 set 1 left 1
+945 set 1 left 0
+948 set 1 move 2 -2
+954 set 1 move 0 0
+960 set 1 move 1 0
+966 set 1 move 0 1
+972 set 1 move -1 0
+978 set 1 move 0 -1
+984 set 1 move 5 3
+984 set 1 left 1
+987 set 1 left 0
+984 set 1 right 1
+988 set 1 right 0
+990 set 1 move -7 2
+996 set 1 move 40 -30
+1002 set 1 move -90 70
+1008 set 1 move 2 -2
+1014 set 1 move 0 0
+1020 set 1 move 1 0
+1026 set 1 move 0 1
+1026 set 1 left 1
+1029 set 1 left 0
+1032 set 1 move -1 0
+1038 set 1 move 0 -1
+1044 set 1 move 5 3
+1050 set 1 move -7 2
+1050 set 1 right 1
+1054 set 1 right 0
+1056 set 1 move 40 -30
+1062 set 1 move -90 70
+1068 set 1 move 2 -2
+1068 set 1 left 1
+1071 set 1 left 0
+1074 set 1 move 0 0
+1080 set 1 move 1 0
+1086 set 1 move 0 1
+1092 set 1 move -1 0
+1098 set 1 move 0 -1
+1104 set 1 move 5 3
+1110 set 1 move -7 2
+1110 set 1 left 1
+1113 set 1 left 0
+1116 set 1 move 40 -30
+1116 set 1 right 1
+1120 set 1 right 0
+1122 set 1 move -90 70
+1128 set 1 move 2 -2
+1134 set 1 move 0 0
+1140 set 1 move 1 0
+1146 set 1 move 0 1
+1152 set 1 move -1 0
+1152 set 1 left 1
+1155 set 1 left 0
+1158 set 1 move 0 -1
+1164 set 1 move 5 3
+1170 set 1 move -7 2
+1176 set 1 move 40 -30
+1182 set 1 move -90 70
+1182 set 1 right 1
+1186 set 1 right 0
+1188 set 1 move 2 -2
+1194 set 1 move 0 0
+1194 set 1 left 1
+1197 set 1 left 0
+1200 set 1 move 1 0
+1206 set 1 move 0 1
+1212 set 1 move -1 0
+1218 set 1 move 0 -1
+1224 set 1 move 5 3
+1230 set 1 move -7 2
+1236 set 1 move 40 -30
+1236 set 1 left 1
+1239 set 1 left 0
+1242 set 1 move -90 70
+1248 set 1 move 2 -2
+1248 set 1 right 1
+1252 set 1 right 0
+1254 set 1 move 0 0
+63 set 0 keys ENTER
+70 set 0 keys
+88 set 0 keys F1
+95 set 0 keys
+113 set 0 keys A
+120 set 0 keys
+138 set 0 keys S
+145 set 0 keys
+163 set 0 keys D
+170 set 0 keys
+188 set 0 keys F
+195 set 0 keys
+213 set 0 keys G
+220 set 0 keys
+238 set 0 keys H
+245 set 0 keys
+263 set 0 keys J
+270 set 0 keys
+288 set 0 keys K
+295 set 0 keys
+313 set 0 keys L
+320 set 0 keys
+338 set 0 keys 1
+345 set 0 keys
+363 set 0 keys 2
+370 set 0 keys
+388 set 0 keys 3
+395 set 0 keys
+413 set 0 keys 4
+420 set 0 keys
+438 set 0 keys 5
+445 set 0 keys
+463 set 0 keys SPACE
+470 set 0 keys
+488 set 0 keys ENTER
+495 set 0 keys
+513 set 0 keys ESC
+520 set 0 keys
+538 set 0 keys SPACE
+545 set 0 keys
+563 set 0 keys ENTER
+570 set 0 keys
+588 set 0 keys Q
+595 set 0 keys
+613 set 0 keys W
+620 set 0 keys
+638 set 0 keys E
+645 set 0 keys
+663 set 0 keys R
+670 set 0 keys
+688 set 0 keys T
+695 set 0 keys
+713 set 0 keys Y
+720 set 0 keys
+738 set 0 keys U
+745 set 0 keys
+763 set 0 keys I
+770 set 0 keys
+788 set 0 keys O
+795 set 0 keys
+813 set 0 keys P
+820 set 0 keys
+838 set 0 keys ENTER
+845 set 0 keys
+863 set 0 keys LEFT
+870 set 0 keys
+888 set 0 keys RIGHT
+895 set 0 keys
+913 set 0 keys UP
+920 set 0 keys
+938 set 0 keys DOWN
+945 set 0 keys
+963 set 0 keys TAB
+970 set 0 keys
+988 set 0 keys DELETE
+995 set 0 keys
+1013 set 0 keys BACKSPACE
+1020 set 0 keys
+1038 set 0 keys KP1
+1045 set 0 keys
+1063 set 0 keys KP2
+1070 set 0 keys
+1088 set 0 keys F12
+1095 set 0 keys
+1113 set 0 keys NUMLOCK
+1120 set 0 keys
+1138 set 0 keys LSHIFT
+1145 set 0 keys
+1163 set 0 keys ENTER
+1170 set 0 keys

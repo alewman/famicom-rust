@@ -1,0 +1,396 @@
+# Hori Track: motion, its pad, the switches
+60 set - move 1 0
+60 set - left 1
+63 set - left 0
+60 set - right 1
+64 set - right 0
+66 set - move 0 1
+72 set - move -1 0
+78 set - move 0 -1
+84 set - move 5 3
+90 set - move -7 2
+96 set - move 40 -30
+102 set - move -90 70
+102 set - left 1
+105 set - left 0
+108 set - move 2 -2
+114 set - move 0 0
+120 set - move 1 0
+126 set - move 0 1
+126 set - right 1
+130 set - right 0
+132 set - move -1 0
+138 set - move 0 -1
+144 set - move 5 3
+144 set - left 1
+147 set - left 0
+150 set - move -7 2
+156 set - move 40 -30
+162 set - move -90 70
+168 set - move 2 -2
+174 set - move 0 0
+180 set - move 1 0
+186 set - move 0 1
+186 set - left 1
+189 set - left 0
+192 set - move -1 0
+192 set - right 1
+196 set - right 0
+198 set - move 0 -1
+204 set - move 5 3
+210 set - move -7 2
+216 set - move 40 -30
+222 set - move -90 70
+228 set - move 2 -2
+228 set - left 1
+231 set - left 0
+234 set - move 0 0
+240 set - move 1 0
+246 set - move 0 1
+252 set - move -1 0
+258 set - move 0 -1
+258 set - right 1
+262 set - right 0
+264 set - move 5 3
+270 set - move -7 2
+270 set - left 1
+273 set - left 0
+276 set - move 40 -30
+282 set - move -90 70
+288 set - move 2 -2
+294 set - move 0 0
+300 set - move 1 0
+306 set - move 0 1
+312 set - move -1 0
+312 set - left 1
+315 set - left 0
+318 set - move 0 -1
+324 set - move 5 3
+324 set - right 1
+328 set - right 0
+330 set - move -7 2
+336 set - move 40 -30
+342 set - move -90 70
+348 set - move 2 -2
+354 set - move 0 0
+354 set - left 1
+357 set - left 0
+360 set - move 1 0
+366 set - move 0 1
+372 set - move -1 0
+378 set - move 0 -1
+384 set - move 5 3
+390 set - move -7 2
+390 set - right 1
+394 set - right 0
+396 set - move 40 -30
+396 set - left 1
+399 set - left 0
+402 set - move -90 70
+408 set - move 2 -2
+414 set - move 0 0
+420 set - move 1 0
+426 set - move 0 1
+432 set - move -1 0
+438 set - move 0 -1
+438 set - left 1
+441 set - left 0
+444 set - move 5 3
+450 set - move -7 2
+456 set - move 40 -30
+456 set - right 1
+460 set - right 0
+462 set - move -90 70
+468 set - move 2 -2
+474 set - move 0 0
+480 set - move 1 0
+480 set - left 1
+483 set - left 0
+486 set - move 0 1
+492 set - move -1 0
+498 set - move 0 -1
+504 set - move 5 3
+510 set - move -7 2
+516 set - move 40 -30
+522 set - move -90 70
+522 set - left 1
+525 set - left 0
+522 set - right 1
+526 set - right 0
+528 set - move 2 -2
+534 set - move 0 0
+540 set - move 1 0
+546 set - move 0 1
+552 set - move -1 0
+558 set - move 0 -1
+564 set - move 5 3
+564 set - left 1
+567 set - left 0
+570 set - move -7 2
+576 set - move 40 -30
+582 set - move -90 70
+588 set - move 2 -2
+588 set - right 1
+592 set - right 0
+594 set - move 0 0
+600 set - move 1 0
+606 set - move 0 1
+606 set - left 1
+609 set - left 0
+612 set - move -1 0
+618 set - move 0 -1
+624 set - move 5 3
+630 set - move -7 2
+636 set - move 40 -30
+642 set - move -90 70
+648 set - move 2 -2
+648 set - left 1
+651 set - left 0
+654 set - move 0 0
+654 set - right 1
+658 set - right 0
+660 set - move 1 0
+666 set - move 0 1
+672 set - move -1 0
+678 set - move 0 -1
+684 set - move 5 3
+690 set - move -7 2
+690 set - left 1
+693 set - left 0
+696 set - move 40 -30
+702 set - move -90 70
+708 set - move 2 -2
+714 set - move 0 0
+720 set - move 1 0
+720 set - right 1
+724 set - right 0
+726 set - move 0 1
+732 set - move -1 0
+732 set - left 1
+735 set - left 0
+738 set - move 0 -1
+744 set - move 5 3
+750 set - move -7 2
+756 set - move 40 -30
+762 set - move -90 70
+768 set - move 2 -2
+774 set - move 0 0
+774 set - left 1
+777 set - left 0
+780 set - move 1 0
+786 set - move 0 1
+786 set - right 1
+790 set - right 0
+792 set - move -1 0
+798 set - move 0 -1
+804 set - move 5 3
+810 set - move -7 2
+816 set - move 40 -30
+816 set - left 1
+819 set - left 0
+822 set - move -90 70
+828 set - move 2 -2
+834 set - move 0 0
+840 set - move 1 0
+846 set - move 0 1
+852 set - move -1 0
+852 set - right 1
+856 set - right 0
+858 set - move 0 -1
+858 set - left 1
+861 set - left 0
+864 set - move 5 3
+870 set - move -7 2
+876 set - move 40 -30
+882 set - move -90 70
+888 set - move 2 -2
+894 set - move 0 0
+900 set - move 1 0
+900 set - left 1
+903 set - left 0
+906 set - move 0 1
+912 set - move -1 0
+918 set - move 0 -1
+918 set - right 1
+922 set - right 0
+924 set - move 5 3
+930 set - move -7 2
+936 set - move 40 -30
+942 set - move -90 70
+942 set - left 1
+945 set - left 0
+948 set - move 2 -2
+954 set - move 0 0
+960 set - move 1 0
+966 set - move 0 1
+972 set - move -1 0
+978 set - move 0 -1
+984 set - move 5 3
+984 set - left 1
+987 set - left 0
+984 set - right 1
+988 set - right 0
+990 set - move -7 2
+996 set - move 40 -30
+1002 set - move -90 70
+1008 set - move 2 -2
+1014 set - move 0 0
+1020 set - move 1 0
+1026 set - move 0 1
+1026 set - left 1
+1029 set - left 0
+1032 set - move -1 0
+1038 set - move 0 -1
+1044 set - move 5 3
+1050 set - move -7 2
+1050 set - right 1
+1054 set - right 0
+1056 set - move 40 -30
+1062 set - move -90 70
+1068 set - move 2 -2
+1068 set - left 1
+1071 set - left 0
+1074 set - move 0 0
+1080 set - move 1 0
+1086 set - move 0 1
+1092 set - move -1 0
+1098 set - move 0 -1
+1104 set - move 5 3
+1110 set - move -7 2
+1110 set - left 1
+1113 set - left 0
+1116 set - move 40 -30
+1116 set - right 1
+1120 set - right 0
+1122 set - move -90 70
+1128 set - move 2 -2
+1134 set - move 0 0
+1140 set - move 1 0
+1146 set - move 0 1
+1152 set - move -1 0
+1152 set - left 1
+1155 set - left 0
+1158 set - move 0 -1
+1164 set - move 5 3
+1170 set - move -7 2
+1176 set - move 40 -30
+1182 set - move -90 70
+1182 set - right 1
+1186 set - right 0
+1188 set - move 2 -2
+1194 set - move 0 0
+1194 set - left 1
+1197 set - left 0
+1200 set - move 1 0
+1206 set - move 0 1
+1212 set - move -1 0
+1218 set - move 0 -1
+1224 set - move 5 3
+1230 set - move -7 2
+1236 set - move 40 -30
+1236 set - left 1
+1239 set - left 0
+1242 set - move -90 70
+1248 set - move 2 -2
+1248 set - right 1
+1252 set - right 0
+1254 set - move 0 0
+62 set pad buttons 0x8
+70 set pad buttons 0
+83 set pad buttons 0x1
+91 set pad buttons 0
+104 set pad buttons 0x2
+112 set pad buttons 0
+125 set pad buttons 0x10
+133 set pad buttons 0
+146 set pad buttons 0x20
+154 set pad buttons 0
+167 set pad buttons 0x40
+175 set pad buttons 0
+188 set pad buttons 0x80
+196 set pad buttons 0
+209 set pad buttons 0x4
+217 set pad buttons 0
+230 set pad buttons 0x8
+238 set pad buttons 0
+251 set pad buttons 0x1
+259 set pad buttons 0
+272 set pad buttons 0x2
+280 set pad buttons 0
+293 set pad buttons 0x10
+301 set pad buttons 0
+314 set pad buttons 0x20
+322 set pad buttons 0
+335 set pad buttons 0x40
+343 set pad buttons 0
+356 set pad buttons 0x80
+364 set pad buttons 0
+377 set pad buttons 0x4
+385 set pad buttons 0
+398 set pad buttons 0x8
+406 set pad buttons 0
+419 set pad buttons 0x1
+427 set pad buttons 0
+440 set pad buttons 0x2
+448 set pad buttons 0
+461 set pad buttons 0x10
+469 set pad buttons 0
+482 set pad buttons 0x20
+490 set pad buttons 0
+503 set pad buttons 0x40
+511 set pad buttons 0
+524 set pad buttons 0x80
+532 set pad buttons 0
+545 set pad buttons 0x4
+553 set pad buttons 0
+566 set pad buttons 0x8
+574 set pad buttons 0
+587 set pad buttons 0x1
+595 set pad buttons 0
+608 set pad buttons 0x2
+616 set pad buttons 0
+629 set pad buttons 0x10
+637 set pad buttons 0
+650 set pad buttons 0x20
+658 set pad buttons 0
+671 set pad buttons 0x40
+679 set pad buttons 0
+692 set pad buttons 0x80
+700 set pad buttons 0
+713 set pad buttons 0x4
+721 set pad buttons 0
+734 set pad buttons 0x8
+742 set pad buttons 0
+755 set pad buttons 0x1
+763 set pad buttons 0
+776 set pad buttons 0x2
+784 set pad buttons 0
+797 set pad buttons 0x10
+805 set pad buttons 0
+818 set pad buttons 0x20
+826 set pad buttons 0
+839 set pad buttons 0x40
+847 set pad buttons 0
+860 set pad buttons 0x80
+868 set pad buttons 0
+881 set pad buttons 0x4
+889 set pad buttons 0
+902 set pad buttons 0x8
+910 set pad buttons 0
+923 set pad buttons 0x1
+931 set pad buttons 0
+944 set pad buttons 0x2
+952 set pad buttons 0
+965 set pad buttons 0x10
+973 set pad buttons 0
+986 set pad buttons 0x20
+994 set pad buttons 0
+1007 set pad buttons 0x40
+1015 set pad buttons 0
+1028 set pad buttons 0x80
+1036 set pad buttons 0
+1049 set pad buttons 0x4
+1057 set pad buttons 0
+400 set - rotation_l 1
+700 set - slow 1
+900 set - rotation_l 0

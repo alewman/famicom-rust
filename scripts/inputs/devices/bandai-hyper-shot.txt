@@ -1,0 +1,136 @@
+# Bandai Hyper Shot: its pad's Start and pad 1's, then shots
+60 0 08
+66 0 00
+120 0 08
+126 0 00
+180 0 08
+186 0 00
+240 0 08
+246 0 00
+60 set pad buttons 8
+66 set pad buttons 0
+120 set pad buttons 8
+126 set pad buttons 0
+180 set pad buttons 8
+186 set pad buttons 0
+240 set zapper aim 17 40
+242 set zapper trigger 1
+248 set zapper trigger 0
+270 set zapper aim 70 77
+272 set zapper trigger 1
+278 set zapper trigger 0
+300 set zapper aim 123 114
+302 set zapper trigger 1
+308 set zapper trigger 0
+330 set zapper aim 176 151
+332 set zapper trigger 1
+338 set zapper trigger 0
+360 set zapper aim 229 188
+362 set zapper trigger 1
+368 set zapper trigger 0
+390 set zapper aim 26 65
+392 set zapper trigger 1
+398 set zapper trigger 0
+420 set zapper aim 79 102
+422 set zapper trigger 1
+428 set zapper trigger 0
+450 set zapper aim 132 139
+452 set zapper trigger 1
+458 set zapper trigger 0
+480 set zapper aim 185 176
+482 set zapper trigger 1
+488 set zapper trigger 0
+510 set zapper aim 238 53
+512 set zapper trigger 1
+518 set zapper trigger 0
+540 set zapper aim 35 90
+542 set zapper trigger 1
+548 set zapper trigger 0
+570 set zapper aim 88 127
+572 set zapper trigger 1
+578 set zapper trigger 0
+600 set zapper aim 141 164
+602 set zapper trigger 1
+608 set zapper trigger 0
+630 set zapper aim 194 41
+632 set zapper trigger 1
+638 set zapper trigger 0
+660 set zapper aim 247 78
+662 set zapper trigger 1
+668 set zapper trigger 0
+690 set zapper aim 44 115
+692 set zapper trigger 1
+698 set zapper trigger 0
+720 set zapper aim 97 152
+722 set zapper trigger 1
+728 set zapper trigger 0
+750 set zapper aim 150 189
+752 set zapper trigger 1
+758 set zapper trigger 0
+780 set zapper aim 203 66
+782 set zapper trigger 1
+788 set zapper trigger 0
+810 set zapper aim 0 103
+812 set zapper trigger 1
+818 set zapper trigger 0
+840 set zapper aim 53 140
+842 set zapper trigger 1
+848 set zapper trigger 0
+870 set zapper aim 106 177
+872 set zapper trigger 1
+878 set zapper trigger 0
+900 set zapper aim 159 54
+902 set zapper trigger 1
+908 set zapper trigger 0
+930 set zapper aim 212 91
+932 set zapper trigger 1
+938 set zapper trigger 0
+960 set zapper aim 9 128
+962 set zapper trigger 1
+968 set zapper trigger 0
+990 set zapper aim 62 165
+992 set zapper trigger 1
+998 set zapper trigger 0
+1020 set zapper aim 115 42
+1022 set zapper trigger 1
+1028 set zapper trigger 0
+1050 set zapper aim 168 79
+1052 set zapper trigger 1
+1058 set zapper trigger 0
+1080 set zapper aim 221 116
+1082 set zapper trigger 1
+1088 set zapper trigger 0
+1110 set zapper aim 18 153
+1112 set zapper trigger 1
+1118 set zapper trigger 0
+1140 set zapper aim 71 190
+1142 set zapper trigger 1
+1148 set zapper trigger 0
+1170 set zapper aim 124 67
+1172 set zapper trigger 1
+1178 set zapper trigger 0
+1200 set zapper aim 177 104
+1202 set zapper trigger 1
+1208 set zapper trigger 0
+1230 set zapper aim 230 141
+1232 set zapper trigger 1
+1238 set zapper trigger 0
+1260 set zapper aim 27 178
+1262 set zapper trigger 1
+1268 set zapper trigger 0
+1290 set zapper aim 80 55
+1292 set zapper trigger 1
+1298 set zapper trigger 0
+1320 set zapper aim 133 92
+1322 set zapper trigger 1
+1328 set zapper trigger 0
+1350 set zapper aim 186 129
+1352 set zapper trigger 1
+1358 set zapper trigger 0
+1380 set zapper aim 239 166
+1382 set zapper trigger 1
+1388 set zapper trigger 0
+1410 set zapper aim 36 43
+1412 set zapper trigger 1
+1418 set zapper trigger 0
+1440 set zapper aim none

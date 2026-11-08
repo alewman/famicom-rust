@@ -1,11 +1,18 @@
 //! The lockstep gate's Rust side: the same lines as scripts/famicom_trace.py
 //! writes for the reference (see there for the format).
 //!
-//!     famicom-trace ROM --slices N [--machine KEY] [--input FILE]
+//!     famicom-trace ROM --slices N [--machine KEY] [--input FILE] [--device N]
 //!                   [--reset FRAME ...] [--detail FRAME] --out FILE
+//!
+//! `--device` and the `FRAME set PATH FIELD VALUE...` input lines are the
+//! reference tracer's: [`resolve`] walks PATH from what `plug` returned (a
+//! [`Plugged`]) and [`drive`] sets FIELD as the reference's `drive` does.
 
+use famicom_rust::board::Board;
 use famicom_rust::joypad::StandardController;
+use famicom_rust::peripherals::*;
 use famicom_rust::{Machine, System};
+use std::any::Any;
 use std::collections::HashMap;
 use std::io::Write;
 use std::path::PathBuf;
@@ -16,6 +23,227 @@ fn crc(bytes: &[u8]) -> u32 {
     hasher.finalize()
 }
 
+/// Python's `int(text, 0)`, as far as the input files use it.
+fn int(text: &str) -> i64 {
+    let (negative, digits) = match text.strip_prefix('-') {
+        Some(rest) => (true, rest),
+        None => (false, text),
+    };
+    let value = match digits
+        .strip_prefix("0x")
+        .or_else(|| digits.strip_prefix("0X"))
+    {
+        Some(hex) => i64::from_str_radix(hex, 16),
+        None => digits.parse(),
+    }
+    .unwrap_or_else(|_| panic!("not a number: {text}"));
+    if negative {
+        -value
+    } else {
+        value
+    }
+}
+
+fn bool_value(text: &str) -> bool {
+    text == "1" || text == "true"
+}
+
+fn index(token: Option<&str>) -> usize {
+    token.expect("an index").parse().expect("an index")
+}
+
+/// The object PATH names (`-`: itself; dot-separated fields and indices),
+/// from what `plug` returned.
+fn resolve<'a>(board: &'a mut Board, plugged: &'a mut Plugged, path: &str) -> &'a mut dyn Any {
+    let tokens: Vec<&str> = if path == "-" {
+        Vec::new()
+    } else {
+        path.split('.').collect()
+    };
+    let mut tokens = tokens.into_iter();
+    let mut target: &mut dyn Any = match plugged {
+        Plugged::None => panic!("no device to drive"),
+        Plugged::Rob(rob) => rob,
+        Plugged::FourScore => {
+            assert_eq!(tokens.next(), Some("pads"));
+            let n = index(tokens.next());
+            let port = board.pad_as::<TapPort>(n % 2).unwrap();
+            if n < 2 {
+                &mut port.first
+            } else {
+                &mut port.second
+            }
+        }
+        Plugged::Pad(port) => board.pads[*port].as_any_mut(),
+        Plugged::Pads => board.pads[index(tokens.next())].as_any_mut(),
+        Plugged::Expansion => board.expansion.as_mut().unwrap().as_any_mut(),
+        Plugged::ExpansionZapper => &mut board.expansion_as::<FamicomZapper>().unwrap().zapper,
+        Plugged::PadVaus(port) => &mut board.pad_as::<VausNes>(*port).unwrap().vaus,
+        Plugged::ExpansionVaus => &mut board.expansion_as::<VausFamicom>().unwrap().vaus,
+        Plugged::VausPair => {
+            let pair = board.expansion_as::<VausFamicom>().unwrap();
+            match index(tokens.next()) {
+                0 => &mut pair.vaus,
+                _ => pair.second.as_mut().unwrap(),
+            }
+        }
+        Plugged::Recorder => board
+            .expansion_as::<FamilyBasicKeyboard>()
+            .unwrap()
+            .recorder
+            .as_mut()
+            .unwrap(),
+        Plugged::SuborPair(port) => match index(tokens.next()) {
+            0 => board.expansion.as_mut().unwrap().as_any_mut(),
+            _ => board.pads[*port].as_any_mut(),
+        },
+    };
+    while let Some(token) = tokens.next() {
+        target = match token {
+            "pads" if target.is::<HoriAdapter>() => {
+                let n = index(tokens.next());
+                TapPort::player(&mut target.downcast_mut::<HoriAdapter>().unwrap().ports, n)
+            }
+            "pads" if target.is::<ExpansionPads>() => {
+                &mut target.downcast_mut::<ExpansionPads>().unwrap().pads[index(tokens.next())]
+            }
+            "through" => &mut target.downcast_mut::<Famicom3DSystem>().unwrap().through,
+            "recorder" => target
+                .downcast_mut::<FamilyBasicKeyboard>()
+                .unwrap()
+                .recorder
+                .as_mut()
+                .unwrap(),
+            "zapper" => &mut target.downcast_mut::<BandaiHyperShot>().unwrap().zapper,
+            "pad" if target.is::<HoriTrack>() => {
+                &mut target.downcast_mut::<HoriTrack>().unwrap().pad
+            }
+            "pad" if target.is::<CoconutsPachinko>() => {
+                &mut target.downcast_mut::<CoconutsPachinko>().unwrap().pad
+            }
+            "pad" if target.is::<BandaiHyperShot>() => {
+                &mut target.downcast_mut::<BandaiHyperShot>().unwrap().pad
+            }
+            "pad" if target.is::<PortTestPort>() => {
+                &mut target.downcast_mut::<PortTestPort>().unwrap().pad
+            }
+            _ => panic!("no {token} in {path}"),
+        };
+    }
+    target
+}
+
+/// A pointing device's host side: `left`, `right`, `move`.
+fn drive_pointer(pointer: &mut Pointer, field: &str, values: &[&str]) {
+    match field {
+        "left" => pointer.left = bool_value(values[0]),
+        "right" => pointer.right = bool_value(values[0]),
+        "move" => pointer.move_by(int(values[0]), int(values[1])),
+        _ => panic!("cannot set {field}"),
+    }
+}
+
+fn keys(values: &[&str]) -> std::collections::HashSet<String> {
+    values.iter().map(|v| v.to_string()).collect()
+}
+
+/// `set PATH FIELD VALUE...` on the object `resolve` found, as the reference
+/// tracer's `drive` does with setattr or a method call; `time` is `ppu.time`.
+fn drive(target: &mut dyn Any, field: &str, values: &[&str], time: i64) {
+    let v = |i: usize| values[i];
+    let only = |name: &str| assert_eq!(field, name, "cannot set {field}");
+    if let Some(d) = target.downcast_mut::<StandardController>() {
+        only("buttons");
+        d.buttons = int(v(0)) as u8;
+    } else if let Some(d) = target.downcast_mut::<Zapper>() {
+        match field {
+            "aim" => {
+                d.aim = if v(0) == "none" {
+                    None
+                } else {
+                    Some((int(v(0)), int(v(1))))
+                }
+            }
+            "trigger" => d.set_trigger(bool_value(v(0)), time),
+            _ => panic!("cannot set {field}"),
+        }
+    } else if let Some(d) = target.downcast_mut::<Vaus>() {
+        match field {
+            "position" => d.position = int(v(0)),
+            "fire" => d.fire = bool_value(v(0)),
+            _ => panic!("cannot set {field}"),
+        }
+    } else if let Some(d) = target.downcast_mut::<PowerPad>() {
+        only("buttons");
+        d.buttons = int(v(0)) as u32;
+    } else if let Some(d) = target.downcast_mut::<FamilyTrainer>() {
+        only("buttons");
+        d.buttons = int(v(0)) as u32;
+    } else if let Some(d) = target.downcast_mut::<KonamiHyperShot>() {
+        only("buttons");
+        d.buttons = int(v(0)) as u8;
+    } else if let Some(d) = target.downcast_mut::<Partytap>() {
+        only("buttons");
+        d.buttons = int(v(0)) as u8;
+    } else if let Some(d) = target.downcast_mut::<SnesController>() {
+        only("buttons");
+        d.buttons = int(v(0)) as u16;
+    } else if let Some(d) = target.downcast_mut::<ExcitingBoxing>() {
+        only("sensors");
+        d.sensors = int(v(0)) as u8;
+    } else if let Some(d) = target.downcast_mut::<FamilyBasicKeyboard>() {
+        only("keys");
+        d.keys = keys(values);
+    } else if let Some(d) = target.downcast_mut::<SuborKeyboard>() {
+        only("keys");
+        d.keys = keys(values);
+    } else if let Some(d) = target.downcast_mut::<JissenMahjong>() {
+        only("keys");
+        d.keys = keys(values);
+    } else if let Some(d) = target.downcast_mut::<DataRecorder>() {
+        match field {
+            "play" => d.play(time),
+            "record" => d.record(time),
+            "stop" => d.stop(),
+            _ => panic!("cannot set {field}"),
+        }
+    } else if let Some(d) = target.downcast_mut::<TurboFile>() {
+        only("locked");
+        d.locked = bool_value(v(0));
+    } else if let Some(d) = target.downcast_mut::<SnesMouse>() {
+        if field == "sensitivity" {
+            d.sensitivity = int(v(0));
+        } else {
+            drive_pointer(&mut d.pointer, field, values);
+        }
+    } else if let Some(d) = target.downcast_mut::<SuborMouse>() {
+        drive_pointer(&mut d.pointer, field, values);
+    } else if let Some(d) = target.downcast_mut::<MacroWinnersMouse>() {
+        drive_pointer(&mut d.pointer, field, values);
+    } else if let Some(d) = target.downcast_mut::<YuxingMouse>() {
+        drive_pointer(&mut d.pointer, field, values);
+    } else if let Some(d) = target.downcast_mut::<HoriTrack>() {
+        match field {
+            "rotation_l" => d.rotation_l = bool_value(v(0)),
+            "slow" => d.slow = bool_value(v(0)),
+            _ => drive_pointer(&mut d.pointer, field, values),
+        }
+    } else if let Some(d) = target.downcast_mut::<CoconutsPachinko>() {
+        only("dial");
+        d.dial = int(v(0));
+    } else if let Some(d) = target.downcast_mut::<OekaKidsTablet>() {
+        match field {
+            "x" => d.x = int(v(0)),
+            "y" => d.y = int(v(0)),
+            "touching" => d.touching = bool_value(v(0)),
+            "click" => d.click = bool_value(v(0)),
+            _ => panic!("cannot set {field}"),
+        }
+    } else {
+        panic!("cannot set {field}");
+    }
+}
+
 fn main() {
     let mut args = std::env::args().skip(1);
     let mut rom = None;
@@ -24,6 +252,7 @@ fn main() {
     let mut input = None;
     let mut resets = Vec::new();
     let mut detail = None;
+    let mut device = None;
     let mut out = None;
     while let Some(arg) = args.next() {
         match arg.as_str() {
@@ -32,20 +261,29 @@ fn main() {
             "--input" => input = args.next(),
             "--reset" => resets.push(args.next().unwrap().parse::<u64>().unwrap()),
             "--detail" => detail = Some(args.next().unwrap().parse::<u64>().unwrap()),
+            "--device" => device = args.next(),
             "--out" => out = args.next(),
             _ => rom = Some(arg),
         }
     }
     let rom = PathBuf::from(rom.expect("ROM"));
     let mut inputs: HashMap<u64, Vec<(usize, u8)>> = HashMap::new();
+    let mut sets: HashMap<u64, Vec<Vec<String>>> = HashMap::new();
     if let Some(path) = input {
         for text in std::fs::read_to_string(path).unwrap().lines() {
             let parts: Vec<&str> = text.split_whitespace().collect();
-            if parts.len() == 3 && !text.starts_with('#') {
+            if text.starts_with('#') {
+                continue;
+            }
+            if parts.len() == 3 {
                 inputs.entry(parts[0].parse().unwrap()).or_default().push((
                     parts[1].parse().unwrap(),
                     u8::from_str_radix(parts[2], 16).unwrap(),
                 ));
+            } else if parts.len() >= 4 && parts[1] == "set" {
+                sets.entry(parts[0].parse().unwrap())
+                    .or_default()
+                    .push(parts[2..].iter().map(|p| p.to_string()).collect());
             }
         }
     }
@@ -56,6 +294,15 @@ fn main() {
             eprintln!("{e}");
             std::process::exit(2);
         }
+    };
+    let mut plugged = match device.as_deref() {
+        None => Plugged::None,
+        Some("auto") => system.plug(None),
+        Some("hori-adapter") => {
+            system.board().expansion = Some(Box::new(HoriAdapter::new()));
+            Plugged::Expansion
+        }
+        Some(number) => system.plug(Some(int(number) as u8)),
     };
     system.board().bus_log = Some(Vec::with_capacity(40_000));
     let mut out = std::io::BufWriter::new(std::fs::File::create(out.expect("--out")).unwrap());
@@ -68,6 +315,12 @@ fn main() {
                     pad.buttons = buttons;
                 }
             }
+        }
+        for line in sets.get(&frame).into_iter().flatten() {
+            let values: Vec<&str> = line[2..].iter().map(|v| v.as_str()).collect();
+            let time = system.cpu.bus.ppu.time;
+            let target = resolve(&mut system.cpu.bus, &mut plugged, &line[0]);
+            drive(target, &line[1], &values, time);
         }
         if resets.contains(&frame) {
             system.reset();
@@ -94,7 +347,7 @@ fn main() {
         let snd = crc(&bytes);
         let cpu = &system.cpu;
         let ppu = &board.ppu;
-        writeln!(
+        write!(
             out,
             "{frame} cyc {} ins {} pc {:04X} a {:02X} x {:02X} y {:02X} s {:02X} p {:02X} \
              bus {bus:08X} {} pic {pic:08X} v {:04X} t {:04X} st {:02X} snd {snd:08X} {}",
@@ -113,6 +366,20 @@ fn main() {
             samples.len()
         )
         .unwrap();
+        if let Plugged::Rob(rob) = &mut plugged {
+            rob.see(&board.ppu.picture);
+            write!(
+                out,
+                " rob {} {} {} {} {}",
+                rob.height,
+                rob.turn,
+                rob.arms_closed as u8,
+                rob.led as u8,
+                rob.commands.len()
+            )
+            .unwrap();
+        }
+        writeln!(out).unwrap();
         if detail == Some(frame) {
             for &packed in log {
                 let t = packed >> 25;

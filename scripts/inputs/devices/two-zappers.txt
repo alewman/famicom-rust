@@ -1,0 +1,243 @@
+# Two Zappers: Start on neither (no pads); shots from both
+100 set 0 aim 17 40
+102 set 0 trigger 1
+108 set 0 trigger 0
+130 set 0 aim 70 77
+132 set 0 trigger 1
+138 set 0 trigger 0
+160 set 0 aim 123 114
+162 set 0 trigger 1
+168 set 0 trigger 0
+190 set 0 aim 176 151
+192 set 0 trigger 1
+198 set 0 trigger 0
+220 set 0 aim 229 188
+222 set 0 trigger 1
+228 set 0 trigger 0
+250 set 0 aim 26 65
+252 set 0 trigger 1
+258 set 0 trigger 0
+280 set 0 aim 79 102
+282 set 0 trigger 1
+288 set 0 trigger 0
+310 set 0 aim 132 139
+312 set 0 trigger 1
+318 set 0 trigger 0
+340 set 0 aim 185 176
+342 set 0 trigger 1
+348 set 0 trigger 0
+370 set 0 aim 238 53
+372 set 0 trigger 1
+378 set 0 trigger 0
+400 set 0 aim 35 90
+402 set 0 trigger 1
+408 set 0 trigger 0
+430 set 0 aim 88 127
+432 set 0 trigger 1
+438 set 0 trigger 0
+460 set 0 aim 141 164
+462 set 0 trigger 1
+468 set 0 trigger 0
+490 set 0 aim 194 41
+492 set 0 trigger 1
+498 set 0 trigger 0
+520 set 0 aim 247 78
+522 set 0 trigger 1
+528 set 0 trigger 0
+550 set 0 aim 44 115
+552 set 0 trigger 1
+558 set 0 trigger 0
+580 set 0 aim 97 152
+582 set 0 trigger 1
+588 set 0 trigger 0
+610 set 0 aim 150 189
+612 set 0 trigger 1
+618 set 0 trigger 0
+640 set 0 aim 203 66
+642 set 0 trigger 1
+648 set 0 trigger 0
+670 set 0 aim 0 103
+672 set 0 trigger 1
+678 set 0 trigger 0
+700 set 0 aim 53 140
+702 set 0 trigger 1
+708 set 0 trigger 0
+730 set 0 aim 106 177
+732 set 0 trigger 1
+738 set 0 trigger 0
+760 set 0 aim 159 54
+762 set 0 trigger 1
+768 set 0 trigger 0
+790 set 0 aim 212 91
+792 set 0 trigger 1
+798 set 0 trigger 0
+820 set 0 aim 9 128
+822 set 0 trigger 1
+828 set 0 trigger 0
+850 set 0 aim 62 165
+852 set 0 trigger 1
+858 set 0 trigger 0
+880 set 0 aim 115 42
+882 set 0 trigger 1
+888 set 0 trigger 0
+910 set 0 aim 168 79
+912 set 0 trigger 1
+918 set 0 trigger 0
+940 set 0 aim 221 116
+942 set 0 trigger 1
+948 set 0 trigger 0
+970 set 0 aim 18 153
+972 set 0 trigger 1
+978 set 0 trigger 0
+1000 set 0 aim 71 190
+1002 set 0 trigger 1
+1008 set 0 trigger 0
+1030 set 0 aim 124 67
+1032 set 0 trigger 1
+1038 set 0 trigger 0
+1060 set 0 aim 177 104
+1062 set 0 trigger 1
+1068 set 0 trigger 0
+1090 set 0 aim 230 141
+1092 set 0 trigger 1
+1098 set 0 trigger 0
+1120 set 0 aim 27 178
+1122 set 0 trigger 1
+1128 set 0 trigger 0
+1150 set 0 aim 80 55
+1152 set 0 trigger 1
+1158 set 0 trigger 0
+1180 set 0 aim 133 92
+1182 set 0 trigger 1
+1188 set 0 trigger 0
+1210 set 0 aim 186 129
+1212 set 0 trigger 1
+1218 set 0 trigger 0
+1240 set 0 aim 239 166
+1242 set 0 trigger 1
+1248 set 0 trigger 0
+1270 set 0 aim 36 43
+1272 set 0 trigger 1
+1278 set 0 trigger 0
+1300 set 0 aim none
+115 set 1 aim 17 40
+117 set 1 trigger 1
+123 set 1 trigger 0
+145 set 1 aim 70 77
+147 set 1 trigger 1
+153 set 1 trigger 0
+175 set 1 aim 123 114
+177 set 1 trigger 1
+183 set 1 trigger 0
+205 set 1 aim 176 151
+207 set 1 trigger 1
+213 set 1 trigger 0
+235 set 1 aim 229 188
+237 set 1 trigger 1
+243 set 1 trigger 0
+265 set 1 aim 26 65
+267 set 1 trigger 1
+273 set 1 trigger 0
+295 set 1 aim 79 102
+297 set 1 trigger 1
+303 set 1 trigger 0
+325 set 1 aim 132 139
+327 set 1 trigger 1
+333 set 1 trigger 0
+355 set 1 aim 185 176
+357 set 1 trigger 1
+363 set 1 trigger 0
+385 set 1 aim 238 53
+387 set 1 trigger 1
+393 set 1 trigger 0
+415 set 1 aim 35 90
+417 set 1 trigger 1
+423 set 1 trigger 0
+445 set 1 aim 88 127
+447 set 1 trigger 1
+453 set 1 trigger 0
+475 set 1 aim 141 164
+477 set 1 trigger 1
+483 set 1 trigger 0
+505 set 1 aim 194 41
+507 set 1 trigger 1
+513 set 1 trigger 0
+535 set 1 aim 247 78
+537 set 1 trigger 1
+543 set 1 trigger 0
+565 set 1 aim 44 115
+567 set 1 trigger 1
+573 set 1 trigger 0
+595 set 1 aim 97 152
+597 set 1 trigger 1
+603 set 1 trigger 0
+625 set 1 aim 150 189
+627 set 1 trigger 1
+633 set 1 trigger 0
+655 set 1 aim 203 66
+657 set 1 trigger 1
+663 set 1 trigger 0
+685 set 1 aim 0 103
+687 set 1 trigger 1
+693 set 1 trigger 0
+715 set 1 aim 53 140
+717 set 1 trigger 1
+723 set 1 trigger 0
+745 set 1 aim 106 177
+747 set 1 trigger 1
+753 set 1 trigger 0
+775 set 1 aim 159 54
+777 set 1 trigger 1
+783 set 1 trigger 0
+805 set 1 aim 212 91
+807 set 1 trigger 1
+813 set 1 trigger 0
+835 set 1 aim 9 128
+837 set 1 trigger 1
+843 set 1 trigger 0
+865 set 1 aim 62 165
+867 set 1 trigger 1
+873 set 1 trigger 0
+895 set 1 aim 115 42
+897 set 1 trigger 1
+903 set 1 trigger 0
+925 set 1 aim 168 79
+927 set 1 trigger 1
+933 set 1 trigger 0
+955 set 1 aim 221 116
+957 set 1 trigger 1
+963 set 1 trigger 0
+985 set 1 aim 18 153
+987 set 1 trigger 1
+993 set 1 trigger 0
+1015 set 1 aim 71 190
+1017 set 1 trigger 1
+1023 set 1 trigger 0
+1045 set 1 aim 124 67
+1047 set 1 trigger 1
+1053 set 1 trigger 0
+1075 set 1 aim 177 104
+1077 set 1 trigger 1
+1083 set 1 trigger 0
+1105 set 1 aim 230 141
+1107 set 1 trigger 1
+1113 set 1 trigger 0
+1135 set 1 aim 27 178
+1137 set 1 trigger 1
+1143 set 1 trigger 0
+1165 set 1 aim 80 55
+1167 set 1 trigger 1
+1173 set 1 trigger 0
+1195 set 1 aim 133 92
+1197 set 1 trigger 1
+1203 set 1 trigger 0
+1225 set 1 aim 186 129
+1227 set 1 trigger 1
+1233 set 1 trigger 0
+1255 set 1 aim 239 166
+1257 set 1 trigger 1
+1263 set 1 trigger 0
+1285 set 1 aim 36 43
+1287 set 1 trigger 1
+1293 set 1 trigger 0
+1315 set 1 aim none

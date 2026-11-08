@@ -1,0 +1,130 @@
+# Duck Hunt with the Zapper: Start, then 40 shots across the picture
+60 0 08
+66 0 00
+120 0 08
+126 0 00
+180 0 08
+186 0 00
+240 0 08
+246 0 00
+300 set - aim 17 40
+302 set - trigger 1
+308 set - trigger 0
+330 set - aim 70 77
+332 set - trigger 1
+338 set - trigger 0
+360 set - aim 123 114
+362 set - trigger 1
+368 set - trigger 0
+390 set - aim 176 151
+392 set - trigger 1
+398 set - trigger 0
+420 set - aim 229 188
+422 set - trigger 1
+428 set - trigger 0
+450 set - aim 26 65
+452 set - trigger 1
+458 set - trigger 0
+480 set - aim 79 102
+482 set - trigger 1
+488 set - trigger 0
+510 set - aim 132 139
+512 set - trigger 1
+518 set - trigger 0
+540 set - aim 185 176
+542 set - trigger 1
+548 set - trigger 0
+570 set - aim 238 53
+572 set - trigger 1
+578 set - trigger 0
+600 set - aim 35 90
+602 set - trigger 1
+608 set - trigger 0
+630 set - aim 88 127
+632 set - trigger 1
+638 set - trigger 0
+660 set - aim 141 164
+662 set - trigger 1
+668 set - trigger 0
+690 set - aim 194 41
+692 set - trigger 1
+698 set - trigger 0
+720 set - aim 247 78
+722 set - trigger 1
+728 set - trigger 0
+750 set - aim 44 115
+752 set - trigger 1
+758 set - trigger 0
+780 set - aim 97 152
+782 set - trigger 1
+788 set - trigger 0
+810 set - aim 150 189
+812 set - trigger 1
+818 set - trigger 0
+840 set - aim 203 66
+842 set - trigger 1
+848 set - trigger 0
+870 set - aim 0 103
+872 set - trigger 1
+878 set - trigger 0
+900 set - aim 53 140
+902 set - trigger 1
+908 set - trigger 0
+930 set - aim 106 177
+932 set - trigger 1
+938 set - trigger 0
+960 set - aim 159 54
+962 set - trigger 1
+968 set - trigger 0
+990 set - aim 212 91
+992 set - trigger 1
+998 set - trigger 0
+1020 set - aim 9 128
+1022 set - trigger 1
+1028 set - trigger 0
+1050 set - aim 62 165
+1052 set - trigger 1
+1058 set - trigger 0
+1080 set - aim 115 42
+1082 set - trigger 1
+1088 set - trigger 0
+1110 set - aim 168 79
+1112 set - trigger 1
+1118 set - trigger 0
+1140 set - aim 221 116
+1142 set - trigger 1
+1148 set - trigger 0
+1170 set - aim 18 153
+1172 set - trigger 1
+1178 set - trigger 0
+1200 set - aim 71 190
+1202 set - trigger 1
+1208 set - trigger 0
+1230 set - aim 124 67
+1232 set - trigger 1
+1238 set - trigger 0
+1260 set - aim 177 104
+1262 set - trigger 1
+1268 set - trigger 0
+1290 set - aim 230 141
+1292 set - trigger 1
+1298 set - trigger 0
+1320 set - aim 27 178
+1322 set - trigger 1
+1328 set - trigger 0
+1350 set - aim 80 55
+1352 set - trigger 1
+1358 set - trigger 0
+1380 set - aim 133 92
+1382 set - trigger 1
+1388 set - trigger 0
+1410 set - aim 186 129
+1412 set - trigger 1
+1418 set - trigger 0
+1440 set - aim 239 166
+1442 set - trigger 1
+1448 set - trigger 0
+1470 set - aim 36 43
+1472 set - trigger 1
+1478 set - trigger 0
+1500 set - aim none
