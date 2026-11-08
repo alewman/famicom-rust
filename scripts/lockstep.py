@@ -31,7 +31,10 @@ ROOT = HERE.parent
 sys.path.insert(0, str(HERE))
 from make_cases import DEFAULTS  # noqa: E402
 
-PYTHON = ROOT / "external" / "famicom-python" / ".venv-pypy" / "bin" / "python"
+# The reference checkout (scripts/fetch_famicompython.sh); FAMICOM_REFERENCE moves it
+# (a worktree shares the main tree's).
+REFERENCE = Path(os.environ.get("FAMICOM_REFERENCE", ROOT / "external" / "famicom-python"))
+PYTHON = REFERENCE / ".venv-pypy" / "bin" / "python"
 
 
 def cases(table: Path) -> list[tuple[str, int, str, list[str]]]:

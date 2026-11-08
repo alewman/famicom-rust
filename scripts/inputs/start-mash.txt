@@ -1,0 +1,15 @@
+# frame pad buttons(hex): Start, then A, pressed now and then, so a game leaves its title
+120 0 08
+126 0 00
+240 0 08
+246 0 00
+300 0 01
+306 0 00
+360 0 08
+366 0 00
+420 0 01
+426 0 00
+480 0 08
+486 0 00
+540 0 81
+560 0 00

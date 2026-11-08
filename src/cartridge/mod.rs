@@ -9,7 +9,10 @@ pub mod banked;
 pub mod connector;
 pub mod database;
 pub mod discrete;
+pub mod flash;
 pub mod ines;
+pub mod mmc1;
+pub mod mmc3;
 
 pub use banked::Banked;
 pub use connector::Cartridge;
@@ -101,8 +104,34 @@ fn differences(winner: &BoardInfo, other: &BoardInfo, label: &str) -> Vec<String
 /// cycle length in master ticks.
 pub fn build(image: RomImage, cpu_cycle_ticks: i64) -> Result<Box<dyn Cartridge>, String> {
     let mapper = image.board.mapper;
+    let t = cpu_cycle_ticks;
+    use discrete::*;
     Ok(match mapper {
-        0 => Box::new(discrete::nrom(image, cpu_cycle_ticks)),
+        0 => Box::new(nrom(image, t)),
+        1 => Box::new(mmc1::Mmc1::new(image, t)),
+        4 => mmc3::mmc3_for(image, t),
+        37 | 47 => Box::new(mmc3::Mmc3Multicart::new(image, t)),
+        105 => Box::new(mmc1::Mmc1::nes_event(image, t)),
+        115 => Box::new(mmc3::Kasheng::new(image, t)),
+        118 => Box::new(mmc3::TxSrom::new(image, t)),
+        119 => Box::new(mmc3::TqRom::new(image, t)),
+        155 => Box::new(mmc1::Mmc1::mmc1a(image, t)),
+        224 => Box::new(mmc3::mindkids_224(image, t)),
+        268 => Box::new(mmc3::Aa6023::new(image, t)),
+        555 => Box::new(mmc3::Event2::new(image, t)),
+        2 | 517 => Box::new(UxRom::new(image, t)),
+        3 => Box::new(CnRom::new(image, t)),
+        7 => Box::new(AxRom::new(image, t)),
+        13 => Box::new(CpRom::new(image, t)),
+        30 => Box::new(UnRom512::new(image, t)),
+        34 => mapper_34(image, t),
+        66 => Box::new(GxRom::new(image, t)),
+        87 => Box::new(J87::new(image, t)),
+        94 => Box::new(Un1Rom::new(image, t)),
+        170 => Box::new(Fujiya170::new(image, t)),
+        180 => Box::new(UnRom180::new(image, t)),
+        185 => Box::new(CnRomProtected::new(image, t)),
+        470 => Box::new(AxRom::multicart(image, t)),
         _ => return Err(format!("mapper {mapper} is not implemented yet")),
     })
 }

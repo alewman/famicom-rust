@@ -13,13 +13,16 @@ resolved by scripts/lockstep.py against DEFAULTS or the environment.
 
 from __future__ import annotations
 
+import os
 import re
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
+REFERENCE = Path(os.environ.get("FAMICOM_REFERENCE", ROOT / "external" / "famicom-python"))
 DEFAULTS = {
-    "NES_TEST_ROMS": str(ROOT / "external" / "famicom-python" / "tests" / "test_roms"),
+    "NES_TEST_ROMS": str(REFERENCE / "tests" / "test_roms"),
+    "NES_DUMPS": "/data/emu/roms/nes",
     "INPUTS": str(HERE / "inputs"),
 }
 # The mappers built so far (cartridge::build).

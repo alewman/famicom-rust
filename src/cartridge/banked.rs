@@ -2,8 +2,8 @@
 //! (`banked.py`).
 //!
 //! The reference's mappers subclass `Banked`; here a mapper holds a
-//! [`Banked`] and forwards what it does not override (see
-//! [`crate::forward_banked`]).
+//! [`Banked`] and the connector's defaults forward to it (see the notes in
+//! `connector.rs`).
 
 use super::connector::Cartridge;
 use super::ines::RomImage;
@@ -86,20 +86,23 @@ impl Banked {
     // -- banking helpers ---------------------------------------------------
 
     /// Point `size_kib` KiB of CPU space from 8 KiB window `window` at `bank`.
-    pub fn map_prg(&mut self, window: usize, size_kib: usize, bank: usize) {
-        let base = bank * size_kib * 1024;
-        let len = self.prg.len().max(1);
+    ///
+    /// `bank` may be negative, as Python's arithmetic makes it (a last bank of
+    /// an image too small to have one): the offset is Python's modulo.
+    pub fn map_prg(&mut self, window: usize, size_kib: usize, bank: i64) {
+        let base = bank * size_kib as i64 * 1024;
+        let len = self.prg.len().max(1) as i64;
         for i in 0..size_kib / 8 {
-            self.prg_offsets[window + i] = (base + i * 0x2000) % len;
+            self.prg_offsets[window + i] = (base + i as i64 * 0x2000).rem_euclid(len) as usize;
         }
     }
 
     /// Point `size_kib` KiB of PPU space from 1 KiB window `window` at `bank`.
-    pub fn map_chr(&mut self, window: usize, size_kib: usize, bank: usize) {
-        let base = bank * size_kib * 1024;
-        let len = self.chr.len().max(1);
+    pub fn map_chr(&mut self, window: usize, size_kib: usize, bank: i64) {
+        let base = bank * size_kib as i64 * 1024;
+        let len = self.chr.len().max(1) as i64;
         for i in 0..size_kib {
-            self.chr_offsets[window + i] = (base + i * 0x400) % len;
+            self.chr_offsets[window + i] = (base + i as i64 * 0x400).rem_euclid(len) as usize;
         }
     }
 
@@ -113,14 +116,9 @@ impl Banked {
             & self.prg[self.prg_offsets[(address as usize >> 13) & 3] + (address as usize & 0x1FFF)]
     }
 
-    /// The inverse of `battery_ram`, for data of its length.
-    pub fn restore(&mut self, data: &[u8]) {
-        self.prg_ram.copy_from_slice(data);
-    }
-}
+    // -- the connector, as Banked does it (the trait's defaults call these) --
 
-impl Cartridge for Banked {
-    fn cpu_read(&mut self, address: u16, _t: i64) -> Option<u16> {
+    pub fn base_cpu_read(&self, address: u16, _t: i64) -> Option<u16> {
         let a = address as usize;
         if address >= 0x8000 {
             return Some(self.prg[self.prg_offsets[(a >> 13) & 3] + (a & 0x1FFF)] as u16);
@@ -131,14 +129,14 @@ impl Cartridge for Banked {
         None
     }
 
-    fn cpu_write(&mut self, address: u16, value: u8, _t: i64) {
+    pub fn base_cpu_write(&mut self, address: u16, value: u8, _t: i64) {
         if (0x6000..0x8000).contains(&address) && self.prg_ram_enabled && self.prg_ram_writable {
             let a = address as usize;
             self.prg_ram[self.prg_ram_offset + (a & self.prg_ram_mask)] = value;
         }
     }
 
-    fn ciram_a10(&mut self, address: u16) -> Option<u8> {
+    pub fn base_ciram_a10(&self, address: u16) -> Option<u8> {
         if self.four_screen {
             return None;
         }
@@ -150,7 +148,7 @@ impl Cartridge for Banked {
         })
     }
 
-    fn ppu_read(&mut self, address: u16, _t: i64) -> Option<u8> {
+    pub fn base_ppu_read(&self, address: u16, _t: i64) -> Option<u8> {
         let a = address as usize;
         if address < 0x2000 {
             return Some(self.chr[self.chr_offsets[a >> 10] + (a & 0x3FF)]);
@@ -161,7 +159,7 @@ impl Cartridge for Banked {
         None
     }
 
-    fn ppu_write(&mut self, address: u16, value: u8, _t: i64) {
+    pub fn base_ppu_write(&mut self, address: u16, value: u8, _t: i64) {
         let a = address as usize;
         if address < 0x2000 {
             if self.chr_writable {
@@ -172,21 +170,21 @@ impl Cartridge for Banked {
         }
     }
 
-    fn battery_ram(&self) -> Option<Vec<u8>> {
+    pub fn base_battery_ram(&self) -> Option<Vec<u8>> {
         if self.battery {
             Some(self.prg_ram.clone())
         } else {
             None
         }
     }
+}
 
-    fn restore_battery(&mut self, data: &[u8]) -> bool {
-        match self.battery_ram() {
-            Some(saved) if saved.len() == data.len() => {
-                self.restore(data);
-                true
-            }
-            _ => false,
-        }
+/// `Banked` itself is a cartridge: NROM is no more than its windows.
+impl Cartridge for Banked {
+    fn banked(&self) -> Option<&Banked> {
+        Some(self)
+    }
+    fn banked_mut(&mut self) -> Option<&mut Banked> {
+        Some(self)
     }
 }
