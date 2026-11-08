@@ -104,6 +104,7 @@ name = "famicom-rust"
 version = "0.1.0"
 dependencies = [
  "crc32fast",
+ "serde_json",
  "sha1",
  "sixfiveohtwo",
  "zip",
