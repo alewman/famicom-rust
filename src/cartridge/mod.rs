@@ -5,14 +5,41 @@
 //! caller's override, then nes20db by the whole ROM, then by PRG and CHR, then
 //! the file's NES 2.0 header, then the iNES 1.0 header.
 
+pub mod bandai;
 pub mod banked;
+pub mod chinese;
 pub mod connector;
+pub mod conversions;
+pub mod cony;
 pub mod database;
 pub mod discrete;
+pub mod eeprom;
 pub mod flash;
+pub mod homebrew;
 pub mod ines;
+pub mod irem;
+pub mod jaleco;
+pub mod jycompany;
+pub mod kaiser;
+pub mod konami;
 pub mod mmc1;
+pub mod mmc2;
 pub mod mmc3;
+pub mod mmc3_clones;
+pub mod mmc5;
+pub mod multiasic;
+pub mod multicart;
+pub mod namco;
+pub mod nanjing;
+pub mod pic16c54;
+pub mod sachen;
+pub mod sunsoft;
+pub mod taito;
+pub mod tengen;
+pub mod txc;
+pub mod unlicensed;
+pub mod vrc5;
+pub mod waixing;
 
 pub use banked::Banked;
 pub use connector::Cartridge;
@@ -132,8 +159,119 @@ pub fn build(image: RomImage, cpu_cycle_ticks: i64) -> Result<Box<dyn Cartridge>
         180 => Box::new(UnRom180::new(image, t)),
         185 => Box::new(CnRomProtected::new(image, t)),
         470 => Box::new(AxRom::multicart(image, t)),
-        _ => return Err(format!("mapper {mapper} is not implemented yet")),
+        _ => return built_elsewhere(mapper, image, t),
     })
+}
+
+/// The modules transcribed one per reference module: each `build` answers
+/// for its own mapper numbers, or hands the image back.
+fn built_elsewhere(mapper: u16, image: RomImage, t: i64) -> Result<Box<dyn Cartridge>, String> {
+    let image = match bandai::build(mapper, image, t) {
+        Ok(cartridge) => return Ok(cartridge),
+        Err(image) => image,
+    };
+    let image = match chinese::build(mapper, image, t) {
+        Ok(cartridge) => return Ok(cartridge),
+        Err(image) => image,
+    };
+    let image = match conversions::build(mapper, image, t) {
+        Ok(cartridge) => return Ok(cartridge),
+        Err(image) => image,
+    };
+    let image = match cony::build(mapper, image, t) {
+        Ok(cartridge) => return Ok(cartridge),
+        Err(image) => image,
+    };
+    let image = match homebrew::build(mapper, image, t) {
+        Ok(cartridge) => return Ok(cartridge),
+        Err(image) => image,
+    };
+    let image = match irem::build(mapper, image, t) {
+        Ok(cartridge) => return Ok(cartridge),
+        Err(image) => image,
+    };
+    let image = match jaleco::build(mapper, image, t) {
+        Ok(cartridge) => return Ok(cartridge),
+        Err(image) => image,
+    };
+    let image = match jycompany::build(mapper, image, t) {
+        Ok(cartridge) => return Ok(cartridge),
+        Err(image) => image,
+    };
+    let image = match kaiser::build(mapper, image, t) {
+        Ok(cartridge) => return Ok(cartridge),
+        Err(image) => image,
+    };
+    let image = match konami::build(mapper, image, t) {
+        Ok(cartridge) => return Ok(cartridge),
+        Err(image) => image,
+    };
+    let image = match mmc2::build(mapper, image, t) {
+        Ok(cartridge) => return Ok(cartridge),
+        Err(image) => image,
+    };
+    let image = match mmc3_clones::build(mapper, image, t) {
+        Ok(cartridge) => return Ok(cartridge),
+        Err(image) => image,
+    };
+    let image = match mmc5::build(mapper, image, t) {
+        Ok(cartridge) => return Ok(cartridge),
+        Err(image) => image,
+    };
+    let image = match multiasic::build(mapper, image, t) {
+        Ok(cartridge) => return Ok(cartridge),
+        Err(image) => image,
+    };
+    let image = match multicart::build(mapper, image, t) {
+        Ok(cartridge) => return Ok(cartridge),
+        Err(image) => image,
+    };
+    let image = match namco::build(mapper, image, t) {
+        Ok(cartridge) => return Ok(cartridge),
+        Err(image) => image,
+    };
+    let image = match nanjing::build(mapper, image, t) {
+        Ok(cartridge) => return Ok(cartridge),
+        Err(image) => image,
+    };
+    let image = match pic16c54::build(mapper, image, t) {
+        Ok(cartridge) => return Ok(cartridge),
+        Err(image) => image,
+    };
+    let image = match sachen::build(mapper, image, t) {
+        Ok(cartridge) => return Ok(cartridge),
+        Err(image) => image,
+    };
+    let image = match sunsoft::build(mapper, image, t) {
+        Ok(cartridge) => return Ok(cartridge),
+        Err(image) => image,
+    };
+    let image = match taito::build(mapper, image, t) {
+        Ok(cartridge) => return Ok(cartridge),
+        Err(image) => image,
+    };
+    let image = match tengen::build(mapper, image, t) {
+        Ok(cartridge) => return Ok(cartridge),
+        Err(image) => image,
+    };
+    let image = match txc::build(mapper, image, t) {
+        Ok(cartridge) => return Ok(cartridge),
+        Err(image) => image,
+    };
+    let image = match unlicensed::build(mapper, image, t) {
+        Ok(cartridge) => return Ok(cartridge),
+        Err(image) => image,
+    };
+    let image = match vrc5::build(mapper, image, t) {
+        Ok(cartridge) => return Ok(cartridge),
+        Err(image) => image,
+    };
+    let image = match waixing::build(mapper, image, t) {
+        Ok(cartridge) => return Ok(cartridge),
+        Err(image) => image,
+    };
+    let _ = image;
+    Err(format!("mapper {mapper} is not implemented yet"))
 }
 
 /// Identify the cartridge in `data` and build its mapper.
