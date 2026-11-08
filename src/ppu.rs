@@ -991,6 +991,7 @@ impl Ppu {
         (((self.ctrl & 0x08) as u16) << 9) | (tile << 4) | (row & 7)
     }
 
+    #[allow(clippy::needless_range_loop)] // n indexes the lanes, the plan and the leak mask
     fn plan_sprites(&mut self, x1: usize) {
         self.sprite_line = [0; WIDTH];
         let now = self.time;

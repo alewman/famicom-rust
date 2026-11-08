@@ -23,6 +23,7 @@ pub struct Mmc2 {
 }
 
 impl Mmc2 {
+    #[allow(clippy::self_named_constructors)] // the reference's class names: MMC2 and MMC4
     pub fn mmc2(image: RomImage, cpu_cycle_ticks: i64) -> Mmc2 {
         Mmc2::build(image, cpu_cycle_ticks, 8, 1)
     }

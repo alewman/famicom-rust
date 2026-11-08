@@ -43,10 +43,10 @@ The ladder is the brief's (`docs/` of the handoff), in its order:
 | --- | --- | --- | --- |
 | 1 | nestest in automation mode against nestest.log: PC, registers, P, SP, CPU cycle, PPU line and dot per instruction | 8,991 of 8,991 lines; result codes 00 00 | `rung1.sh` |
 | 2 | The lockstep gate on every NROM test ROM the reference carries (600 slices) and AccuracyCoin's run-all (3,000) | 200 of 200 identical | `rung2.sh` |
-| 3 | The reference's test ROM tables (its `pytest -m slow` cases: CPU, PPU, APU, mappers, FDS, PAL) through a transcription of its harness: verdict, CPU cycles, instructions and detail text against the reference's own outcomes | 175 of 197 agree, the other 22 waiting on mappers in progress; the reference passes 197 | `rung3.sh` |
+| 3 | The reference's test ROM tables (its `pytest -m slow` cases: CPU, PPU, APU, mappers, FDS, PAL) through a transcription of its harness: verdict, CPU cycles, instructions and detail text against the reference's own outcomes | 188 of 197 agree, the other 9 (VRC2/VRC4) waiting on the Konami mappers; the reference passes 197 | `rung3.sh` |
 | 4 | AccuracyCoin, all tests, as the reference's `scripts/accuracycoin.py` runs them | 147 of 147 pass, on the reference's 126,984,584 CPU cycles and 4,264 frames (4.7 s against its 315 s) | `rung4.sh` |
 | 5 | Every mapper the reference builds, in lockstep on dumps that use it (scripts/mapper_dumps.py indexes the local dumps by the board the reference builds), plus the FDS on three disks | in progress | `rung5.sh` |
-| 6 | The machine rows and the peripherals in lockstep | in progress | `rung6.sh` |
+| 6 | The machine rows (PAL and Dendy on ten test ROMs; AccuracyCoin's run-all on PAL, Dendy, Famicom, AV Famicom, NES-101) and the peripherals in lockstep | machine rows 25 of 25 identical; peripherals in progress | `rung6.sh` |
 
 A slice is one PPU frame (`System::run_frames(1)`); the trace line holds the
 CPU registers, cycle and instruction counts, a CRC of every bus cycle, of the

@@ -1162,9 +1162,7 @@ impl Cartridge for Smb3Bootleg106 {
     }
 
     fn m2(&mut self, _t: i64) {
-        if self.counter != 0xFFFF {
-            self.counter += 1;
-        }
+        self.counter = self.counter.saturating_add(1);
         self.irq = self.enabled && self.counter == 0xFFFF;
     }
 }

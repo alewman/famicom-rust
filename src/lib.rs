@@ -9,6 +9,10 @@
 //! difference, the module header says so. The CPU is 6502-rust (crate
 //! `sixfiveohtwo`), its RP2A03.
 
+// Each mapper module's `build` hands the image back (`Err(image)`) when the
+// number is not its own, so the next module can try it: a large Err by design.
+#![allow(clippy::result_large_err)]
+
 pub mod apu;
 pub mod board;
 pub mod cartridge;
