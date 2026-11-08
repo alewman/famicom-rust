@@ -24,7 +24,7 @@ cargo build --release
 target/release/famicom ROM.zip --frames 600 --png last.png --wav sound.wav
 ```
 
-It runs at about ten times real time (Super Mario Bros.: 300 frames in 0.5 s),
+It runs at about eight to ten times real time (Super Mario Bros.: 300 frames in 0.5 s),
 some 25 times the reference on PyPy: correct, not yet fast. Speed is the job
 of a `-fast` fork.
 
@@ -37,7 +37,7 @@ of a `-fast` fork.
 | nes-test-roms | christopherpow `95d8f62` (the reference's pin) |
 | nes20db | 2026-09-26 (the reference's pin, read at run time, never committed) |
 
-The ladder is the brief's (`docs/` of the handoff), in its order:
+The ladder is the brief's (`docs/` of the handoff), in its order, and then save states:
 
 | Rung | What | Result | Script |
 | --- | --- | --- | --- |
@@ -45,8 +45,9 @@ The ladder is the brief's (`docs/` of the handoff), in its order:
 | 2 | The lockstep gate on every NROM test ROM the reference carries (600 slices) and AccuracyCoin's run-all (3,000) | 200 of 200 identical | `rung2.sh` |
 | 3 | The reference's test ROM tables (its `pytest -m slow` cases: CPU, PPU, APU, mappers, FDS, PAL) through a transcription of its harness: verdict, CPU cycles, instructions and detail text against the reference's own outcomes | 197 of 197 agree; the reference passes 197 | `rung3.sh` |
 | 4 | AccuracyCoin, all tests, as the reference's `scripts/accuracycoin.py` runs them | 147 of 147 pass, on the reference's 126,984,584 CPU cycles and 4,264 frames (4.7 s against its 315 s) | `rung4.sh` |
-| 5 | Every mapper the reference builds, in lockstep on dumps that use it (scripts/mapper_dumps.py indexes the local dumps by the board the reference builds), plus the FDS on three disks | in progress | `rung5.sh` |
+| 5 | Every mapper the reference builds (all 294; `tests/mapper_coverage.rs`), in lockstep on dumps that use it: up to two dumps of every board class the reference builds for the local dumps (scripts/mapper_dumps.py indexes them), 600 slices with Start pressed now and then; the FDS on three disks, NES and Famicom; Lagrange Point's VRC7 FM music (ym2413-rust) on the Famicom, 3,000 slices | 581 of 581, 6 of 6 and 1 of 1 identical | `rung5.sh` |
 | 6 | The machine rows (PAL and Dendy on ten test ROMs; AccuracyCoin's run-all on PAL, Dendy, Famicom, AV Famicom, NES-101) and the peripherals in lockstep | machine rows 25 of 25 identical; peripherals 54 of 54 identical (every device class of `peripherals.py`, driven by scripted inputs: Zapper, Vaus, Power Pad, keyboards and data recorder, mice, R.O.B. ...) | `rung6.sh` |
+| — | Save states (`state.rs`, from famicom-python `c497645`'s `state.py`): saved at frame 60 plus a random number of cycles, loaded into a fresh system and into one that had run elsewhere, each continues as the run that was not interrupted (bus cycles, picture, audio, registers, master clock) | 363 of 363 dumps, one of every board class | `famicom-state-roundtrip` |
 
 A slice is one PPU frame (`System::run_frames(1)`); the trace line holds the
 CPU registers, cycle and instruction counts, a CRC of every bus cycle, of the
