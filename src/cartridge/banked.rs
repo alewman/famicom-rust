@@ -10,7 +10,7 @@ use super::ines::RomImage;
 
 /// CIRAM A10 per nametable arrangement: horizontal mirroring takes PPU A11,
 /// vertical takes A10, single-screen a constant.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub enum Mirroring {
     Horizontal,
     Vertical,
@@ -22,11 +22,15 @@ pub use Mirroring::{
 };
 
 /// PRG in four 8 KiB windows at $8000, CHR in eight 1 KiB windows, PRG-RAM at $6000.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Banked {
+    #[serde(skip, default = "crate::state::live_image")]
     pub image: RomImage,
     pub cpu_cycle_ticks: i64,
+    #[serde(with = "crate::state::rom_bytes::prg")]
     pub prg: Vec<u8>,
     pub chr_writable: bool,
+    #[serde(with = "crate::state::rom_bytes::chr")]
     pub chr: Vec<u8>,
     pub prg_ram: Vec<u8>,
     pub prg_ram_enabled: bool,

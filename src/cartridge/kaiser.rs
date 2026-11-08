@@ -34,6 +34,7 @@ fn last(b: &Banked, size: usize) -> i64 {
 /// Mapper 42 (Ai Senshi Nicol, Bio Miracle Bokutte Upa): $6000 banked, the
 /// last 32 KiB fixed (INES_Mapper_042.wiki; 42.2, Green Beret, as its dumps
 /// decide, C65).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Kaiser42 {
     pub b: Banked,
     pub green_beret: bool,
@@ -112,6 +113,7 @@ impl Cartridge for Kaiser42 {
 
 /// Mapper 326 (a bootleg Contra): 8 KiB PRG, 1 KiB CHR, a CIRAM bit per
 /// nametable (krzysiobal's dump notes, forum t=17352).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Contra326 {
     pub b: Banked,
     pub nametables: [u8; 4],
@@ -154,6 +156,7 @@ impl Cartridge for Contra326 {
 }
 
 /// The SMB3 board's registers on the KS202 (mapper 56).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Smb3 {
     pub low: [i64; 4],
     pub upper: [i64; 4],
@@ -162,6 +165,7 @@ pub struct Smb3 {
 /// Mapper 142: Kaiser KS-7032 (SMB2J and other FDS conversions;
 /// INES_Mapper_142.wiki). With `smb3`, mapper 56 (Kaiser's Super Mario Bros.
 /// 3, INES_Mapper_056.wiki): the KS202 plus CHR and mirroring.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Ks7032 {
     pub b: Banked,
     pub select: u8,
@@ -304,6 +308,7 @@ impl Cartridge for Ks7032 {
 
 /// NES 2.0 mapper 303: Kaiser's conversion keeping the disk system's timer
 /// and mirroring (NES_2.0_Mapper_303.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Kaiser303 {
     pub b: Banked,
     pub latched: i64,
@@ -392,6 +397,7 @@ impl Cartridge for Kaiser303 {
 
 /// NES 2.0 mapper 304: the 09-034A conversions (Whirlwind Manu's SMB2J,
 /// Volleyball, Zanac; NES_2.0_Mapper_304.wiki; no counter, as on the cartridge).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Board09034A {
     pub b: Banked,
     pub bank6000: i64,
@@ -429,6 +435,7 @@ impl Cartridge for Board09034A {
 
 /// Mapper 40: NTDEC 2722 (SMB2J conversions) and 40.1, the 2752 multicart
 /// (INES_Mapper_040.wiki, from FCEUX's and Nestopia's source).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Ntdec2722 {
     pub b: Banked,
     pub multicart: bool,
@@ -528,6 +535,7 @@ pub const TONY_I_BANKS: [i64; 8] = [4, 3, 4, 4, 4, 7, 5, 6];
 
 /// Mapper 43 (SMB2J conversions on the TONY-I and YS-612 boards): three PRG
 /// chips (INES_Mapper_043.wiki; the file layout is Mesen2's).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct TonyI43 {
     pub b: Banked,
     pub counter: u32,
@@ -597,6 +605,7 @@ impl Cartridge for TonyI43 {
 
 /// NES 2.0 mapper 309: Whirlwind Manu's Ai Senshi Nicol conversion
 /// (NES_2.0_Mapper_309.wiki, masks taken as $E000).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Whirlwind309 {
     pub b: Banked,
 }
@@ -630,6 +639,7 @@ impl Cartridge for Whirlwind309 {
 
 /// NES 2.0 mapper 305: a Kaiser conversion in 2 KiB PRG banks
 /// (NES_2.0_Mapper_305.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Kaiser305 {
     pub b: Banked,
     pub low_banks: [i64; 4],
@@ -675,6 +685,7 @@ impl Cartridge for Kaiser305 {
 
 /// NES 2.0 mapper 306: a Kaiser conversion banking $6000 by address
 /// (NES_2.0_Mapper_306.wiki, mask $D903, FCEUX's).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Kaiser306 {
     pub b: Banked,
     pub bank6000: i64,
@@ -716,6 +727,7 @@ impl Cartridge for Kaiser306 {
 
 /// NES 2.0 mapper 522 (Fūun Shōrinken): an MMC3 clone wired for two PRG
 /// banks and RAM at $C000 (NES_2.0_Mapper_522.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Kaiser522 {
     pub b: Banked,
     pub ram: Vec<u8>,
@@ -772,6 +784,7 @@ impl Cartridge for Kaiser522 {
 
 /// NES 2.0 mapper 525 (UNL-KS7021A: Kaiser's VRC2 mapper hacks of Contra,
 /// Getsu Fūma Den; NES_2.0_Mapper_525.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Ks7021A {
     pub b: Banked,
 }
@@ -805,6 +818,7 @@ impl Cartridge for Ks7021A {
 
 /// NES 2.0 mapper 302 (Kaiser KS7057): eight 2 KiB PRG banks set by nibbles
 /// (NES_2.0_Mapper_302.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Ks7057 {
     pub b: Banked,
     /// 2 KiB banks: $8000-$9FFF (0-3), $6000-$7FFF (4-7).
@@ -859,6 +873,7 @@ impl Cartridge for Ks7057 {
 
 /// NES 2.0 mapper 312 (UNL-KS7013B: Kaiser's Highway Star;
 /// NES_2.0_Mapper_312.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Ks7013B {
     pub b: Banked,
 }
@@ -889,6 +904,7 @@ impl Cartridge for Ks7013B {
 
 /// NES 2.0 mapper 307: a Kaiser conversion with RAM and ROM in 4 KiB pieces
 /// (NES_2.0_Mapper_307.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Kaiser307 {
     pub b: Banked,
     pub ram: Vec<u8>,
@@ -961,6 +977,7 @@ impl Cartridge for Kaiser307 {
 
 /// NES 2.0 mapper 521 (Korean Igo): a 16 KiB bank register at $5020 (mask
 /// $F030; NES_2.0_Mapper_521.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Board521 {
     pub b: Banked,
     pub last: i64,
@@ -997,6 +1014,7 @@ impl Cartridge for Board521 {
 
 /// Mapper 125 (Whirlwind Manu's Monty no Doki Doki Daisassou): $6000
 /// banked, RAM at $C000 (INES_Mapper_125.wiki, mask taken as $E000).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Whirlwind125 {
     pub b: Banked,
     pub ram: Vec<u8>,
@@ -1043,6 +1061,7 @@ impl Cartridge for Whirlwind125 {
 
 /// NES 2.0 mapper 526 (Sangoku III, BJ-56): direct 1 KiB CHR and 8 KiB PRG
 /// registers (NES_2.0_Mapper_526.wiki, mask taken as $800F).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Board526 {
     pub b: Banked,
     pub counter: u16,
@@ -1097,6 +1116,7 @@ impl Cartridge for Board526 {
 
 /// Mapper 106: a discrete Super Mario Bros. 3 bootleg (two 128 KiB PRG
 /// chips, combined here; INES_Mapper_106.wiki, mask $800F).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Smb3Bootleg106 {
     pub b: Banked,
     pub counter: u16,
@@ -1170,6 +1190,7 @@ impl Cartridge for Smb3Bootleg106 {
 /// Mapper 50 (the N-32 SMB2J conversion, "Romeo"): a scrambled bank
 /// register and a counter (INES_Mapper_050.wiki, mask $4120; the 13-bit
 /// counter the wiki expects).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct N32Mapper50 {
     pub b: Banked,
     pub counter: u16,
@@ -1236,6 +1257,7 @@ impl Cartridge for N32Mapper50 {
 
 /// Mapper 120 (Whirlwind Manu's Tobidase Daisakusen): $6000 banked by a
 /// $41FF register (INES_Mapper_120.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Lh15 {
     pub b: Banked,
     pub bank6000: i64,
@@ -1270,6 +1292,7 @@ impl Cartridge for Lh15 {
 
 /// Mapper 103: a port of the FDS Doki Doki Panic, RAM over parts of the ROM
 /// (INES_Mapper_103.wiki, mask $F000).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct DokiDoki103 {
     pub b: Banked,
     pub low_ram: Vec<u8>,
@@ -1334,6 +1357,7 @@ impl Cartridge for DokiDoki103 {
 
 /// NES 2.0 mapper 346 (UNL-KS7012: Kaiser's Zanac): 32 KiB banks by magic
 /// addresses (NES_2.0_Mapper_346.wiki; exact addresses here).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Ks7012 {
     pub b: Banked,
 }

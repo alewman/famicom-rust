@@ -17,6 +17,7 @@ const CYCLE_IRQ_DELAY: u8 = 1;
 
 /// Mapper 64: Tengen RAMBO-1; mapper 158 (Tengen 800037, Alien Syndrome):
 /// the RAMBO-1 with CHR A17 as CIRAM A10.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Rambo1 {
     pub m: Mmc3,
     pub cycle_mode: bool,

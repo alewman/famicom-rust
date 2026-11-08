@@ -33,7 +33,7 @@ pub fn pcm_gain() -> f64 {
     pulse_gain() * pcm_per_pulse_step
 }
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, serde::Serialize, serde::Deserialize)]
 pub struct Mmc5Pulse {
     pub duty: usize,
     /// Also the envelope's loop.
@@ -125,7 +125,7 @@ impl Mmc5Pulse {
 }
 
 /// The registers at $5000-$5015 and the level the chip drives.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct Mmc5Sound {
     pub pulses: [Mmc5Pulse; 2],
     pub read_mode: bool,

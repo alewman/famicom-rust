@@ -47,6 +47,7 @@ pub fn build(
 /// What these boards share: a ROM window at $6000 and hard-wired mirroring
 /// (the reference's `Conversion`; its class attribute `mirroring_wired` is
 /// the constructor's argument).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Conversion {
     pub b: Banked,
     pub bank6000: usize,
@@ -84,6 +85,7 @@ impl Conversion {
 
 /// Mapper 415: the 0353 board (Lucky Rabbit, the FDS's Roger Rabbit): a latch
 /// at $8000-$FFFF, the $6000 bank and the mirroring (NES_2.0_Mapper_415.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Board0353 {
     pub c: Conversion,
 }
@@ -119,6 +121,7 @@ impl Cartridge for Board0353 {
 
 /// Mapper 554: Kaiser's KS-7010 (Akumajou Dracula): banks switched by reads
 /// of magic addresses.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Ks7010 {
     pub c: Conversion,
 }
@@ -148,6 +151,7 @@ impl Cartridge for Ks7010 {
 
 /// Mapper 548: Co Tung's CTC-15 (Almana no Kiseki): a latch in the address of
 /// $4800 writes, applied at $5000, and an M2 counter.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Ctc15 {
     pub b: Banked,
     pub latch: i64,
@@ -221,6 +225,7 @@ pub const PALTHENA_RAM: [(u16, u16, usize); 6] = [
 
 /// Mapper 539: a bootleg of the disk Kid Icarus: 8 KiB of RAM laid over ROM
 /// in slices.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Palthena539 {
     pub c: Conversion,
 }
@@ -271,6 +276,7 @@ impl Cartridge for Palthena539 {
 
 /// Mapper 535: Whirlwind Manu's LH53 (Nazo no Murasamejou): 8 KiB of RAM at
 /// $B800-$D7FF and an M2 counter reaching 7560 (the number from FCEUX).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Lh53 {
     pub c: Conversion,
     pub counter: i64,
@@ -336,6 +342,7 @@ pub const YUNG08_BANKS: [i64; 8] = [4, 3, 5, 3, 6, 3, 7, 3];
 
 /// Mapper 368: the Yung-08 conversion of the disk Super Mario Bros. 2: a
 /// table-banked $C000 and a 12-bit M2 counter.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Yung08 {
     pub c: Conversion,
     pub latch: u8,
@@ -403,6 +410,7 @@ impl Cartridge for Yung08 {
 
 /// Mapper 538: the 60-1064-16L board (Super Soccer Champion, the disk
 /// Exciting Soccer): one write sets the banks at $6000 and $8000.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct SoccerChampion538 {
     pub c: Conversion,
 }
@@ -446,6 +454,7 @@ impl Cartridge for SoccerChampion538 {
 /// Mapper 347: Kaiser's KS-7030 (UNL-KS7030, Yume Koujou: Doki Doki Panic):
 /// 8 KiB of RAM and banked ROM quilted over $6000-$FFFF, banks set by the
 /// address of $8000/$9000 writes.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Ks7030 {
     pub b: Banked,
     pub bank7000: i64,
@@ -524,6 +533,7 @@ impl Cartridge for Ks7030 {
 
 /// Mappers 418 (LH42, Highway Star) and 557 (LG25, NTDEC 2718, Moero
 /// TwinBee): a cut-down MMC3's two ports (MAME's bootleg.cpp, BSD-3).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Lh42 {
     pub b: Banked,
     pub mirror_bit: u8,
@@ -570,6 +580,7 @@ impl Cartridge for Lh42 {
 
 /// Mapper 549 (Meikyuu Jiin Dababa): Kaiser's KS-7016B: the address of a
 /// write banks $6000 (krzysiobal, forum t=19303; MAME's kaiser.cpp, BSD-3).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Ks7016b {
     pub c: Conversion,
 }

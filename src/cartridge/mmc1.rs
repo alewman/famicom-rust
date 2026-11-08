@@ -18,7 +18,7 @@ const MIRRORING: [super::banked::Mirroring; 4] = [SCREEN_A, SCREEN_B, VERTICAL, 
 /// The NES-EVENT timer's four DIP switches, D C B A (C closed).
 pub const EVENT_DIP_SWITCHES: u32 = 0b0100;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct Event {
     pub unlocked: bool,
     pub saw_running: bool,
@@ -27,7 +27,7 @@ pub struct Event {
     pub target: u32,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub enum Kind {
     Mmc1,
     /// Mapper 155: $E000 D4 leaves PRG-RAM enabled.
@@ -41,6 +41,7 @@ pub enum Kind {
     },
 }
 
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Mmc1 {
     pub b: Banked,
     pub kind: Kind,

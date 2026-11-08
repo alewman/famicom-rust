@@ -78,6 +78,7 @@ fn map_both_16(b: &mut Banked, bank: i64) {
 
 /// Mapper 58 (and its duplicate 213): the address of a write to $8000-$FFFF
 /// is the latch (INES_Mapper_058.wiki). Power-on latch 0.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct AddressLatch58 {
     pub b: Banked,
 }
@@ -118,6 +119,7 @@ impl Cartridge for AddressLatch58 {
 
 /// NES 2.0 mapper 286: the BS-5 multicart: four 8 KiB PRG and four 2 KiB CHR
 /// windows, all from the address (NES_2.0_Mapper_286.wiki; DIP setting 1, A4).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Bs5 {
     pub b: Banked,
 }
@@ -150,6 +152,7 @@ impl Cartridge for Bs5 {
 
 /// NES 2.0 mapper 319: the HP-898F and KD-7/9-E boards, two registers decoded
 /// by A14, A13 and A2 (NES_2.0_Mapper_319.wiki, the wiki's NES 2.0 order).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Hp898f {
     pub b: Banked,
 }
@@ -201,6 +204,7 @@ impl Cartridge for Hp898f {
 /// Mappers 242, 227 (and 301): address-latch multicarts with UNROM-like and
 /// NROM modes (INES_Mapper_242.wiki, _227.wiki; the reference details the
 /// boards). Power-on and reset clear the latch.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct AddressLatch242 {
     pub b: Banked,
     pub wide: bool,
@@ -308,6 +312,7 @@ impl Cartridge for AddressLatch242 {
 
 /// Mapper 59 (BMC-T3H53, BMC-D1038): an address latch with a lock and a
 /// jumper read (INES_Mapper_059.wiki). Power-on latch 0.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct AddressLatch59 {
     pub b: Banked,
     pub locked: bool,
@@ -364,6 +369,7 @@ impl Cartridge for AddressLatch59 {
 
 /// Mapper 212 (BMC Super HiK 300-in-1): an address latch with a read-back
 /// quirk (INES_Mapper_212.wiki, from FCEUX's source). Power-on latch 0.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct AddressLatch212 {
     pub b: Banked,
 }
@@ -410,6 +416,7 @@ impl Cartridge for AddressLatch212 {
 
 /// Mappers 225 and 255: an address latch with sixteen bits of RAM at $5800
 /// (INES_Mapper_225.wiki). Power-on latch 0.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct AddressLatch225 {
     pub b: Banked,
     pub nibbles: [u8; 4],
@@ -461,6 +468,7 @@ impl Cartridge for AddressLatch225 {
 
 /// Mapper 226 (76-in-1, Super 42-in-1): two latches at $8000/$8001 (mask
 /// $8001; INES_Mapper_226.wiki). Power-on and reset clear both.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Latch226 {
     pub b: Banked,
     pub regs: [u8; 2],
@@ -509,6 +517,7 @@ impl Cartridge for Latch226 {
 
 /// NES 2.0 mapper 332 (BMC-WS: Super 40-in-1, Super 500-in-1;
 /// NES_2.0_Mapper_332.wiki). Power-on 0.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Ws332 {
     pub b: Banked,
     pub regs: [u8; 2],
@@ -569,6 +578,7 @@ impl Cartridge for Ws332 {
 
 /// Mapper 60: the reset-based NROM-128 4-in-1 (INES_Mapper_060.wiki, Disch's
 /// notes): each reset counts the game up. Power-on game 0.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResetMulticart60 {
     pub b: Banked,
     pub game: i64,
@@ -600,6 +610,7 @@ impl Cartridge for ResetMulticart60 {
 
 /// Mapper 57 (GK 47-in-1, 6-in-1 SuperGK): two registers at $8000 and $8800
 /// (mask $8800; INES_Mapper_057.wiki). Power-on registers 0.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Gk57 {
     pub b: Banked,
     pub regs: [u8; 2],
@@ -648,6 +659,7 @@ impl Cartridge for Gk57 {
 
 /// NES 2.0 mapper 519: an address-and-data latch with a lock and a DIP switch
 /// read (NES_2.0_Mapper_519.wiki). Power-on 0.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Latch519 {
     pub b: Banked,
     pub address: u16,
@@ -709,6 +721,7 @@ impl Cartridge for Latch519 {
 /// Mapper 235 ("Golden Game" 150-in-1 and kin): an address latch over up to
 /// four 1 MiB ROMs; chips the file lacks read open bus (INES_Mapper_235.wiki,
 /// The Mad Dumper's notes). Power-on and reset clear the latch.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct GoldenGame235 {
     pub b: Banked,
     pub open_bus: bool,
@@ -768,6 +781,7 @@ impl Cartridge for GoldenGame235 {
 /// Mapper 234: the Maxi 15 multicart, banking on the value the CPU *reads* at
 /// $FF80-$FFF7 (INES_Mapper_234.wiki; the lockout defeat is left out).
 /// Power-on and reset clear the registers.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Maxi15 {
     pub b: Banked,
     pub outer: u8,
@@ -851,6 +865,7 @@ impl Cartridge for Maxi15 {
 
 /// Mapper 15: the K-1029/K-1030P boards (100-in-1 and 168-in-1 Contra
 /// Function 16; INES_Mapper_015.wiki). Power-on and reset clear the latch.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct K1029 {
     pub b: Banked,
 }
@@ -906,6 +921,7 @@ impl Cartridge for K1029 {
 /// NES 2.0 mapper 314 (BMC-64in1NoRepeat: the Y2K multicarts;
 /// NES_2.0_Mapper_314.wiki, MAME's multigame.cpp for the decoding). Power-on
 /// $80, $43, $00.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct NoRepeat314 {
     pub b: Banked,
     pub regs: [u8; 4],
@@ -971,6 +987,7 @@ impl Cartridge for NoRepeat314 {
 
 /// NES 2.0 mapper 289 (Super HiK 17-in-1, Champion Cassette 1200-in-1, Super
 /// 76-in-1; NES_2.0_Mapper_289.wiki). Power-on 0.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Champion289 {
     pub b: Banked,
     pub mode: u8,
@@ -1036,6 +1053,7 @@ impl Cartridge for Champion289 {
 
 /// NES 2.0 mapper 290 (Asder 20-in-1): an address latch
 /// (NES_2.0_Mapper_290.wiki). Power-on latch 0.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Asder290 {
     pub b: Banked,
 }
@@ -1077,6 +1095,7 @@ impl Cartridge for Asder290 {
 
 /// NES 2.0 mapper 299: a data latch at $8000-$FFFF (NES_2.0_Mapper_299.wiki).
 /// Power-on 0.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Latch299 {
     pub b: Banked,
 }
@@ -1113,6 +1132,7 @@ impl Cartridge for Latch299 {
 
 /// Mapper 229 (BMC 31-in-1): the address of a write to $8000-$FFFF (mask
 /// $803F; INES_Mapper_229.wiki). Power-on latch 0.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Latch229 {
     pub b: Banked,
 }
@@ -1150,6 +1170,7 @@ impl Cartridge for Latch229 {
 /// Mapper 221 (NTDEC N625092 multicarts): two address latches
 /// (INES_Mapper_221.wiki; A6 also drives PRG A18, which the page does not
 /// show). Power-on 0.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct N625092 {
     pub b: Banked,
     pub mode: u16,
@@ -1203,6 +1224,7 @@ impl Cartridge for N625092 {
 
 /// NES 2.0 mapper 285: the A65AS (285.0) and JY-066 (285.1) multicarts, a
 /// data latch (NES_2.0_Mapper_285.wiki). 8 KiB CHR-RAM. Power-on 0.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct A65as {
     pub b: Banked,
     pub jy066: bool,
@@ -1258,6 +1280,7 @@ impl Cartridge for A65as {
 /// Mapper 63 (Powerful 255-in-1 and kin): an address latch, unpopulated banks
 /// open bus, which the menu uses to count the games (INES_Mapper_063.wiki).
 /// Power-on latch 0.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Powerful63 {
     pub b: Banked,
     pub narrow: bool,
@@ -1320,6 +1343,7 @@ impl Cartridge for Powerful63 {
 
 /// Mapper 62 (Super 700-in-1): the address and the data of a write to
 /// $8000-$FFFF (INES_Mapper_062.wiki, Disch's notes). Power-on 0.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Super700 {
     pub b: Banked,
 }
@@ -1360,6 +1384,7 @@ impl Cartridge for Super700 {
 
 /// Mapper 61 (Tetris Family 9-in-1, HQ 15-in-1, 32-in-1): an address latch
 /// (INES_Mapper_061.wiki). CHR-RAM on GS-2017, unbanked. Power-on latch 0.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Latch61 {
     pub b: Banked,
     pub wide_chr: bool,
@@ -1414,6 +1439,7 @@ impl Cartridge for Latch61 {
 
 /// Mapper 380: the 970630C (0) and KN-35A (1) multicarts' address latch
 /// (NES_2.0_Mapper_380.wiki). Reset clears it.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Latch380 {
     pub b: Banked,
     pub submapper: u8,
@@ -1478,6 +1504,7 @@ impl Cartridge for Latch380 {
 }
 
 /// Mapper 389: the Caltron 9-in-1, all by address (NES_2.0_Mapper_389.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Caltron389 {
     pub b: Banked,
     pub outer: u16,
@@ -1532,6 +1559,7 @@ impl Cartridge for Caltron389 {
 
 /// Mapper 396: J.Y.'s YY850437C and Realtec's GN-51: UNROM with an outer bank
 /// (NES_2.0_Mapper_396.wiki; 396.3 starts in the last outer bank).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Yy850437c {
     pub b: Banked,
     pub submapper: u8,
@@ -1588,6 +1616,7 @@ impl Cartridge for Yy850437c {
 
 /// Mapper 400: retroUSB's 8-BIT XMAS 2017, UNROM 512's Christmas lights as a
 /// multicart (NES_2.0_Mapper_400.wiki; the LEDs and LCD are not modelled).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct RetroUsb400 {
     pub b: Banked,
     pub low_outer: u8,
@@ -1636,6 +1665,7 @@ impl Cartridge for RetroUsb400 {
 
 /// Mapper 409: retroUSB's DPCMcart: UNROM addressing 64 MiB by a 12-bit
 /// address latch at $C000-$CFFF (NES_2.0_Mapper_409.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct DpcmCart409 {
     pub b: Banked,
 }
@@ -1661,6 +1691,7 @@ impl Cartridge for DpcmCart409 {
 
 /// Mapper 471: Impact Soft's IM1 (Haratyler, Haraforce): mapper 201 with a
 /// scanline IRQ on every fall of PPU A12, unfiltered (NES_2.0_Mapper_471.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ImpactSoft471 {
     pub b: Banked,
     pub a12: u8,
@@ -1706,6 +1737,7 @@ impl Cartridge for ImpactSoft471 {
 
 /// Mapper 493: the Maxivision 30-in-1 prototype: mapper 11 with an outer bank
 /// (NES_2.0_Mapper_493.wiki). Vertical mirroring.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Maxivision493 {
     pub b: Banked,
     pub outer: u8,
@@ -1747,6 +1779,7 @@ impl Cartridge for Maxivision493 {
 
 /// Mapper 541: the LittleCom 160-in-1's address latch at $C000-$FFFF
 /// (NES_2.0_Mapper_541.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct LittleCom541 {
     pub b: Banked,
 }
@@ -1782,6 +1815,7 @@ impl Cartridge for LittleCom541 {
 }
 
 /// Mapper 81: NTDEC's N715021 (Super Gun; INES_Mapper_081.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Ntdec81 {
     pub b: Banked,
 }
@@ -1809,6 +1843,7 @@ impl Cartridge for Ntdec81 {
 
 /// Mapper 122: the JY043: 32 KiB of PRG and two 4 KiB CHR banks
 /// (INES_Mapper_122.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Jy043 {
     pub b: Banked,
 }
@@ -1840,6 +1875,7 @@ impl Cartridge for Jy043 {
 /// The reference's counter is the MMC3's attribute, 16 bits wide in the M2
 /// mode; here it is this board's own `counter` (the MMC3's `u8` one unused),
 /// and `clock_counter` is the MMC3's with it.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Sb5013 {
     pub m: Mmc3,
     pub two_kib: bool,

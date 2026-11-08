@@ -468,3 +468,95 @@ impl Bus for Board {
         self.write_byte(address, value, frame)
     }
 }
+
+// -- save states (state.rs) ---------------------------------------------------------
+
+/// The board's own state: what changes as it runs. Its configuration (the
+/// machine and the flags derived from it) stays as the system was built.
+#[derive(serde::Serialize, serde::Deserialize)]
+struct BoardFields {
+    #[serde(with = "serde_big_array::BigArray")]
+    ram: [u8; 0x800],
+    ppu: Vec<u8>,
+    apu: Vec<u8>,
+    analogue: Vec<u8>,
+    cart: Vec<u8>,
+    pads: [Vec<u8>; 2],
+    expansion: Option<Vec<u8>>,
+    microphone: bool,
+    t: i64,
+    data_bus: u8,
+    internal_bus: u8,
+    undriven: bool,
+    pad_oe: i32,
+    oam_dma_page: Option<u8>,
+    opcode_read: bool,
+    strobe: Option<u8>,
+    irq: bool,
+    nmi: bool,
+}
+
+impl Board {
+    /// The board's state (state.rs), the cartridge and devices included.
+    pub fn save_state(&self) -> Vec<u8> {
+        let fields = BoardFields {
+            ram: self.ram,
+            ppu: bincode::serialize(&self.ppu).expect("the PPU serializes"),
+            apu: bincode::serialize(&self.apu).expect("the APU serializes"),
+            analogue: bincode::serialize(&self.analogue).expect("the analogue stage serializes"),
+            cart: self.ppu.cart.save_state(),
+            pads: [self.pads[0].save_state(), self.pads[1].save_state()],
+            expansion: self.expansion.as_ref().map(|device| device.save_state()),
+            microphone: self.microphone,
+            t: self.t,
+            data_bus: self.data_bus,
+            internal_bus: self.internal_bus,
+            undriven: self.undriven,
+            pad_oe: self.pad_oe,
+            oam_dma_page: self.oam_dma_page,
+            opcode_read: self.opcode_read,
+            strobe: self.strobe,
+            irq: self.irq,
+            nmi: self.nmi,
+        };
+        bincode::serialize(&fields).expect("the board serializes")
+    }
+
+    /// Load a state [`Board::save_state`] wrote, inside `state::load_state`'s
+    /// context. The cartridge and devices must be of the types saved.
+    pub fn load_state(&mut self, data: &[u8]) -> Result<(), String> {
+        let fields: BoardFields = bincode::deserialize(data).map_err(|e| e.to_string())?;
+        let mut ppu: Ppu = bincode::deserialize(&fields.ppu).map_err(|e| e.to_string())?;
+        let apu: Apu = bincode::deserialize(&fields.apu).map_err(|e| e.to_string())?;
+        let analogue: AnalogueStage =
+            bincode::deserialize(&fields.analogue).map_err(|e| e.to_string())?;
+        if fields.expansion.is_some() != self.expansion.is_some() {
+            return Err("a state with other devices plugged".into());
+        }
+        // The cartridge stays this system's own object; its state is loaded into it.
+        std::mem::swap(&mut ppu.cart, &mut self.ppu.cart);
+        ppu.cart.load_state(&fields.cart)?;
+        for (pad, saved) in self.pads.iter_mut().zip(&fields.pads) {
+            pad.load_state(saved)?;
+        }
+        if let (Some(device), Some(saved)) = (self.expansion.as_mut(), &fields.expansion) {
+            device.load_state(saved)?;
+        }
+        self.ppu = ppu;
+        self.apu = apu;
+        self.analogue = analogue;
+        self.ram = fields.ram;
+        self.microphone = fields.microphone;
+        self.t = fields.t;
+        self.data_bus = fields.data_bus;
+        self.internal_bus = fields.internal_bus;
+        self.undriven = fields.undriven;
+        self.pad_oe = fields.pad_oe;
+        self.oam_dma_page = fields.oam_dma_page;
+        self.opcode_read = fields.opcode_read;
+        self.strobe = fields.strobe;
+        self.irq = fields.irq;
+        self.nmi = fields.nmi;
+        Ok(())
+    }
+}

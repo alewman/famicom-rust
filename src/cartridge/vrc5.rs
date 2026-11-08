@@ -44,6 +44,7 @@ pub fn kanji_tile(column: i64, row: i64, position: i64) -> i64 {
 
 /// Mapper 547: PRG, RAM and an IRQ like any Konami, and two banks for every
 /// tile (QTRAM picks, per background tile, the kanji ROM or CHR-RAM).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct QTa {
     pub b: Banked,
     pub kanji: Vec<u8>,

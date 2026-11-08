@@ -15,8 +15,10 @@ fn sprite_slot(slot: i64) -> bool {
     (32..40).contains(&slot)
 }
 
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Mmc5 {
     pub b: Banked,
+    #[serde(with = "serde_big_array::BigArray")]
     pub exram: [u8; 0x400],
     pub prg_mode: u8,
     /// $5113-$5117.

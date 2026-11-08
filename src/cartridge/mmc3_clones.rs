@@ -36,6 +36,7 @@ fn mmc3(image: RomImage, cpu_cycle_ticks: i64) -> Mmc3 {
 
 /// Mapper 45: the GA23C multicart ASIC, an MMC3 with four outer registers at
 /// $6000 (INES_Mapper_045.wiki; power-on values Mesen2's).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Ga23c {
     pub m: Mmc3,
     pub outer: [u8; 4],
@@ -117,6 +118,7 @@ impl Cartridge for Ga23c {
 /// Mapper 189: TXC's and Yoko Soft's MMC3 games with a 32 KiB PRG register
 /// (INES_Mapper_189.wiki); and its subclass, mapper 196 (MRCM's Mario hacks:
 /// the MMC3's A0 wired to another address line, INES_Mapper_196.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Prg32Override {
     pub m: Mmc3,
     pub bank32: Option<i64>,
@@ -288,6 +290,7 @@ const PROTECTION_158B: [[u8; 8]; 8] = [
 /// with an NROM override register and scrambling (INES_Mapper_114.wiki,
 /// INES_Mapper_215.wiki); and its subclass, mapper 258 (UNL-158B: 215's 8237
 /// with protection, from MAME's mmc3_clones.cpp).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct SuperGame {
     pub m: Mmc3,
     pub kind: u16,
@@ -500,6 +503,7 @@ fn reverse6(value: u8) -> u8 {
 }
 
 /// Mapper 121: Kǎshèng's A9711/A9713 protected boards (INES_Mapper_121.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct A9711 {
     pub m: Mmc3,
     /// The protection's PRG banks by CPU window (the reference's `overrides`).
@@ -628,6 +632,7 @@ const REWIRED_197: [[usize; 8]; 4] = [
 
 /// Mapper 197: Kǎshèng's mapper hacks, an MMC3 rewired for 512 KiB of CHR in
 /// 2/4 KiB banks (INES_Mapper_197.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Rewired197 {
     pub m: Mmc3,
     pub wiring: [usize; 8],
@@ -700,6 +705,7 @@ impl Cartridge for Rewired197 {
 
 /// Mapper 245: Waixing's F003, TNROM-like with the MMC3's CHR A11 as PRG A19
 /// (INES_Mapper_245.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct F003 {
     pub m: Mmc3,
 }
@@ -742,6 +748,7 @@ impl Cartridge for F003 {
 
 /// Mapper 165: an MMC3 with MMC2-style CHR latches and 4 KiB of CHR-RAM as
 /// page 0 (INES_Mapper_165.wiki; Mesen2's latch ranges).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Latched165 {
     pub m: Mmc3,
     pub latches: [u8; 2],
@@ -832,6 +839,7 @@ impl Cartridge for Latched165 {
 // -- T4A54A --------------------------------------------------------------------
 
 /// Mapper 134: the T4A54A / WX-KB4K / BS-5652 MMC3 multicart (INES_Mapper_134.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct T4a54a {
     pub m: Mmc3,
     pub outer: [u8; 3],
@@ -937,6 +945,7 @@ fn reset_txrom_sizes(submapper: u8) -> (i64, i64, i64) {
 
 /// NES 2.0 mapper 313 (BMC-RESET-TXROM): MMC3 multicarts whose game advances
 /// on each reset (NES_2.0_Mapper_313.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ResetTxRom {
     pub m: Mmc3,
     pub sizes: (i64, i64, i64),
@@ -1001,6 +1010,7 @@ impl Cartridge for ResetTxRom {
 
 /// NES 2.0 mapper 263 (UNL-KOF97): the MMC3 clone's A0 is CPU A12, the data
 /// lines shuffled (NES_2.0_Mapper_263.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Rex263 {
     pub m: Mmc3,
 }
@@ -1036,6 +1046,7 @@ impl Cartridge for Rex263 {
 
 /// Mapper 250 (Nitra): an MMC3 wired to the address bus: A0 is CPU A10, the
 /// data the address's low byte (INES_Mapper_250.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Nitra250 {
     pub m: Mmc3,
 }
@@ -1103,6 +1114,7 @@ const PROTECTION_208: [u8; 256] = {
 
 /// Mapper 208 (Street Fighter IV, Gouder): MMC3 CHR and IRQ, a 32 KiB PRG
 /// register, protection (INES_Mapper_208.wiki, FCEUX's implementation).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Gouder208 {
     pub m: Mmc3,
     pub plain: bool,
@@ -1191,6 +1203,7 @@ const JC016_BLOCKS: [(i64, i64, i64, i64); 4] = [
 ];
 
 /// Mapper 205 (BMC-JC-016-2): an MMC3 inside four blocks (INES_Mapper_205.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Jc016 {
     pub m: Mmc3,
     pub block: usize,
@@ -1244,6 +1257,7 @@ impl Cartridge for Jc016 {
 
 /// Mapper 12 (Gouder's SL-5020B): the Huang-1 as an MMC3A with CHR A18
 /// (INES_Mapper_012.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Sl5020b {
     pub m: Mmc3,
     pub chr_high: u8,
@@ -1298,6 +1312,7 @@ impl Cartridge for Sl5020b {
 
 /// NES 2.0 mapper 292 (Flying Star's Dragon Fighter): MMC3 PRG/IRQ, custom
 /// CHR banking (NES_2.0_Mapper_292.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Bmw8544 {
     pub m: Mmc3,
     pub extra: [u8; 2],
@@ -1374,6 +1389,7 @@ impl Cartridge for Bmw8544 {
 
 /// NES 2.0 mapper 513 (Mei Shaonu Meng Gongchang): MMC3, 32 KiB of CHR-RAM,
 /// an outer bank (NES_2.0_Mapper_513.wiki; bank 3 mirrors 2, as FCEUX).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Board513 {
     pub m: Mmc3,
 }
@@ -1434,6 +1450,7 @@ impl Cartridge for Board513 {
 
 /// Mapper 254 (Pikachu Y2K): MMC3 whose PRG-RAM reads are XORed until $8000
 /// is written (INES_Mapper_254.wiki, from MesenCE's source).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct XorRam254 {
     pub m: Mmc3,
     pub xor_mask: u8,
@@ -1486,6 +1503,7 @@ impl Cartridge for XorRam254 {
 
 /// NES 2.0 mapper 262 (UNL-SHERO: Sachen's Street Heroes): MMC3, CHR-ROM or
 /// -RAM, four screens (NES_2.0_Mapper_262.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct SachenShero {
     pub m: Mmc3,
     pub high: u8,
@@ -1560,6 +1578,7 @@ impl Cartridge for SachenShero {
 
 /// Mapper 52 ("Mario Party" 7-in-1 and kin): MMC3 with an outer register at
 /// $6000 (INES_Mapper_052.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Outer52 {
     pub m: Mmc3,
     pub outer: u8,
@@ -1638,6 +1657,7 @@ impl Cartridge for Outer52 {
 
 /// NES 2.0 mapper 260 (BMC-HPxx, BMC-HP2018-A multicarts) (NES_2.0_Mapper_260.wiki;
 /// its CNROM mode from FCEUX's source).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Hpxx260 {
     pub m: Mmc3,
     pub outer: [u8; 3],
@@ -1722,6 +1742,7 @@ impl Cartridge for Hpxx260 {
 
 /// Mapper 219 (Kǎshèng's A9461): an MMC3 with an extended mode
 /// (INES_Mapper_219.wiki, FCEUX's and Nestopia's implementations).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct A9461 {
     pub m: Mmc3,
     pub extended: bool,
@@ -1831,6 +1852,7 @@ impl Cartridge for A9461 {
 
 /// Mappers 126 (TEC9719), 422 (ING003C) and 534 (ING-022): MMC3 multicarts
 /// with four registers (NES_2.0_Mapper_534.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Ing003c {
     pub m: Mmc3,
     pub outer: [u8; 4],
@@ -1998,6 +2020,7 @@ impl Cartridge for Ing003c {
 
 /// NES 2.0 mapper 412 (Intellivision 10-in-1, Henggedianzi multicarts): MMC3
 /// plus NROM (NES_2.0_Mapper_412.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Henggedianzi412 {
     pub m: Mmc3,
     pub outer: [u8; 3],
@@ -2089,6 +2112,7 @@ impl Cartridge for Henggedianzi412 {
 
 /// Mapper 334: the 5/20-in-1 1993: the MMC3 does mirroring and CHR, a
 /// register does PRG (NES_2.0_Mapper_334.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Multicart334 {
     pub m: Mmc3,
     pub bank32: i64,
@@ -2143,6 +2167,7 @@ impl Cartridge for Multicart334 {
 
 /// Mapper 516: EduBank's Cocoma Pack: an MMC3 clone in a 128 KiB window with
 /// a PAL's outer bank (NES_2.0_Mapper_516.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Cocoma516 {
     pub m: Mmc3,
     pub outer: u8,
@@ -2193,6 +2218,7 @@ impl Cartridge for Cocoma516 {
 
 /// Mapper 512: Sachen's Zhongguo Daheng: an MMC3 clone, CHR-ROM and RAM, and
 /// four more pages (NES_2.0_Mapper_512.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Zhongguo512 {
     pub m: Mmc3,
     pub mode: u8,
@@ -2263,6 +2289,7 @@ impl Cartridge for Zhongguo512 {
 
 /// Mapper 399: BATMAP-000 (Star Versus): an MMC3's IRQ and mirroring with
 /// simpler banking (NES_2.0_Mapper_399.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Batmap399 {
     pub m: Mmc3,
     pub chr4: [u8; 2],
@@ -2327,6 +2354,7 @@ fn flash_cpu_read(m: &Mmc3, flash: &Flash, address: u16, t: i64) -> Option<u16> 
 
 /// Mapper 406: Haradius Zero: a homebrew TLROM saving high scores to flash
 /// (NES_2.0_Mapper_406.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Haradius406 {
     pub m: Mmc3,
     pub rewired: u8,
@@ -2380,6 +2408,7 @@ impl Cartridge for Haradius406 {
 
 /// Mapper 451: Haratyler HG/MP: an MMC3's IRQ behind address-decoded
 /// registers, and flash (NES_2.0_Mapper_451.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Haratyler451 {
     pub m: Mmc3,
     pub bank: u8,
@@ -2458,6 +2487,7 @@ const RINCO_MODES: [(i64, i64, i64, [i64; 2]); 3] = [
 
 /// Mapper 594: Rinco's Talkman 3-in-1, for the RS-7600 famiclone's speech
 /// hardware (NES_2.0_Mapper_594.wiki; the speech is not modelled).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Rinco594 {
     pub m: Mmc3,
     pub mode: usize,
@@ -2523,6 +2553,7 @@ impl Cartridge for Rinco594 {
 // -- ContraFighter238 ----------------------------------------------------------
 
 /// Mapper 238 (Contra Fighter): an MMC3 and a protection register (C68).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ContraFighter238 {
     pub m: Mmc3,
     pub protection: usize,

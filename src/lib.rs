@@ -20,6 +20,7 @@ pub mod joypad;
 pub mod machine;
 pub mod peripherals;
 pub mod ppu;
+pub mod state;
 pub mod system;
 pub mod testrom;
 pub mod video;

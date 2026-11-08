@@ -20,6 +20,7 @@ const TWO_KIB_CHR: [usize; 8] = [0, 0, 1, 1, 6, 6, 7, 7];
 /// Mappers 83.0 (256 KiB CHR), 83.1 (512 KiB, 2 KiB CHR banks), 83.2 (4-in-1
 /// with 32 KiB of PRG-NVRAM), 83.3 (4-in-1) and 264 (2-in-1; the ASIC's A9-A8
 /// are CPU A11-A10). The registers are described in the reference.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Cony {
     pub b: Banked,
     pub remapped: bool,

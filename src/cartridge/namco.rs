@@ -30,7 +30,7 @@ pub fn n163_db(submapper: u8) -> Option<f64> {
 /// CPU cycles per channel update (Namco_163_audio.wiki).
 pub const N163_UPDATE: u32 = 15;
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub enum Kind {
     /// Mapper 206.
     Namco108,
@@ -45,6 +45,7 @@ pub enum Kind {
 /// Mapper 206: Namco 108/109/118/119 and Tengen MIMIC-1, the MMC3's
 /// predecessor (INES_Mapper_206.wiki), and its boards 76, 88, 95, 154
 /// (INES_Mapper_076.wiki, _088, _154, _095).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Namco108 {
     pub b: Banked,
     pub kind: Kind,
@@ -144,8 +145,10 @@ impl Cartridge for Namco108 {
 /// Mapper 19: Namco 129/163: 1 KiB CHR banks, nametables from CIRAM or
 /// CHR-ROM, a cycle IRQ, and the wavetable sound (INES_Mapper_019.wiki,
 /// Namco_163_audio.wiki; the IRQ's count-while-enabled is Mesen2's reading).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Namco163 {
     pub b: Banked,
+    #[serde(with = "serde_big_array::BigArray")]
     pub chip_ram: [u8; 0x80],
     pub chip_address: u8,
     pub protect: u8,
@@ -361,6 +364,7 @@ const ARRANGEMENTS_340: [Mirroring; 4] = [SCREEN_A, VERTICAL, SCREEN_B, HORIZONT
 
 /// Mapper 210: Namco 175 (210.1) and 340 (210.2), the 163's banking without
 /// its extras (INES_Mapper_210.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Namco175 {
     pub b: Banked,
     pub is_340: bool,

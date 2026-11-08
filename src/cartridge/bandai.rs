@@ -18,7 +18,7 @@ use crate::banked_field;
 
 const ARRANGEMENTS: [Mirroring; 4] = [VERTICAL, HORIZONTAL, SCREEN_A, SCREEN_B];
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub enum Kind {
     /// Mapper 16 (and the LZ93D50 base of the others).
     Fcg,
@@ -34,6 +34,7 @@ pub enum Kind {
 /// Mapper 16: 16 KiB PRG and the last fixed, eight 1 KiB CHR banks, a 16-bit
 /// M2 counter (registers at $6000 on the FCG-1/2, $8000 on the LZ93D50; the
 /// counter's test-then-decrement order is Mesen2's, BandaiFcg.h).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct BandaiFcg {
     pub b: Banked,
     pub kind: Kind,
@@ -317,6 +318,7 @@ impl Cartridge for BandaiFcg {
 
 /// Mappers 70 and 152: a 74161 and a 7432, UNROM's PRG with a CHR bank on
 /// top (INES_Mapper_070.wiki, _152.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Bandai74161 {
     pub b: Banked,
     pub one_screen: bool,
@@ -366,6 +368,7 @@ impl Cartridge for Bandai74161 {
 /// Mapper 96: the Oeka Kids board: CHR-RAM banked by the nametable the PPU
 /// last moved to (INES_Mapper_096.wiki). The tablet itself is a device on
 /// the console's expansion port, not the cartridge's.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct OekaKids {
     pub b: Banked,
     pub outer: i64,
@@ -426,6 +429,7 @@ impl Cartridge for OekaKids {
 /// Mapper 188: Bandai's Karaoke Studio (M60001): 16 KiB PRG banks, internal
 /// or expansion ROM (INES_Mapper_188.wiki). The microphone at $6000-$7FFF
 /// reads idle: buttons released, the ADC silent.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Karaoke {
     pub b: Banked,
     pub internal_banks: i64,

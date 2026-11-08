@@ -33,14 +33,14 @@ use crate::banked_field;
 
 /// A mirroring the register file can select: Banked's, or `L_SHAPED` (one
 /// quadrant on the other CIRAM page: (0, 1, 1, 1) or (0, 0, 0, 1)).
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, serde::Serialize, serde::Deserialize)]
 enum Arrangement {
     Plain(Mirroring),
     LShaped,
 }
 use Arrangement::{LShaped as L_SHAPED, Plain};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub enum Variant {
     /// Mappers 138 (8259B), 141 (8259A) and 139 (8259C): a 32 KiB PRG bank,
     /// four 2 KiB CHR banks. 141 with CHR-RAM (Q-Boy) has 8 KiB unbanked.
@@ -55,6 +55,7 @@ pub enum Variant {
 }
 
 /// An index register at $4100 and eight 3-bit data registers at $4101 (mask $C101).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct SachenRegisterFile {
     pub b: Banked,
     pub variant: Variant,
@@ -224,6 +225,7 @@ impl Cartridge for SachenRegisterFile {
 
 /// Sachen's latches: 133 (SA-72008), 145 (SA-72007), 148 (SA-008-A), 149
 /// (SA-0036) (INES_Mapper_133/145/148/149.wiki). Power-on 0.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct SachenLatch {
     pub b: Banked,
     pub kind: u16,
@@ -267,6 +269,7 @@ impl Cartridge for SachenLatch {
 
 /// Mapper 143: NROM with a protection read (Dancing Blocks, Magical
 /// Mathematics; INES_Mapper_143.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Sachen143 {
     pub b: Banked,
 }
@@ -295,6 +298,7 @@ impl Cartridge for Sachen143 {
 
 /// Mapper 533: the Sachen 3014: CNROM whose latch reads back
 /// (NES_2.0_Mapper_533.wiki; here the latch wins at once).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Sachen3014 {
     pub b: Banked,
     pub latch: u8,
@@ -331,6 +335,7 @@ impl Cartridge for Sachen3014 {
 
 /// Mapper 553: Sachen's 3013 board (Dong Dongnao 1): NROM-128 whose
 /// $8000-$BFFF reads $3A (NES_2.0_Mapper_553.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Sachen3013 {
     pub b: Banked,
 }

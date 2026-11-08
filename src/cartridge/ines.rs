@@ -5,7 +5,7 @@ pub const MAGIC: &[u8; 4] = b"NES\x1a";
 /// What a cartridge's circuit is: everything a mapper needs besides the ROM.
 ///
 /// `mirroring` is nes20db's letter: 'H', 'V', '4' or '1'.
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub struct BoardInfo {
     pub mapper: u16,
     pub submapper: u8,
@@ -42,7 +42,7 @@ impl BoardInfo {
 }
 
 /// A cartridge file, split: header, trainer, PRG, CHR and anything after.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct RomImage {
     pub header: Vec<u8>,
     pub trainer: Vec<u8>,

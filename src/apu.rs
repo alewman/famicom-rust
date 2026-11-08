@@ -143,7 +143,7 @@ fn step_event(steps: &[(u32, u8)], cycle: u32) -> u8 {
 }
 
 /// APU_Envelope.wiki: a divider and a decay level, clocked on quarter frames.
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, serde::Serialize, serde::Deserialize)]
 pub struct Envelope {
     pub start: bool,
     pub looping: bool,
@@ -189,7 +189,7 @@ impl Envelope {
 }
 
 /// APU_Length_Counter.wiki, with blargg's two races.
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, serde::Serialize, serde::Deserialize)]
 pub struct LengthCounter {
     pub value: u8,
     pub halt: bool,
@@ -240,7 +240,7 @@ impl LengthCounter {
 }
 
 /// APU_Pulse.wiki and APU_Sweep.wiki.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct Pulse {
     pub ones_complement: bool,
     pub envelope: Envelope,
@@ -357,7 +357,7 @@ impl Pulse {
 }
 
 /// APU_Triangle.wiki. The timer counts CPU cycles.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct Triangle {
     pub length: LengthCounter,
     pub control: bool,
@@ -436,8 +436,9 @@ impl Default for Triangle {
 }
 
 /// APU_Noise.wiki: a 15-bit LFSR clocked by a timer counting APU cycles.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct Noise {
+    #[serde(skip, default = "crate::state::live_noise_periods")]
     pub periods: &'static [u16; 16],
     pub envelope: Envelope,
     pub length: LengthCounter,
@@ -505,8 +506,9 @@ impl Noise {
 }
 
 /// APU_DMC.wiki: the memory reader, sample buffer, output unit and IRQ flag.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct Dmc {
+    #[serde(skip, default = "crate::state::live_dmc_rates")]
     pub rates: &'static [u16; 16],
     pub irq_enabled: bool,
     pub looping: bool,
@@ -614,7 +616,9 @@ impl Dmc {
     }
 }
 
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Apu {
+    #[serde(skip, default = "crate::state::live_tables")]
     pub tables: Tables,
     /// Whether the current CPU cycle is an APU put; clock() flips it first.
     pub put: bool,
@@ -1091,6 +1095,7 @@ impl Apu {
 }
 
 /// The console's filters after the DAC, **fitted** (`apu.AnalogueStage`).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct AnalogueStage {
     highs: Vec<f64>,
     high_state: Vec<(f64, f64)>,

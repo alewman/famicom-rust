@@ -27,6 +27,7 @@ fn swap_d0_d1(value: u8) -> u8 {
     (value & !3) | ((value & 1) << 1) | ((value >> 1) & 1)
 }
 
+#[derive(serde::Serialize, serde::Deserialize)]
 pub enum Variant {
     /// Mapper 163: Nánjīng's FC-001, with a protection latch (F) at $5100/$5101.
     Fc001 { feedback: u8 },
@@ -42,6 +43,7 @@ pub enum Variant {
 /// What the four boards share: a 32 KiB PRG bank and unbanked 8 KiB CHR-RAM;
 /// the FC-001 and FS304 can make PPU A9, latched on PPU A13's last rise, CHR
 /// A12 for pattern fetches ($5000 D7).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct NanjingAsic {
     pub b: Banked,
     pub variant: Variant,

@@ -27,6 +27,7 @@ pub fn nrom_map(b: &mut Banked) {
 
 /// Mapper 2: a write to $8000-$FFFF selects the 16 KiB bank at $8000; $C000
 /// is the last. Submapper 2 has AND-type bus conflicts.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct UxRom {
     pub b: Banked,
     pub bus_conflicts: bool,
@@ -60,6 +61,7 @@ impl Cartridge for UxRom {
 }
 
 /// Mapper 3: a write to $8000-$FFFF selects the 8 KiB CHR bank.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct CnRom {
     pub b: Banked,
     pub bus_conflicts: bool,
@@ -95,6 +97,7 @@ impl Cartridge for CnRom {
 /// screen (D4). Also NES 2.0 mapper 470 (INX_007T_V01), AOROM with an outer
 /// 256 KiB bank at $5000-$5FFF that a reset clears: the reference's
 /// `AOROMMulticart` overrides `map_prg`, here `outer` is `Some`.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct AxRom {
     pub b: Banked,
     pub bus_conflicts: bool,
@@ -174,6 +177,7 @@ impl Cartridge for AxRom {
 
 /// Mapper 34.2: BNROM, a write to $8000-$FFFF selects the 32 KiB PRG bank;
 /// always AND-type bus conflicts.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct BnRom {
     pub b: Banked,
 }
@@ -192,6 +196,7 @@ impl Cartridge for BnRom {
 
 /// Mapper 34.1: NINA-001, registers at $7FFD-$7FFF written through to the
 /// PRG-RAM beneath.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Nina001 {
     pub b: Banked,
 }
@@ -231,6 +236,7 @@ pub fn mapper_34(image: RomImage, cpu_cycle_ticks: i64) -> Box<dyn Cartridge> {
 }
 
 /// Mapper 66: GxROM, PRG bank in D5-D4, CHR in D1-D0; always bus conflicts.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct GxRom {
     pub b: Banked,
 }
@@ -258,6 +264,7 @@ impl Cartridge for GxRom {
 
 /// Mapper 87: a write to $6000-$7FFF selects the 8 KiB CHR bank, its two
 /// bits swapped. Other writes go nowhere (the reference does not call super).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct J87 {
     pub b: Banked,
 }
@@ -281,6 +288,7 @@ impl Cartridge for J87 {
 }
 
 /// Mapper 185: CNROM whose CHR is enabled only by the right chip-select bits.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct CnRomProtected {
     pub b: Banked,
     pub enabling: Option<u8>,
@@ -323,6 +331,7 @@ impl Cartridge for CnRomProtected {
 }
 
 /// Mapper 94: HVC-UN1ROM, UxROM with the bank in D4-D2; always bus conflicts.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Un1Rom {
     pub u: UxRom,
 }
@@ -348,6 +357,7 @@ impl Cartridge for Un1Rom {
 }
 
 /// Mapper 180: UNROM with an AND gate, the first 16 KiB fixed, $C000 switched.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct UnRom180 {
     pub b: Banked,
     pub bus_conflicts: bool,
@@ -380,6 +390,7 @@ impl Cartridge for UnRom180 {
 }
 
 /// Mapper 13: NES-CPROM, 16 KiB of CHR-RAM in 4 KiB pages.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct CpRom {
     pub b: Banked,
 }
@@ -407,6 +418,7 @@ impl Cartridge for CpRom {
 }
 
 /// Mapper 30: UNROM 512, the homebrew board with self-flashing PRG.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct UnRom512 {
     pub b: Banked,
     pub submapper: u8,
@@ -545,6 +557,7 @@ impl Cartridge for UnRom512 {
 }
 
 /// Mapper 170 (Fujiya): NROM and a one-bit latch.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Fujiya170 {
     pub b: Banked,
     pub latch: u8,

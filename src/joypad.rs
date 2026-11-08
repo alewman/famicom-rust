@@ -9,7 +9,7 @@ pub const DOWN: u8 = 0x20;
 pub const LEFT: u8 = 0x40;
 pub const RIGHT: u8 = 0x80;
 
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, serde::Serialize, serde::Deserialize)]
 pub struct StandardController {
     /// Pressed buttons, the bits above.
     pub buttons: u8,

@@ -24,7 +24,7 @@ pub fn reverse6(value: u8) -> u8 {
 }
 
 /// The 05-00002-010: 3-bit P, R and output, S, increment (C) and invert (V).
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, serde::Serialize, serde::Deserialize)]
 pub struct TxcChip {
     pub p: u8,
     pub r: u8,
@@ -59,7 +59,7 @@ impl TxcChip {
 }
 
 /// The JV001: 6-bit input, register and output, mode and invert.
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, serde::Serialize, serde::Deserialize)]
 pub struct Jv001 {
     pub input: u8,
     pub register: u8,
@@ -90,7 +90,7 @@ impl Jv001 {
 }
 
 /// Either chip (the reference's duck-typed `self.chip`).
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub enum Chip {
     Txc(TxcChip),
     Jv001(Jv001),
@@ -138,6 +138,7 @@ impl Chip {
 /// A board with one of the chips at $4100-$4103 (mask $E103) and its output
 /// latched by writes to $8000-$FFFF, each board wiring the data bits and the
 /// outputs its own way (the reference lists each board's wiring).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ProtectedLatch {
     pub b: Banked,
     pub board: u16,

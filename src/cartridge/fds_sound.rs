@@ -39,7 +39,7 @@ pub const MOD_STEPS: [Option<i64>; 8] = [
 pub const MOD_READ: [u8; 8] = [0x0, 0x1, 0x2, 0x4, 0xC, 0xC, 0xE, 0xF];
 
 /// The volume ($4080) or mod depth ($4084) envelope.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct Envelope {
     pub speed: i64,
     pub increase: bool,
@@ -87,9 +87,10 @@ impl Envelope {
 }
 
 /// $4040-$408A and the readable $4090-$4097, clocked every CPU cycle.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct FdsSound {
     pub enabled: bool,
+    #[serde(with = "serde_big_array::BigArray")]
     pub wave: [u8; 64],
     pub wave_write: bool,
     pub master: usize,

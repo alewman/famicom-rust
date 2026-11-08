@@ -4,7 +4,7 @@
 //! Difference forced by Rust: the reference's flash keeps a reference to the
 //! cartridge's PRG bytes; here each call is handed them.
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct Flash {
     pub manufacturer: u8,
     pub device: u8,

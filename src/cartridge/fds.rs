@@ -36,6 +36,7 @@ pub const CRC_ENABLE: u8 = 64;
 pub const DISK_IRQ: u8 = 128;
 
 /// The RAM adapter with a disk image in its drive (`image.misc`: the `.fds` data).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Fds {
     pub b: Banked,
     pub bios: Vec<u8>,

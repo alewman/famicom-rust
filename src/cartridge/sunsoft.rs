@@ -15,6 +15,7 @@ const ARRANGEMENTS: [Mirroring; 4] = [VERTICAL, HORIZONTAL, SCREEN_A, SCREEN_B];
 
 /// Mapper 69: a command register ($8000) and its parameter ($A000)
 /// (Sunsoft_FME-7.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Fme7 {
     pub b: Banked,
     pub command: u8,
@@ -119,6 +120,7 @@ impl Cartridge for Fme7 {
 
 /// Mappers 89 (Sunsoft-2 on the Sunsoft-3 board) and 93 (on the Sunsoft-3R)
 /// (INES_Mapper_089.wiki, _093.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Sunsoft2 {
     pub b: Banked,
     pub sunsoft_3r: bool,
@@ -180,6 +182,7 @@ impl Cartridge for Sunsoft2 {
 
 /// Mapper 184: Sunsoft-1 on the Sunsoft-K board: two 4 KiB CHR banks from
 /// $6000-$7FFF (INES_Mapper_184.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Sunsoft1 {
     pub b: Banked,
 }
@@ -208,6 +211,7 @@ impl Cartridge for Sunsoft1 {
 
 /// Mapper 67: Sunsoft-3: 16 KiB PRG and the last fixed, four 2 KiB CHR
 /// banks, a cycle counter (INES_Mapper_067.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Sunsoft3 {
     pub b: Banked,
     pub counter: u16,
@@ -288,6 +292,7 @@ pub const LICENSING_CYCLES: u32 = 1024 * 105;
 
 /// Mapper 68.1's state: the Sunsoft Dual Cartridge System (Nantettatte!!
 /// Baseball; INES_Mapper_068.wiki, NES_2.0_submappers.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Dual {
     pub internal_banks: i64,
     pub cassette_banks: i64,
@@ -297,6 +302,7 @@ pub struct Dual {
 
 /// Mapper 68: Sunsoft-4: 16 KiB PRG and the last fixed, 2 KiB CHR banks,
 /// CHR-ROM nametables (INES_Mapper_068.wiki). With `dual`, 68.1.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Sunsoft4 {
     pub b: Banked,
     pub rom_nametables: bool,

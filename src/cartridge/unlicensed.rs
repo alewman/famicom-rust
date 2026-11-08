@@ -58,6 +58,7 @@ pub fn build(
 
 /// Mapper 11: a 74377 latch: `CCCCLLPP`, the 32 KiB PRG and 8 KiB CHR banks
 /// (Color_Dreams.wiki). Submapper 2 has AND-type bus conflicts.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ColorDreams {
     pub b: Banked,
     pub bus_conflicts: bool,
@@ -92,6 +93,7 @@ impl Cartridge for ColorDreams {
 
 /// Mappers 71 (BF9093/BF9097) and 232 (BF9096, the Quattro multicarts):
 /// UNROM-like (INES_Mapper_071.wiki, _232.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Camerica {
     pub b: Banked,
     pub quattro: bool,
@@ -161,6 +163,7 @@ impl Cartridge for Camerica {
 
 /// Mappers 79 (AVE NINA-03/06) and 113 (HES NTD-8), the register at
 /// $4100-$5FFF (NINA-003-006.wiki, INES_Mapper_113.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Nina03 {
     pub b: Banked,
     pub multicart: bool,
@@ -201,6 +204,7 @@ impl Cartridge for Nina03 {
 
 /// Mapper 168: Racermate Challenge II: UNROM with 64 KiB of CHR-RAM in 4 KiB
 /// banks, an M2 counter driving /IRQ and a battery half (INES_Mapper_168.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Racermate {
     pub b: Banked,
     pub held: bool,
@@ -293,6 +297,7 @@ impl Cartridge for Racermate {
 /// Mapper 228: Active Enterprises' Action 52 and Cheetahmen II: the address
 /// and data of a write latched (INES_Mapper_228.wiki); chip 2 of Action 52
 /// does not exist and reads open bus.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Action52 {
     pub b: Banked,
     pub three_chips: bool,
@@ -355,6 +360,7 @@ impl Cartridge for Action52 {
 
 /// Mapper 144 (Death Race): a Color Dreams board where the ROM's D0 always
 /// wins the conflict (INES_Mapper_144.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct DeathRace {
     pub c: ColorDreams,
 }
@@ -376,6 +382,7 @@ impl Cartridge for DeathRace {
 
 /// Mapper 41 (Caltron 6-in-1): an outer register in the address of
 /// $6000-$67FF writes (INES_Mapper_041.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Caltron41 {
     pub b: Banked,
     pub outer: u16,
@@ -430,6 +437,7 @@ impl Cartridge for Caltron41 {
 
 /// Mapper 38 (Bit Corp.'s Crime Busters): GNROM with the register at
 /// $7000-$7FFF, `....CCPP` (INES_Mapper_038.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct BitCorp38 {
     pub b: Banked,
 }
@@ -457,6 +465,7 @@ impl Cartridge for BitCorp38 {
 /// NES 2.0 mapper 487: AVE's NINA-08 (the unreleased Maxivision 30-in-1),
 /// an outer register at $4180 over NINA-03's or Color Dreams' inner one
 /// (NES_2.0_Mapper_487.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Nina08 {
     pub b: Banked,
     pub outer: u8,
@@ -514,6 +523,7 @@ impl Cartridge for Nina08 {
 
 /// Mapper 104 (Pegasus 5-in-1 / Golden Five): a write-protectable game
 /// register and an inner 16 KiB bank (PEGASUS_5_IN_1.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Pegasus104 {
     pub b: Banked,
     pub outer: u8,
@@ -558,6 +568,7 @@ impl Cartridge for Pegasus104 {
 
 /// Mapper 46 (Rumble Station 15-in-1): Color Dreams inside 64 KiB outer
 /// banks (INES_Mapper_046.wiki). No PRG-RAM; power-on and reset clear both.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct RumbleStation46 {
     pub b: Banked,
     pub outer: u8,
@@ -606,6 +617,7 @@ impl Cartridge for RumbleStation46 {
 
 /// Mapper 167 (Subor's computer learning cartridges): four registers, banks
 /// XORed in pairs (INES_Mapper_167.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Subor167 {
     pub b: Banked,
     pub regs: [u8; 4],
@@ -655,6 +667,7 @@ impl Cartridge for Subor167 {
 
 /// Mapper 216 (Bonza, Magic Jewelry II): a latch of the address; $5000 the
 /// SIM-card port (no card), $6000-$7FFF reads 0 (MAME's rcm.cpp, BSD-3).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Rcm216 {
     pub b: Banked,
 }

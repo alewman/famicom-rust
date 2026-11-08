@@ -12,6 +12,7 @@ use crate::banked_field;
 /// Mapper 9: 8 KiB PRG at $8000 (the last three fixed), two latched pairs of
 /// 4 KiB CHR banks. Mapper 10 (MMC4): 16 KiB PRG banking, both latches over a
 /// range.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Mmc2 {
     pub b: Banked,
     pub prg_bank_kib: usize,

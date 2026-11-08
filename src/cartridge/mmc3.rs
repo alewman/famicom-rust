@@ -17,6 +17,7 @@ use super::connector::Cartridge;
 use super::ines::RomImage;
 
 /// The MMC3's own state (the reference's `MMC3` attributes) and its `Banked`.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Mmc3 {
     pub b: Banked,
     pub nec_irq: bool,
@@ -216,6 +217,7 @@ macro_rules! mmc3_cartridge {
 // -- MMC3 itself, MC-ACC -------------------------------------------------------
 
 /// Mapper 4 (submappers 0, 2, 4): the MMC3.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Mmc3Board {
     pub m: Mmc3,
 }
@@ -244,6 +246,7 @@ impl Cartridge for Mmc3Board {
 }
 
 /// Submapper 4.3: MC-ACC, clocked on every eighth fall of A12, unfiltered.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct McAcc {
     pub m: Mmc3,
     pub prescaler: u8,
@@ -287,6 +290,7 @@ impl Cartridge for McAcc {
 // -- MMC6 ----------------------------------------------------------------------
 
 /// Submapper 4.1: MMC6, 1 KiB of PRG-RAM at $7000-$7FFF in two halves.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Mmc6 {
     pub m: Mmc3,
     pub protect: u8,
@@ -374,6 +378,7 @@ impl Cartridge for Mmc6 {
 // -- TxSROM ----------------------------------------------------------------------
 
 /// Mapper 118 (TKSROM, TLSROM): CHR A17 drives CIRAM A10.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct TxSrom {
     pub m: Mmc3,
     pub nametable_a10: [u8; 4],
@@ -420,6 +425,7 @@ impl Cartridge for TxSrom {
 // -- AA6023 ----------------------------------------------------------------------
 
 /// Mapper 268 (submappers 0/1, 8/9) and 224: the AA6023's outer banks.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Aa6023 {
     pub m: Mmc3,
     pub outer_base: u16,
@@ -525,6 +531,7 @@ pub fn mindkids_224(image: RomImage, cpu_cycle_ticks: i64) -> Aa6023 {
 // -- the multicarts 37 and 47 ------------------------------------------------------
 
 /// Mappers 37 and 47: Nintendo of Europe's MMC3 multicarts.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Mmc3Multicart {
     pub m: Mmc3,
     pub outer: u8,
@@ -606,6 +613,7 @@ impl Cartridge for Mmc3Multicart {
 // -- TQROM and NES-EVENT2 ------------------------------------------------------------
 
 /// TQROM's fields (the reference's `TQROM` attributes).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct TqFields {
     pub rom_size: usize,
     pub ram_window: [bool; 8],
@@ -637,6 +645,7 @@ pub fn tqrom_ppu_write(m: &mut Mmc3, tq: &TqFields, address: u16, value: u8, t: 
 }
 
 /// Mapper 119: TQROM, CHR-ROM and 8 KiB of CHR-RAM side by side.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct TqRom {
     pub m: Mmc3,
     pub tq: TqFields,
@@ -680,6 +689,7 @@ impl Cartridge for TqRom {
 }
 
 /// Mapper 555: NES-EVENT2, MMC3, TQROM and a timer.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Event2 {
     pub m: Mmc3,
     pub tq: TqFields,
@@ -798,6 +808,7 @@ impl Cartridge for Event2 {
 // -- Kǎshèng -------------------------------------------------------------------------
 
 /// Mapper 115: Kǎshèng's MMC3 clone with an NROM override and outer banks.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Kasheng {
     pub m: Mmc3,
     pub mode: u8,

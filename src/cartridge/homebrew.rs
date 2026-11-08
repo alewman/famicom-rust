@@ -40,6 +40,7 @@ pub fn build(
 
 /// Mapper 31: PRG-ROM in eight 4 KiB slots at $8000-$FFFF, as an NSF banks
 /// it (INES_Mapper_031.wiki); $F000's register powers on as $FF.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Nsf31 {
     pub b: Banked,
     /// Byte offsets into PRG of each 4 KiB slot.
@@ -84,6 +85,7 @@ impl Cartridge for Nsf31 {
 /// Mapper 28: Damian Yerrick's multicart mapper, which simulates NROM, CNROM,
 /// UxROM, BNROM and AxROM (Action_53_mapper.wiki). Power-on: the wiki's
 /// suggested boot state, $81 = $FF and $80 = $02.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Action53 {
     pub b: Banked,
     pub select: u8,
@@ -173,6 +175,7 @@ impl Cartridge for Action53 {
 /// Mapper 111: Membler Industries' Cheapocabra (GTROM.wiki): one 74377
 /// register (latched on reads too), the SST39SF040 as PRG, 32 KiB of RAM for
 /// CHR and four nametables. The PRG is flash, so it is the save.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Gtrom {
     pub b: Banked,
     pub flash: Flash,
@@ -270,6 +273,7 @@ impl Cartridge for Gtrom {
 /// Mapper 218 (Magic Floor, Starfight): no CHR memory: the console's CIRAM is
 /// the CHR-RAM, its A10 wired to PPU A10, A11, A12 or A13
 /// (INES_Mapper_218.wiki); the board answers with a 2 KiB RAM of its own.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct MagicFloor {
     pub b: Banked,
     pub a10_line: u32,
@@ -332,6 +336,7 @@ impl Cartridge for MagicFloor {
 /// NES 2.0 mapper 284: Quietust's FPGA for the port of Drip
 /// (UNIF_UNL-DripGame.wiki): banks, an extended attribute table and an M2
 /// down-counter; the sound channels are not modelled.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct DripGame {
     pub b: Banked,
     pub control: u8,
@@ -445,6 +450,7 @@ impl Cartridge for DripGame {
 
 /// Mapper 29: Sealie Computing's RET-CUFROM (Glider): UNROM-like with 32 KiB
 /// of CHR-RAM (INES_Mapper_029.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct SealieRet {
     pub b: Banked,
 }
@@ -481,6 +487,7 @@ impl Cartridge for SealieRet {
 /// Mapper 413 (Super Russian Roulette): BATMAP-SRR-X, a CPLD and a speech ROM
 /// (MAME's batlab.cpp, BSD-3): banks, an MMC3-like IRQ on PPU A12 (our guess
 /// at its clock) and a serial pointer into the Misc ROM.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct BatmapSrr {
     pub b: Banked,
     pub speech: Vec<u8>,

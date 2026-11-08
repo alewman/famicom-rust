@@ -42,6 +42,7 @@ pub const Z: i32 = 4;
 
 /// The core. `port_a`/`port_b` are the pins' inputs, set by the caller
 /// between cycles.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Pic16c54 {
     pub program: Vec<u16>,
     pub memory: [i32; 32],
@@ -359,6 +360,7 @@ impl Pic16c54 {
 /// Mapper 355 (3D-BLOCK): NROM-256 with CHR-RAM and a PIC16C54 watching the
 /// CPU's address bus at a quarter of M2 (NES_2.0_Mapper_355.wiki); RA0 drives
 /// /IRQ.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Block355 {
     pub b: Banked,
     pub pic: Pic16c54,

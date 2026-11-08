@@ -39,14 +39,14 @@ use crate::ppu::Ppu;
 use std::any::Any;
 use std::collections::HashSet;
 
-pub trait PortDevice {
+pub trait PortDevice: crate::state::Snapshot {
     fn set_strobe(&mut self, high: bool, ppu: &Ppu);
     fn read(&mut self, ppu: &Ppu) -> u8;
     fn clock(&mut self, ppu: &Ppu);
     fn as_any_mut(&mut self) -> &mut dyn Any;
 }
 
-pub trait ExpansionDevice {
+pub trait ExpansionDevice: crate::state::Snapshot {
     fn set_out(&mut self, value: u8, ppu: &Ppu);
     fn read(&mut self, port: usize, ppu: &Ppu) -> u8;
     fn clock(&mut self, port: usize, ppu: &Ppu);
@@ -93,7 +93,7 @@ impl Board {
 /// One port of a four-player adapter: two pads' reports, then a signature
 /// (Four_player_adapters.wiki). The Four Score answers on D0, the Hori 4
 /// Players Adapter on D1.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct TapPort {
     pub first: StandardController,
     pub second: StandardController,
@@ -191,7 +191,7 @@ pub fn four_score() -> [TapPort; 2] {
 /// The Hori 4 Players Adapter in 4-player mode, on the Famicom expansion port:
 /// the Four Score's protocol on D1, the signatures swapped. Player `n` of its
 /// own ports is [`TapPort::player`]`(&mut ports, n)`.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct HoriAdapter {
     pub ports: [TapPort; 2],
 }
@@ -227,7 +227,7 @@ impl ExpansionDevice for HoriAdapter {
 
 /// Two pads on the Famicom expansion port's D1 of $4016 and $4017: players 3
 /// and 4 of the "simple" adapters (JoyPair, Twin Adapter).
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, serde::Serialize, serde::Deserialize)]
 pub struct ExpansionPads {
     pub pads: [StandardController; 2],
 }
@@ -299,7 +299,7 @@ pub fn zapper_lines(palette: &[[u8; 3]]) -> Vec<f64> {
 /// The NES Zapper on a controller port: D3 = light (0: sensed), D4 = trigger
 /// (Zapper.wiki). The trigger's release holds the bit for 100 ms. `aim` is
 /// the picture pixel (x, y) the gun points at, or None off the screen.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct Zapper {
     pub aim: Option<(i64, i64)>,
     trigger: bool,
@@ -379,7 +379,7 @@ impl PortDevice for Zapper {
 }
 
 /// The Famicom's Zapper, on the expansion port: the NES Zapper's bits on $4017 only.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct FamicomZapper {
     pub zapper: Zapper,
 }
@@ -405,7 +405,7 @@ pub const VAUS_STEP_SECONDS: f64 = 0.007 / 512.0;
 
 /// The Vaus's knob and button, as both versions share them. `position` is
 /// the knob as the game reads it, 8 bits. Times are `ppu.time`.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct Vaus {
     pub position: i64,
     pub fire: bool,
@@ -503,7 +503,7 @@ impl Vaus {
 }
 
 /// The NES Vaus on a controller port: D3 = fire (1: pressed), D4 = knob data.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct VausNes {
     pub vaus: Vaus,
 }
@@ -525,7 +525,7 @@ impl PortDevice for VausNes {
 /// The Famicom Vaus on the expansion port: $4016 D1 = fire, $4017 D1 = knob
 /// data. `second`: the *Arkanoid II* controller's own expansion port's Vaus,
 /// on $4017 D3 (fire) and D4 (knob).
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct VausFamicom {
     pub vaus: Vaus,
     pub second: Option<Vaus>,
@@ -569,7 +569,7 @@ pub const POWER_PAD_HIGH: [u32; 4] = [4, 3, 12, 8];
 
 /// The Power Pad (Family Fun Fitness) on a controller port: two 4021s, on D3
 /// and D4. `buttons`: bit n-1 for button n (side B's numbers); pressed reads 1.
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, serde::Serialize, serde::Deserialize)]
 pub struct PowerPad {
     pub buttons: u32,
     pub strobe: bool,
@@ -621,7 +621,7 @@ impl PortDevice for PowerPad {
 /// The Family Trainer Mat (and the Tap-tap Mat) on the expansion port
 /// (Power_Pad.wiki "Family Trainer Mat"): OUT2-OUT0 = 1 leave out the top,
 /// middle and bottom rows; $4017 D4-D1 the columns, 0 when pressed.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct FamilyTrainer {
     pub buttons: u32,
     out: u8,
@@ -681,7 +681,7 @@ pub const KEYBOARD_MATRIX: [[[&str; 4]; 2]; 9] = [
 /// row 0, OUT1 selects the column and its fall moves to the next row, OUT2
 /// enables the matrix. $4017 D4-D1: the selected keys, 0 = held. `keys`: the
 /// held keys' names. `recorder`: a Data Recorder on its jacks.
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, serde::Serialize, serde::Deserialize)]
 pub struct FamilyBasicKeyboard {
     pub keys: HashSet<String>,
     pub recorder: Option<DataRecorder>,
@@ -742,7 +742,7 @@ impl ExpansionDevice for FamilyBasicKeyboard {
 /// Konami's Hyper Shot pair on the expansion port (Konami_Hyper_Shot.wiki):
 /// OUT1/OUT2 = 0 enable players 1/2; $4017 D1-D4: player 1 Run, Jump, player
 /// 2 Run, Jump. `buttons`: those four bits.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct KonamiHyperShot {
     pub buttons: u8,
     out: u8,
@@ -775,7 +775,7 @@ impl ExpansionDevice for KonamiHyperShot {
 /// The reference's `SerialReport`: latches a report when OUT0 falls and shifts
 /// it out, then `fill`; while OUT0 is high every read returns `fill`. `bit`
 /// is the data line. A device holds one and hands it the report at the fall.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct SerialReport {
     pub strobe: bool,
     pub bits: Vec<u8>,
@@ -827,7 +827,7 @@ fn msb_first(value: i64, width: u32) -> Vec<u8> {
 }
 
 /// Motion a host feeds in (`move_by`), taken whole at each report.
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, serde::Serialize, serde::Deserialize)]
 pub struct Pointer {
     pub left: bool,
     pub right: bool,
@@ -854,7 +854,7 @@ impl Pointer {
 /// A Super NES controller through an adapter (SNES_controller.wiki): 16 bits,
 /// B first, the last four 0, then 1s. `buttons`: B Y Select Start Up Down Left
 /// Right A X L R in bits 0-11.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct SnesController {
     pub serial: SerialReport,
     pub buttons: u16,
@@ -900,7 +900,7 @@ impl PortDevice for SnesController {
 /// The Super NES Mouse through an adapter (Super_NES_Mouse.wiki): 32 bits MSB
 /// first: $00; right, left, sensitivity, signature 0001; then Y and X as sign
 /// and magnitude. A clock while OUT0 is high steps the sensitivity.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct SnesMouse {
     pub serial: SerialReport,
     pub pointer: Pointer,
@@ -982,7 +982,7 @@ impl PortDevice for SnesMouse {
 
 /// The Subor Mouse (Subor_Mouse.wiki): 24 bits, bit 23 first: left, right, E,
 /// then up, down, left, right movement flags, then |X| and |Y| when E is 1.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct SuborMouse {
     pub serial: SerialReport,
     pub pointer: Pointer,
@@ -1018,7 +1018,7 @@ impl SuborMouse {
 /// The Macro Winners (GameStar) Mouse, and the Mega Book's
 /// (Macro_Winners_Mouse.wiki): one byte per strobe, MSB first; motion beyond
 /// one unit takes three.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct MacroWinnersMouse {
     pub serial: SerialReport,
     pub pointer: Pointer,
@@ -1070,7 +1070,7 @@ impl MacroWinnersMouse {
 /// The Yuxing Mouse (Yuxing_Mouse.wiki): a serial mouse with X and Y swapped,
 /// strobed by writing 0 then 1, its data inverted; three 9-bit packets. The
 /// data bits' order is taken as MSB first (UNVERIFIED).
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct YuxingMouse {
     pub serial: SerialReport,
     pub pointer: Pointer,
@@ -1151,7 +1151,7 @@ impl PortDevice for YuxingMouse {
 /// The Hori Track (Hori_Track.wiki) on the Famicom expansion port, $4016 D1
 /// (UNVERIFIED): its pad, A first; the two axes, signed 4 bits XOR $F; rotation
 /// mode, speed, ID; then 1s (UNVERIFIED). `pad`: its buttons.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct HoriTrack {
     pub serial: SerialReport,
     pub pointer: Pointer,
@@ -1246,7 +1246,7 @@ pub const SUBOR_MATRIX: [[&str; 8]; 13] = [
 /// suborkey: while OUT2 is 1, OUT1 selects the row's low or high four keys,
 /// its fall moves to the next row, OUT0 resets to row 0. $4017 D1-D4: the
 /// selected four keys, 0 = held.
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, serde::Serialize, serde::Deserialize)]
 pub struct SuborKeyboard {
     pub keys: HashSet<String>,
     pub row: usize,
@@ -1292,7 +1292,7 @@ impl ExpansionDevice for SuborKeyboard {
 /// ASCII's Turbo File (AS-TFO2) on the expansion port: 8 KiB of battery RAM a
 /// bit at a time (Turbo_File.wiki; MAME's turbofile.cpp, BSD-3). OUT1 = 0
 /// resets; a fall of OUT2 stores OUT0 and steps. $4017 D2: the current bit.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct TurboFile {
     pub data: Vec<u8>,
     pub locked: bool,
@@ -1347,7 +1347,7 @@ impl ExpansionDevice for TurboFile {
 }
 
 /// The Data Recorder's keys.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub enum TapeMode {
     Stop,
     Play,
@@ -1357,7 +1357,7 @@ pub enum TapeMode {
 /// The Family BASIC Data Recorder (HVC-008), or any cassette deck on its jacks
 /// (Family_BASIC_Data_Recorder.wiki): the tape is the list of level changes at
 /// master-tick positions. Times are `ppu.time`.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct DataRecorder {
     pub tape: Vec<(i64, u8)>,
     pub mode: TapeMode,
@@ -1421,7 +1421,7 @@ impl DataRecorder {
 /// Bandai's Hyper Shot on the expansion port (Bandai_Hyper_Shot.wiki): a pad
 /// on $4016 D1 (its A never reads pressed) and a Zapper on $4017 D3-D4 whose
 /// trigger reads 1 while fully pulled. OUT1 and OUT2: `rumble`, `sound`.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct BandaiHyperShot {
     pub pad: StandardController,
     pub zapper: Zapper,
@@ -1467,7 +1467,7 @@ impl ExpansionDevice for BandaiHyperShot {
 
 /// Yonezawa's Partytap on the expansion port (Partytap.wiki): six 1-button
 /// pads; after a strobe $4017 D2-D4 give buttons 1-3, then 4-6, then $14.
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, serde::Serialize, serde::Deserialize)]
 pub struct Partytap {
     pub buttons: u8,
     pub strobe: bool,
@@ -1507,7 +1507,7 @@ impl ExpansionDevice for Partytap {
 /// Konami's Exciting Boxing punching bag on the expansion port
 /// (Exciting_Boxing_Punching_Bag.wiki; active low, as MAME's konamibag.cpp):
 /// OUT1 picks the sensor group; `sensors`: bits 0-3 the first, 4-7 the second.
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, serde::Serialize, serde::Deserialize)]
 pub struct ExcitingBoxing {
     pub sensors: u8,
     group: u8,
@@ -1530,7 +1530,7 @@ impl ExpansionDevice for ExcitingBoxing {
 /// Coconuts Japan's pachinko controller (Hori CJPC-102) on the expansion port,
 /// $4016 D1 (Coconuts_Japan_Pachinko_Controller.wiki): its pad's 8 bits, a 1,
 /// then the dial inverted, MSB first, then 1s. `dial`: $03 (rest) to about $73.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct CoconutsPachinko {
     pub serial: SerialReport,
     pub pad: StandardController,
@@ -1592,7 +1592,7 @@ pub const JISSEN_MAHJONG_ROWS: [[&str; 8]; 3] = [
 /// Capcom's Jissen Mahjong controller on the expansion port
 /// (Jissen_Mahjong_controller.wiki): while OUT0 is 1, OUT2-OUT1 pick the row
 /// (0: rows 1 and 2 ORed); after the fall $4017 D1 gives 8 bits, then 1s.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct JissenMahjong {
     pub keys: HashSet<String>,
     pub strobe: bool,
@@ -1661,7 +1661,7 @@ impl ExpansionDevice for JissenMahjong {
 /// OUT0 = 0 latches a report; with OUT0 = 1 a rise of OUT1 moves to the next
 /// bit. $4017 D2: the acknowledgement; D3: the current bit inverted. The
 /// report, MSB first: X (0-239), Y (0-255), touching, clicking.
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, serde::Serialize, serde::Deserialize)]
 pub struct OekaKidsTablet {
     pub x: i64,
     pub y: i64,
@@ -1713,7 +1713,7 @@ impl ExpansionDevice for OekaKidsTablet {
 /// The Famicom 3D System's control box (Famicom_3D_System.wiki): OUT1 says
 /// which eye the next field is for (`eye`); it passes the expansion port
 /// through, here to `through` (players 3 and 4).
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, serde::Serialize, serde::Deserialize)]
 pub struct Famicom3DSystem {
     pub eye: u8,
     pub through: ExpansionPads,
@@ -1736,7 +1736,7 @@ impl ExpansionDevice for Famicom3DSystem {
 /// One port of the factory port test controller (Port_test_controller.wiki):
 /// a pad on D0, and a signature on D4 from a shift register that D3 taps two
 /// bits later. Port 1's signature is 1, 0, 1, 0... then 1s; port 2's the inverse.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct PortTestPort {
     pub pad: StandardController,
     pub strobe: bool,
@@ -1808,7 +1808,7 @@ pub fn rob_command(bits: u32) -> Option<&'static str> {
 /// (R.O.B..wiki): one bit per frame, bright 1 and black 0. `see` takes each
 /// frame the board drew. The decoded state: `height` 0-5, `turn` -2 to 2,
 /// `arms_closed`, `led`, `commands`.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct Rob {
     bright: Vec<bool>,
     bits: u32,
@@ -1816,7 +1816,7 @@ pub struct Rob {
     pub turn: i32,
     pub arms_closed: bool,
     pub led: bool,
-    pub commands: Vec<&'static str>,
+    pub commands: Vec<String>,
 }
 
 impl Rob {
@@ -1850,7 +1850,7 @@ impl Rob {
         let name = rob_command(command)?;
         self.bits = 0;
         self.act(name);
-        self.commands.push(name);
+        self.commands.push(name.to_string());
         Some(name)
     }
 
@@ -1978,7 +1978,7 @@ pub fn device_name(device: u8) -> Option<&'static str> {
 
 /// What [`plug`] put in, and where the device the player drives is: the
 /// reference's return value, as a place on the board.
-#[derive(Debug)]
+#[derive(Debug, serde::Serialize, serde::Deserialize)]
 pub enum Plugged {
     /// Standard pads, or a number not built here (the reference's None).
     None,

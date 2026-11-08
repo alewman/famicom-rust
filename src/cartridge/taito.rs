@@ -15,6 +15,7 @@ const TC0690_IRQ_DELAY: u8 = 4;
 
 /// Mapper 33: two 8 KiB PRG banks and the last two fixed; CHR 2 KiB x 2 and
 /// 1 KiB x 4 (INES_Mapper_033.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Tc0190 {
     pub b: Banked,
 }
@@ -60,6 +61,7 @@ impl Cartridge for Tc0190 {
 
 /// Mapper 48: Taito TC0690: TC0190's banks, the MMC3's scanline counter, a
 /// later /IRQ (INES_Mapper_048.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Tc0690 {
     pub m: Mmc3,
     pub irq_delay: u8,
@@ -157,6 +159,7 @@ impl Cartridge for Tc0690 {
 
 /// Mappers 80 and 207: Taito X1-005: 8 KiB PRG banks, 2 KiB and 1 KiB CHR,
 /// 128 bytes of RAM (Taito_X1-005.wiki; 207: INES_Mapper_207.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct X1005 {
     pub b: Banked,
     pub cart_nametables: bool,
@@ -254,6 +257,7 @@ impl Cartridge for X1005 {
 
 /// Mappers 82 and 552: Taito X1-017: 8 KiB PRG banks, CHR with A12
 /// inversion, 5 KiB of RAM, an IRQ (Taito_X1-017.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct X1017 {
     pub b: Banked,
     pub reversed_prg: bool,

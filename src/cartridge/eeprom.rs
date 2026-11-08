@@ -13,7 +13,7 @@ const WRITE: u8 = 3;
 const READ: u8 = 4;
 
 /// The 24C02, or with `x24c01` the X24C01.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct Eeprom {
     pub x24c01: bool,
     pub page: usize,
@@ -167,7 +167,7 @@ impl Eeprom {
 
 /// Microchip's 93C66 with ORG low (512 bytes), or the 93C56 with ORG high
 /// (128 16-bit words, big-endian here).
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct Microwire {
     pub size: usize,
     pub address_bits: u32,

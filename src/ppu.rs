@@ -42,7 +42,7 @@ pub const REVERSE: [u8; 256] = {
 };
 
 /// A register effect that lands some dots after the access.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub enum Event {
     WakeUp,
     TurnOff,
@@ -59,7 +59,7 @@ pub enum Event {
 
 /// A sprite FIFO lane: pattern low, pattern high, attribute, X counter, and
 /// the time the lane starts drawing.
-#[derive(Clone, Copy, Debug, Default)]
+#[derive(Clone, Copy, Debug, Default, serde::Serialize, serde::Deserialize)]
 pub struct Lane {
     pub lo: u8,
     pub hi: u8,
@@ -68,13 +68,18 @@ pub struct Lane {
     pub zero: i64,
 }
 
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Ppu {
+    #[serde(skip, default = "crate::state::live_timing")]
     pub timing: Timing,
+    #[serde(skip, default = "crate::state::empty_cart")]
     pub cart: Box<dyn Cartridge>,
     pub prerender_line: i32,
     pub dot_ticks: i64,
+    #[serde(with = "serde_big_array::BigArray")]
     pub ciram: [u8; 0x800],
     pub palette: [u8; 0x20],
+    #[serde(with = "serde_big_array::BigArray")]
     pub oam: [u8; 0x100],
     pub oam2: [u8; 32],
     /// The picture: 240 rows of 256 9-bit values.
@@ -132,6 +137,7 @@ pub struct Ppu {
     plan: [usize; 8],
     zh: bool,
     leaking: u8,
+    #[serde(with = "serde_big_array::BigArray")]
     pub sprite_line: [u8; WIDTH],
     vbl_suppress: bool,
     skip_sample: u8,

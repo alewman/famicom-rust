@@ -34,7 +34,7 @@ pub fn expansion_gain(db: f64, full_square: i32) -> f64 {
 }
 
 #[allow(unused_variables)]
-pub trait Cartridge {
+pub trait Cartridge: crate::state::Snapshot {
     /// The `Banked` this mapper is built on, if any.
     fn banked(&self) -> Option<&Banked> {
         None
@@ -132,6 +132,7 @@ pub trait Cartridge {
 }
 
 /// A cartridge with nothing in it (the connector's defaults).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Empty;
 
 impl Cartridge for Empty {}
