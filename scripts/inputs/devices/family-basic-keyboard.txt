@@ -1,0 +1,185 @@
+# Family BASIC: keys typed one at a time
+120 set - keys RETURN
+127 set - keys
+135 set - keys F1
+142 set - keys
+150 set - keys A
+157 set - keys
+165 set - keys S
+172 set - keys
+180 set - keys D
+187 set - keys
+195 set - keys F
+202 set - keys
+210 set - keys G
+217 set - keys
+225 set - keys H
+232 set - keys
+240 set - keys J
+247 set - keys
+255 set - keys K
+262 set - keys
+270 set - keys L
+277 set - keys
+285 set - keys 1
+292 set - keys
+300 set - keys 2
+307 set - keys
+315 set - keys 3
+322 set - keys
+330 set - keys 4
+337 set - keys
+345 set - keys 5
+352 set - keys
+360 set - keys SPACE
+367 set - keys
+375 set - keys RETURN
+382 set - keys
+390 set - keys STOP
+397 set - keys
+405 set - keys SPACE
+412 set - keys
+420 set - keys RETURN
+427 set - keys
+435 set - keys Q
+442 set - keys
+450 set - keys W
+457 set - keys
+465 set - keys E
+472 set - keys
+480 set - keys R
+487 set - keys
+495 set - keys T
+502 set - keys
+510 set - keys Y
+517 set - keys
+525 set - keys U
+532 set - keys
+540 set - keys I
+547 set - keys
+555 set - keys O
+562 set - keys
+570 set - keys P
+577 set - keys
+585 set - keys RETURN
+592 set - keys
+600 set - keys LEFT
+607 set - keys
+615 set - keys RIGHT
+622 set - keys
+630 set - keys UP
+637 set - keys
+645 set - keys DOWN
+652 set - keys
+660 set - keys CLR
+667 set - keys
+675 set - keys INS
+682 set - keys
+690 set - keys DEL
+697 set - keys
+705 set - keys ESC
+712 set - keys
+720 set - keys CTR
+727 set - keys
+735 set - keys GRPH
+742 set - keys
+750 set - keys KANA
+757 set - keys
+765 set - keys LSHIFT
+772 set - keys
+780 set - keys RSHIFT
+787 set - keys
+795 set - keys RETURN
+802 set - keys
+810 set - keys RETURN
+817 set - keys
+825 set - keys F1
+832 set - keys
+840 set - keys A
+847 set - keys
+855 set - keys S
+862 set - keys
+870 set - keys D
+877 set - keys
+885 set - keys F
+892 set - keys
+900 set - keys G
+907 set - keys
+915 set - keys H
+922 set - keys
+930 set - keys J
+937 set - keys
+945 set - keys K
+952 set - keys
+960 set - keys L
+967 set - keys
+975 set - keys 1
+982 set - keys
+990 set - keys 2
+997 set - keys
+1005 set - keys 3
+1012 set - keys
+1020 set - keys 4
+1027 set - keys
+1035 set - keys 5
+1042 set - keys
+1050 set - keys SPACE
+1057 set - keys
+1065 set - keys RETURN
+1072 set - keys
+1080 set - keys STOP
+1087 set - keys
+1095 set - keys SPACE
+1102 set - keys
+1110 set - keys RETURN
+1117 set - keys
+1125 set - keys Q
+1132 set - keys
+1140 set - keys W
+1147 set - keys
+1155 set - keys E
+1162 set - keys
+1170 set - keys R
+1177 set - keys
+1185 set - keys T
+1192 set - keys
+1200 set - keys Y
+1207 set - keys
+1215 set - keys U
+1222 set - keys
+1230 set - keys I
+1237 set - keys
+1245 set - keys O
+1252 set - keys
+1260 set - keys P
+1267 set - keys
+1275 set - keys RETURN
+1282 set - keys
+1290 set - keys LEFT
+1297 set - keys
+1305 set - keys RIGHT
+1312 set - keys
+1320 set - keys UP
+1327 set - keys
+1335 set - keys DOWN
+1342 set - keys
+1350 set - keys CLR
+1357 set - keys
+1365 set - keys INS
+1372 set - keys
+1380 set - keys DEL
+1387 set - keys
+1395 set - keys ESC
+1402 set - keys
+1410 set - keys CTR
+1417 set - keys
+1425 set - keys GRPH
+1432 set - keys
+1440 set - keys KANA
+1447 set - keys
+1455 set - keys LSHIFT
+1462 set - keys
+1470 set - keys RSHIFT
+1477 set - keys
+1485 set - keys RETURN
+1492 set - keys

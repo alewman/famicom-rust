@@ -1,0 +1,182 @@
+# A Zapper on $4016: shots across the picture
+120 set - aim 17 40
+122 set - trigger 1
+128 set - trigger 0
+150 set - aim 70 77
+152 set - trigger 1
+158 set - trigger 0
+180 set - aim 123 114
+182 set - trigger 1
+188 set - trigger 0
+210 set - aim 176 151
+212 set - trigger 1
+218 set - trigger 0
+240 set - aim 229 188
+242 set - trigger 1
+248 set - trigger 0
+270 set - aim 26 65
+272 set - trigger 1
+278 set - trigger 0
+300 set - aim 79 102
+302 set - trigger 1
+308 set - trigger 0
+330 set - aim 132 139
+332 set - trigger 1
+338 set - trigger 0
+360 set - aim 185 176
+362 set - trigger 1
+368 set - trigger 0
+390 set - aim 238 53
+392 set - trigger 1
+398 set - trigger 0
+420 set - aim 35 90
+422 set - trigger 1
+428 set - trigger 0
+450 set - aim 88 127
+452 set - trigger 1
+458 set - trigger 0
+480 set - aim 141 164
+482 set - trigger 1
+488 set - trigger 0
+510 set - aim 194 41
+512 set - trigger 1
+518 set - trigger 0
+540 set - aim 247 78
+542 set - trigger 1
+548 set - trigger 0
+570 set - aim 44 115
+572 set - trigger 1
+578 set - trigger 0
+600 set - aim 97 152
+602 set - trigger 1
+608 set - trigger 0
+630 set - aim 150 189
+632 set - trigger 1
+638 set - trigger 0
+660 set - aim 203 66
+662 set - trigger 1
+668 set - trigger 0
+690 set - aim 0 103
+692 set - trigger 1
+698 set - trigger 0
+720 set - aim 53 140
+722 set - trigger 1
+728 set - trigger 0
+750 set - aim 106 177
+752 set - trigger 1
+758 set - trigger 0
+780 set - aim 159 54
+782 set - trigger 1
+788 set - trigger 0
+810 set - aim 212 91
+812 set - trigger 1
+818 set - trigger 0
+840 set - aim 9 128
+842 set - trigger 1
+848 set - trigger 0
+870 set - aim 62 165
+872 set - trigger 1
+878 set - trigger 0
+900 set - aim 115 42
+902 set - trigger 1
+908 set - trigger 0
+930 set - aim 168 79
+932 set - trigger 1
+938 set - trigger 0
+960 set - aim 221 116
+962 set - trigger 1
+968 set - trigger 0
+990 set - aim 18 153
+992 set - trigger 1
+998 set - trigger 0
+1020 set - aim 71 190
+1022 set - trigger 1
+1028 set - trigger 0
+1050 set - aim 124 67
+1052 set - trigger 1
+1058 set - trigger 0
+1080 set - aim 177 104
+1082 set - trigger 1
+1088 set - trigger 0
+1110 set - aim 230 141
+1112 set - trigger 1
+1118 set - trigger 0
+1140 set - aim 27 178
+1142 set - trigger 1
+1148 set - trigger 0
+1170 set - aim 80 55
+1172 set - trigger 1
+1178 set - trigger 0
+1200 set - aim 133 92
+1202 set - trigger 1
+1208 set - trigger 0
+1230 set - aim 186 129
+1232 set - trigger 1
+1238 set - trigger 0
+1260 set - aim 239 166
+1262 set - trigger 1
+1268 set - trigger 0
+1290 set - aim 36 43
+1292 set - trigger 1
+1298 set - trigger 0
+1320 set - aim 89 80
+1322 set - trigger 1
+1328 set - trigger 0
+1350 set - aim 142 117
+1352 set - trigger 1
+1358 set - trigger 0
+1380 set - aim 195 154
+1382 set - trigger 1
+1388 set - trigger 0
+1410 set - aim 248 191
+1412 set - trigger 1
+1418 set - trigger 0
+1440 set - aim 45 68
+1442 set - trigger 1
+1448 set - trigger 0
+1470 set - aim 98 105
+1472 set - trigger 1
+1478 set - trigger 0
+1500 set - aim 151 142
+1502 set - trigger 1
+1508 set - trigger 0
+1530 set - aim 204 179
+1532 set - trigger 1
+1538 set - trigger 0
+1560 set - aim 1 56
+1562 set - trigger 1
+1568 set - trigger 0
+1590 set - aim 54 93
+1592 set - trigger 1
+1598 set - trigger 0
+1620 set - aim 107 130
+1622 set - trigger 1
+1628 set - trigger 0
+1650 set - aim 160 167
+1652 set - trigger 1
+1658 set - trigger 0
+1680 set - aim 213 44
+1682 set - trigger 1
+1688 set - trigger 0
+1710 set - aim 10 81
+1712 set - trigger 1
+1718 set - trigger 0
+1740 set - aim 63 118
+1742 set - trigger 1
+1748 set - trigger 0
+1770 set - aim 116 155
+1772 set - trigger 1
+1778 set - trigger 0
+1800 set - aim 169 192
+1802 set - trigger 1
+1808 set - trigger 0
+1830 set - aim 222 69
+1832 set - trigger 1
+1838 set - trigger 0
+1860 set - aim 19 106
+1862 set - trigger 1
+1868 set - trigger 0
+1890 set - aim 72 143
+1892 set - trigger 1
+1898 set - trigger 0
+1920 set - aim none

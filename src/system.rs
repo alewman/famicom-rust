@@ -3,6 +3,7 @@
 use crate::board::Board;
 use crate::cartridge::{self, BoardInfo, Loaded, RomImage};
 use crate::machine::Machine;
+use crate::peripherals;
 use sixfiveohtwo::Mos6502;
 use std::path::Path;
 
@@ -75,6 +76,18 @@ impl System {
 
     pub fn board(&mut self) -> &mut Board {
         &mut self.cpu.bus
+    }
+
+    /// Put in the devices of NES 2.0 expansion number `device` (None: the
+    /// cartridge's, from its header or nes20db); where the one to drive is,
+    /// as [`peripherals::plug`] returns it.
+    pub fn plug(&mut self, device: Option<u8>) -> peripherals::Plugged {
+        let device = match device {
+            Some(device) => device,
+            None => self.image.as_ref().map_or(0, |image| image.board.expansion),
+        };
+        let famicom = self.cpu.bus.machine.famicom_expansion_port;
+        peripherals::plug(&mut self.cpu.bus, device, famicom, None)
     }
 
     // -- power and reset ---------------------------------------------------

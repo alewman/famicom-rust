@@ -1,0 +1,189 @@
+# Subor Keyboard: keys typed one at a time, pad Start too
+60 0 08
+66 0 00
+120 0 08
+126 0 00
+180 0 08
+186 0 00
+240 0 08
+246 0 00
+300 set - keys ENTER
+307 set - keys
+315 set - keys F1
+322 set - keys
+330 set - keys A
+337 set - keys
+345 set - keys S
+352 set - keys
+360 set - keys D
+367 set - keys
+375 set - keys F
+382 set - keys
+390 set - keys G
+397 set - keys
+405 set - keys H
+412 set - keys
+420 set - keys J
+427 set - keys
+435 set - keys K
+442 set - keys
+450 set - keys L
+457 set - keys
+465 set - keys 1
+472 set - keys
+480 set - keys 2
+487 set - keys
+495 set - keys 3
+502 set - keys
+510 set - keys 4
+517 set - keys
+525 set - keys 5
+532 set - keys
+540 set - keys SPACE
+547 set - keys
+555 set - keys ENTER
+562 set - keys
+570 set - keys ESC
+577 set - keys
+585 set - keys SPACE
+592 set - keys
+600 set - keys ENTER
+607 set - keys
+615 set - keys Q
+622 set - keys
+630 set - keys W
+637 set - keys
+645 set - keys E
+652 set - keys
+660 set - keys R
+667 set - keys
+675 set - keys T
+682 set - keys
+690 set - keys Y
+697 set - keys
+705 set - keys U
+712 set - keys
+720 set - keys I
+727 set - keys
+735 set - keys O
+742 set - keys
+750 set - keys P
+757 set - keys
+765 set - keys ENTER
+772 set - keys
+780 set - keys LEFT
+787 set - keys
+795 set - keys RIGHT
+802 set - keys
+810 set - keys UP
+817 set - keys
+825 set - keys DOWN
+832 set - keys
+840 set - keys TAB
+847 set - keys
+855 set - keys DELETE
+862 set - keys
+870 set - keys BACKSPACE
+877 set - keys
+885 set - keys KP1
+892 set - keys
+900 set - keys KP2
+907 set - keys
+915 set - keys F12
+922 set - keys
+930 set - keys NUMLOCK
+937 set - keys
+945 set - keys LSHIFT
+952 set - keys
+960 set - keys ENTER
+967 set - keys
+975 set - keys ENTER
+982 set - keys
+990 set - keys F1
+997 set - keys
+1005 set - keys A
+1012 set - keys
+1020 set - keys S
+1027 set - keys
+1035 set - keys D
+1042 set - keys
+1050 set - keys F
+1057 set - keys
+1065 set - keys G
+1072 set - keys
+1080 set - keys H
+1087 set - keys
+1095 set - keys J
+1102 set - keys
+1110 set - keys K
+1117 set - keys
+1125 set - keys L
+1132 set - keys
+1140 set - keys 1
+1147 set - keys
+1155 set - keys 2
+1162 set - keys
+1170 set - keys 3
+1177 set - keys
+1185 set - keys 4
+1192 set - keys
+1200 set - keys 5
+1207 set - keys
+1215 set - keys SPACE
+1222 set - keys
+1230 set - keys ENTER
+1237 set - keys
+1245 set - keys ESC
+1252 set - keys
+1260 set - keys SPACE
+1267 set - keys
+1275 set - keys ENTER
+1282 set - keys
+1290 set - keys Q
+1297 set - keys
+1305 set - keys W
+1312 set - keys
+1320 set - keys E
+1327 set - keys
+1335 set - keys R
+1342 set - keys
+1350 set - keys T
+1357 set - keys
+1365 set - keys Y
+1372 set - keys
+1380 set - keys U
+1387 set - keys
+1395 set - keys I
+1402 set - keys
+1410 set - keys O
+1417 set - keys
+1425 set - keys P
+1432 set - keys
+1440 set - keys ENTER
+1447 set - keys
+1455 set - keys LEFT
+1462 set - keys
+1470 set - keys RIGHT
+1477 set - keys
+1485 set - keys UP
+1492 set - keys
+1500 set - keys DOWN
+1507 set - keys
+1515 set - keys TAB
+1522 set - keys
+1530 set - keys DELETE
+1537 set - keys
+1545 set - keys BACKSPACE
+1552 set - keys
+1560 set - keys KP1
+1567 set - keys
+1575 set - keys KP2
+1582 set - keys
+1590 set - keys F12
+1597 set - keys
+1605 set - keys NUMLOCK
+1612 set - keys
+1620 set - keys LSHIFT
+1627 set - keys
+1635 set - keys ENTER
+1642 set - keys

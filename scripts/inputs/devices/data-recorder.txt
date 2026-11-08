@@ -1,0 +1,230 @@
+# Family BASIC: SAVE to the Data Recorder, NEW, LOAD it back, LIST
+100 set - keys RETURN
+106 set - keys
+130 set - keys RETURN
+136 set - keys
+160 set - keys RETURN
+166 set - keys
+190 set - keys RETURN
+196 set - keys
+220 set - keys RETURN
+226 set - keys
+250 set - keys RETURN
+256 set - keys
+280 set - keys RETURN
+286 set - keys
+310 set - keys RETURN
+316 set - keys
+340 set - keys RETURN
+346 set - keys
+370 set - keys RETURN
+376 set - keys
+400 set - keys RETURN
+406 set - keys
+430 set - keys RETURN
+436 set - keys
+460 set - keys RETURN
+466 set - keys
+490 set - keys RETURN
+496 set - keys
+520 set - keys RETURN
+526 set - keys
+550 set - keys RETURN
+556 set - keys
+580 set - keys RETURN
+586 set - keys
+610 set - keys RETURN
+616 set - keys
+640 set - keys RETURN
+646 set - keys
+670 set - keys RETURN
+676 set - keys
+700 set - keys RETURN
+706 set - keys
+730 set - keys RETURN
+736 set - keys
+760 set - keys RETURN
+766 set - keys
+790 set - keys RETURN
+796 set - keys
+820 set - keys RETURN
+826 set - keys
+850 set - keys RETURN
+856 set - keys
+880 set - keys RETURN
+886 set - keys
+910 set - keys RETURN
+916 set - keys
+940 set - keys RETURN
+946 set - keys
+970 set - keys RETURN
+976 set - keys
+1000 set - keys RETURN
+1006 set - keys
+1030 set - keys RETURN
+1036 set - keys
+1060 set - keys RETURN
+1066 set - keys
+1090 set - keys RETURN
+1096 set - keys
+1120 set - keys RETURN
+1126 set - keys
+1150 set - keys RETURN
+1156 set - keys
+1180 set - keys RETURN
+1186 set - keys
+1210 set - keys RETURN
+1216 set - keys
+1240 set - keys RETURN
+1246 set - keys
+1270 set - keys RETURN
+1276 set - keys
+1300 set - keys RETURN
+1306 set - keys
+1330 set - keys RETURN
+1336 set - keys
+1360 set - keys RETURN
+1366 set - keys
+1390 set - keys RETURN
+1396 set - keys
+1420 set - keys RETURN
+1426 set - keys
+1450 set - keys RETURN
+1456 set - keys
+1480 set - keys RETURN
+1486 set - keys
+1510 set - keys RETURN
+1516 set - keys
+1540 set - keys RETURN
+1546 set - keys
+1570 set - keys RETURN
+1576 set - keys
+1600 set - keys RETURN
+1606 set - keys
+1630 set - keys RETURN
+1636 set - keys
+1660 set - keys RETURN
+1666 set - keys
+1690 set - keys RETURN
+1696 set - keys
+1720 set - keys RETURN
+1726 set - keys
+1750 set - keys RETURN
+1756 set - keys
+1780 set - keys RETURN
+1786 set - keys
+1810 set - keys RETURN
+1816 set - keys
+1840 set - keys RETURN
+1846 set - keys
+1870 set - keys RETURN
+1876 set - keys
+1900 set - keys RETURN
+1906 set - keys
+1930 set - keys RETURN
+1936 set - keys
+1960 set - keys RETURN
+1966 set - keys
+1990 set - keys RETURN
+1996 set - keys
+2020 set - keys RETURN
+2026 set - keys
+2050 set - keys RETURN
+2056 set - keys
+2080 set - keys RETURN
+2086 set - keys
+2110 set - keys RETURN
+2116 set - keys
+2140 set - keys RETURN
+2146 set - keys
+2170 set - keys RETURN
+2176 set - keys
+2200 set - keys RETURN
+2206 set - keys
+2230 set - keys RETURN
+2236 set - keys
+2260 set - keys RETURN
+2266 set - keys
+2290 set - keys RETURN
+2296 set - keys
+2320 set - keys RETURN
+2326 set - keys
+2350 set - keys RETURN
+2356 set - keys
+2380 set - keys RETURN
+2386 set - keys
+2410 set - keys RETURN
+2416 set - keys
+2440 set - keys RETURN
+2446 set - keys
+2470 set - keys RETURN
+2476 set - keys
+2610 set - keys F1
+2616 set - keys
+2650 set - keys RETURN
+2656 set - keys
+3310 set - keys 1
+3316 set - keys
+3450 set - keys 1
+3455 set - keys
+3462 set - keys 0
+3467 set - keys
+3474 set - keys SPACE
+3479 set - keys
+3486 set - keys P
+3491 set - keys
+3498 set - keys R
+3503 set - keys
+3510 set - keys I
+3515 set - keys
+3522 set - keys N
+3527 set - keys
+3534 set - keys T
+3539 set - keys
+3546 set - keys SPACE
+3551 set - keys
+3558 set - keys 7
+3563 set - keys
+3570 set - keys RETURN
+3575 set - keys
+3582 set recorder record
+3592 set - keys S
+3597 set - keys
+3604 set - keys A
+3609 set - keys
+3616 set - keys V
+3621 set - keys
+3628 set - keys E
+3633 set - keys
+3640 set - keys RETURN
+3645 set - keys
+5500 set recorder stop
+5510 set - keys N
+5515 set - keys
+5522 set - keys E
+5527 set - keys
+5534 set - keys W
+5539 set - keys
+5546 set - keys RETURN
+5551 set - keys
+5558 set recorder play
+5568 set - keys L
+5573 set - keys
+5580 set - keys O
+5585 set - keys
+5592 set - keys A
+5597 set - keys
+5604 set - keys D
+5609 set - keys
+5616 set - keys RETURN
+5621 set - keys
+7500 set - keys L
+7505 set - keys
+7512 set - keys I
+7517 set - keys
+7524 set - keys S
+7529 set - keys
+7536 set - keys T
+7541 set - keys
+7548 set - keys RETURN
+7553 set - keys
