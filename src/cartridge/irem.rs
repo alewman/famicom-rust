@@ -15,6 +15,7 @@ use crate::banked_field;
 
 /// Mapper 32: two 8 KiB PRG banks (one movable), the last two fixed; eight 1
 /// KiB CHR banks (INES_Mapper_032.wiki; submapper 1, Major League, one screen).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct G101 {
     pub b: Banked,
     pub major_league: bool,
@@ -77,6 +78,7 @@ impl Cartridge for G101 {
 
 /// Mapper 77: Irem LROG017 (Napoleon Senki): CHR-ROM, CHR-RAM and cartridge
 /// nametables (INES_Mapper_077.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Lrog017 {
     pub b: Banked,
     pub rom: Vec<u8>,
@@ -135,6 +137,7 @@ impl Cartridge for Lrog017 {
 
 /// Mapper 97: Irem TAM-S1 (Kaiketsu Yanchamaru): the last 16 KiB at $8000,
 /// $C000 switched (INES_Mapper_097.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct TamS1 {
     pub b: Banked,
 }
@@ -171,6 +174,7 @@ impl Cartridge for TamS1 {
 /// Mapper 65: Irem H3001: three 8 KiB PRG banks, eight 1 KiB CHR banks, a
 /// cycle counter (INES_Mapper_065.wiki). The base class's state; also the
 /// plain board.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct H3001 {
     pub b: Banked,
     pub prg_mode: u8,

@@ -16,10 +16,9 @@
 //! multiasic's `HostVRC4`, chinese's embedded VRC2b) build the same way from
 //! [`Vrc24::state`] and [`vrc4e`].
 //!
-//! **The VRC7's sound** is the external `ym2413_python` OPLL (the DS1001),
-//! not transcribed here: [`OpllPlaceholder`] stands in for it with the same
-//! calls and drives level 0, so a VRC7 differs from the reference in its
-//! sound alone.
+//! **The VRC7's sound** is ym2413-rust's OPLL as the DS1001, transcribed
+//! from (and proven equivalent to) the `ym2413_python` the reference uses,
+//! driven with the reference's calls.
 
 use super::banked::{Banked, Mirroring, HORIZONTAL, SCREEN_A, SCREEN_B, VERTICAL};
 use super::connector::{expansion_gain, Cartridge};
@@ -46,6 +45,7 @@ pub fn vrc4e(image: RomImage) -> RomImage {
 
 /// Mapper 75: three 8 KiB PRG banks and the last fixed; two 4 KiB CHR banks
 /// of five bits (VRC1.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Vrc1 {
     pub b: Banked,
     pub chr_banks: [u8; 2],
@@ -103,6 +103,7 @@ impl Cartridge for Vrc1 {
 
 /// Mapper 73: VRC3 (Salamander): 16 KiB PRG and the last fixed, 8 KiB
 /// CHR-RAM, a cycle counter (VRC3.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Vrc3 {
     pub b: Banked,
     pub reload: u32,
@@ -183,7 +184,7 @@ impl Cartridge for Vrc3 {
 /// The VRC4/VRC6/VRC7 IRQ (VRC_IRQ.wiki): an 8-bit up-counter clocked by CPU
 /// cycles, through a 114/114/113 prescaler in scanline mode. `irq` is the
 /// mapper's /IRQ (the reference's `self.irq`, shared with the subclasses).
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct VrcIrq {
     pub irq: bool,
     pub latch: u8,
@@ -290,6 +291,7 @@ pub fn vrc_wiring(mapper: u16, submapper: u8) -> Option<(&'static [u32], &'stati
 
 /// Mappers 21, 22, 23, 25: VRC2 and VRC4, told apart and wired by mapper and
 /// submapper (VRC2_and_VRC4.wiki). The base class's state; also the plain board.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Vrc24 {
     pub b: Banked,
     pub vrc_irq: VrcIrq,
@@ -517,7 +519,7 @@ impl Cartridge for Vrc24 {
 // -- VRC6 ------------------------------------------------------------------------
 
 /// VRC6_audio.wiki: a 12-bit divider clocking a 16-step duty generator, 15 down to 0.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct Vrc6Pulse {
     /// MDDD VVVV
     pub control: u8,
@@ -566,7 +568,7 @@ impl Default for Vrc6Pulse {
 
 /// VRC6_audio.wiki: the same divider clocking an accumulator that adds its
 /// rate on every second clock, six times, and clears on the fourteenth.
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug, Default, serde::Serialize, serde::Deserialize)]
 pub struct Vrc6Saw {
     pub rate: u8,
     pub period: u16,
@@ -614,6 +616,7 @@ impl Vrc6Saw {
 pub const VRC6_DB: f64 = 0.2;
 
 /// Mappers 24 (VRC6a) and 26 (VRC6b, A0 and A1 swapped), with the sound (VRC6.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Vrc6 {
     pub b: Banked,
     pub vrc_irq: VrcIrq,
@@ -831,48 +834,14 @@ pub fn vrc7_select(submapper: u8) -> u16 {
     }
 }
 
-/// **A placeholder** for `ym2413_python.OPLL(DS1001)`, which this crate does
-/// not transcribe: the same four calls the VRC7 makes, an internal cycle every
-/// fourth input clock as the chip has, and every output word 0 (level 0).
-/// The real chip's `take_outputs` gives one (MO, RO) pair per internal cycle.
-#[derive(Clone, Debug, Default)]
-pub struct OpllPlaceholder {
-    pub phase: u32,
-    pub outputs: Vec<(i32, i32)>,
-}
-
-impl OpllPlaceholder {
-    pub fn new() -> OpllPlaceholder {
-        OpllPlaceholder::default()
-    }
-    /// `reset()`: /IC.
-    pub fn reset(&mut self) {
-        self.phase = 0;
-        self.outputs.clear();
-    }
-    /// `write(port, value)`: port 0 the address, 1 the data.
-    pub fn write(&mut self, _port: u8, _value: u8) {}
-    /// `run(clocks)`: input clocks.
-    pub fn run(&mut self, clocks: u32) {
-        let phase = self.phase + clocks;
-        for _ in 0..phase / 4 {
-            self.outputs.push((0, 0));
-        }
-        self.phase = phase % 4;
-    }
-    /// `take_outputs()`: the (MO, RO) words since the last call.
-    pub fn take_outputs(&mut self) -> Vec<(i32, i32)> {
-        std::mem::take(&mut self.outputs)
-    }
-}
-
 /// Mapper 85: the VRC7's banking, IRQ and sound ports (VRC7.wiki); the
-/// sound chip is [`OpllPlaceholder`].
+/// sound chip is ym2413-rust's DS1001.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Vrc7 {
     pub b: Banked,
     pub vrc_irq: VrcIrq,
     pub select: u16,
-    pub fm: OpllPlaceholder,
+    pub fm: ym2413_rust::OPLL,
     /// CPU cycles the chip has not run yet.
     pub fm_pending: u32,
     /// Its last sample's MO words.
@@ -890,7 +859,7 @@ impl Vrc7 {
             b,
             vrc_irq: VrcIrq::new(),
             select,
-            fm: OpllPlaceholder::new(),
+            fm: ym2413_rust::OPLL::new(ym2413_rust::DS1001),
             fm_pending: 0,
             fm_words: vec![0; 18],
             sound_silenced: false,
@@ -914,7 +883,7 @@ impl Vrc7 {
         if self.sound_silenced || pending == 0 {
             return;
         }
-        self.fm.run(pending * FM_CLOCKS_PER_CPU_CYCLE);
+        self.fm.run((pending * FM_CLOCKS_PER_CPU_CYCLE) as i64);
         let mut words = std::mem::take(&mut self.fm_words);
         words.extend(self.fm.take_outputs().into_iter().map(|(mo, _)| mo));
         let start = words.len().saturating_sub(18);
@@ -954,7 +923,7 @@ impl Cartridge for Vrc7 {
             } else if address & 0x20 != 0 || second {
                 self.run_fm();
                 self.fm
-                    .write(if address & 0x20 != 0 { 1 } else { 0 }, value);
+                    .write(if address & 0x20 != 0 { 1 } else { 0 }, value as i32);
             }
         } else if (0xA000..=0xD000).contains(&region) {
             self.b.map_chr(
@@ -997,6 +966,7 @@ impl Cartridge for Vrc7 {
 
 /// NES 2.0 mapper 308: the TH2131-1 board (NTDEC's Batman): a VRC2 with its
 /// own IRQ (NES_2.0_Mapper_308.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Th2131 {
     pub v: Vrc24,
     pub low: u16,
@@ -1057,6 +1027,7 @@ impl Cartridge for Th2131 {
 
 /// NES 2.0 mapper 298 (UNL-TF1201: Lethal Weapon): a VRC4b clone whose $F003
 /// only acknowledges (NES_2.0_Mapper_298.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Tf1201 {
     pub v: Vrc24,
 }
@@ -1089,6 +1060,7 @@ impl Cartridge for Tf1201 {
 
 /// Mapper 183 (Shui Guan Pipe, a Gimmick! bootleg): VRC4e with an 8 KiB bank
 /// at $6000 (INES_Mapper_183.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct ShuiGuan183 {
     pub v: Vrc24,
     pub bank6000: usize,
@@ -1138,6 +1110,7 @@ impl Cartridge for ShuiGuan183 {
 /// Mapper 266 (UNL-CITYFIGHT): City Fighter IV, a VRC4e clone with A13 and
 /// A14 exchanged and a 32 KiB PRG bank (NES_2.0_Mapper_266.wiki; the DAC is
 /// not modelled).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct CityFighter266 {
     pub v: Vrc24,
     pub prg32: i64,
@@ -1189,6 +1162,7 @@ impl Cartridge for CityFighter266 {
 
 /// Mapper 222: pirate VRC2b boards: Dragon Ninja (222.1, CTC-31) and Super
 /// Bros. 8 (222.2), with a '4020 and two 74161s for the IRQ (forum t=12654).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Ninja222 {
     pub v: Vrc24,
     pub whole_chr: bool,
@@ -1265,6 +1239,7 @@ impl Cartridge for Ninja222 {
 
 /// Mapper 272: a bootleg Akumajou Special: a VRC2b clone with a PAL for IRQs
 /// and mirroring (lidnariq's and krzysiobal's analyses, forum t=15302).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct KidDracula272 {
     pub v: Vrc24,
     pub arrangement: Mirroring,
@@ -1360,6 +1335,7 @@ pub fn swap_bits(value: i64, a: u32, b: u32) -> i64 {
 
 /// Mapper 530 (UNL-AX5705): Super Mario Bros. Pocker Mali, a scrambled VRC4f
 /// clone (NES_2.0_Mapper_530.wiki; A3 stands in for A12, C66).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Ax5705 {
     pub v: Vrc24,
 }
@@ -1402,6 +1378,7 @@ impl Cartridge for Ax5705 {
 
 /// Mapper 529 (UNL-T-230): bootleg Dragon Ball Z: a VRC4e clone with 16 KiB
 /// banking and, with PRG-NVRAM in the header, a 93C56 (NES_2.0_Mapper_529.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct T230 {
     pub v: Vrc24,
     pub eeprom: Option<Microwire>,
@@ -1490,6 +1467,7 @@ pub fn fs306_window(key: u16) -> Option<(u16, u16)> {
 /// Mapper 544: Waixing's FS306 (Bawang de Dalu): a VRC4 clone with a third
 /// PRG bank, 2 KiB of CHR-RAM among the banks and per-nametable CIRAM pages
 /// (NES_2.0_Mapper_544.wiki; the IRQ's extra M2 is not modelled).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Fs306 {
     pub v: Vrc24,
     pub prg_c000: i64,

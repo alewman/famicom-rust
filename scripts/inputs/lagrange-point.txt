@@ -1,0 +1,13 @@
+# Lagrange Point: Start at 900, A at 2000, then A every 180 frames (its music needs input)
+900 0 08
+906 0 00
+2000 0 01
+2006 0 00
+2180 0 01
+2186 0 00
+2360 0 01
+2366 0 00
+2540 0 01
+2546 0 00
+2720 0 01
+2726 0 00

@@ -32,6 +32,7 @@ pub fn reverse7(bank: i64) -> i64 {
 /// Mappers 209 (the standard board), 35 (the same, WRAM in the header), 211
 /// (a duplicate of 209) and 90 (a jumper inhibits ROM nametables and the
 /// extended mirroring). The base class's state; also the plain board.
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct JyCompany {
     pub b: Banked,
     pub nametables_allowed: bool,
@@ -483,6 +484,7 @@ impl Cartridge for JyCompany {
 
 /// Mapper 91: J.Y. Company's JY830623C/YY840238C (91.0, an A12 counter) and
 /// EJ-006-1 (91.1, a cycle counter) (INES_Mapper_091.wiki).
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct Jy830623c {
     pub b: Banked,
     pub cycle_counter: bool,

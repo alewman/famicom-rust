@@ -303,7 +303,10 @@ pub fn save_state(system: &System) -> Vec<u8> {
 /// data by more than a fraction of a percent.
 pub fn size_bound(system: &System) -> usize {
     let raw = bincode::serialized_size(&system.cpu.bus.save_state()).unwrap_or(0) as usize;
-    let rom = system.image.as_ref().map_or(0, |image| image.prg.len().max(0x2000) + image.chr.len());
+    let rom = system
+        .image
+        .as_ref()
+        .map_or(0, |image| image.prg.len().max(0x2000) + image.chr.len());
     raw + 2 * rom + 0x10000
 }
 
