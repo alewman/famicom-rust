@@ -297,6 +297,16 @@ pub fn save_state(system: &System) -> Vec<u8> {
     encoder.finish().expect("compression in memory")
 }
 
+/// A size no state of `system` exceeds: what a frontend that wants a fixed
+/// buffer (libretro's `retro_serialize_size`) allocates. The uncompressed
+/// state, with PRG and CHR written whole, and room to spare; zlib never grows
+/// data by more than a fraction of a percent.
+pub fn size_bound(system: &System) -> usize {
+    let raw = bincode::serialized_size(&system.cpu.bus.save_state()).unwrap_or(0) as usize;
+    let rom = system.image.as_ref().map_or(0, |image| image.prg.len().max(0x2000) + image.chr.len());
+    raw + 2 * rom + 0x10000
+}
+
 /// Put `system` in the state `data` was saved from (same cartridge and machine).
 pub fn load_state(system: &mut System, data: &[u8]) -> Result<(), String> {
     if data.len() < MAGIC.len() || &data[..MAGIC.len()] != MAGIC {
