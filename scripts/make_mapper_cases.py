@@ -45,10 +45,17 @@ def main() -> None:
             continue
         groups[(int(mapper), int(submapper), cls)].append(path)
     rows = ["# name\tslices\trom\targuments"]
+    taken: dict[str, int] = {}
     for (mapper, submapper, cls), paths in sorted(groups.items()):
         for path in sorted(paths, key=rank)[: args.per]:
             stem = re.sub(r"[^A-Za-z0-9]+", "_", Path(path).stem).strip("_")[:60]
             name = f"m{mapper}.{submapper}-{cls}-{stem}"
+            # Names that differ only in punctuation ("Fatal Fury 2" and "Fatal
+            # Fury 2'") would share a cached reference trace: number repeats.
+            count = taken.get(name, 0)
+            taken[name] = count + 1
+            if count:
+                name = f"{name}-{count + 1}"
             rows.append(f"{name}\t{args.slices}\t{path}\t--input $INPUTS/start-mash.txt")
     args.out.write_text("\n".join(rows) + "\n")
     print(f"{len(rows) - 1} cases in {args.out}")
