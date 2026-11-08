@@ -192,6 +192,7 @@ pub fn jy_update_prg<T: JyLike + ?Sized>(this: &mut T) {
 }
 
 /// `JYCompany._update_chr`.
+#[allow(clippy::needless_range_loop)] // i is the window and the register
 pub fn jy_update_chr<T: JyLike + ?Sized>(this: &mut T) {
     let jy = this.jy();
     let r = jy.chr_regs.map(|x| x as i64);

@@ -6,7 +6,10 @@
 //! two methods dispatch on it. multicart.py's `ResetMMC1` (mapper 374)
 //! overrides `map_prg`, `map_chr` and `chr_bit_is_prg_a18`: [`Kind::Reset`],
 //! and every bank the MMC1 maps goes through [`Mmc1::map_prg`] and
-//! [`Mmc1::map_chr`], which apply that override.
+//! [`Mmc1::map_chr`], which apply that override. chinese.py's `HuangMMC1`
+//! (116.2) overrides `_update_prg`: [`Kind::Huang`]; multiasic.py's
+//! `HostMMC1` overrides `map_prg` and `map_chr` with its host board's
+//! translation: [`Kind::Translated`].
 
 use super::banked::{Banked, HORIZONTAL, SCREEN_A, SCREEN_B, VERTICAL};
 use super::connector::Cartridge;
@@ -39,6 +42,10 @@ pub enum Kind {
     Reset {
         outer: i64,
     },
+    /// chinese.py's `HuangMMC1` (116.2): the PRG register in 8 KiB units.
+    Huang,
+    /// multiasic.py's `HostMMC1`: banks through the host board's translation.
+    Translated(super::multiasic::Host),
 }
 
 #[derive(serde::Serialize, serde::Deserialize)]
@@ -71,6 +78,16 @@ impl Mmc1 {
     /// Mapper 374 (multicart.py's `ResetMMC1`).
     pub fn reset_multicart(image: RomImage, cpu_cycle_ticks: i64) -> Mmc1 {
         Mmc1::build(image, cpu_cycle_ticks, Kind::Reset { outer: 0 })
+    }
+
+    /// chinese.py's `HuangMMC1`.
+    pub fn huang(image: RomImage, cpu_cycle_ticks: i64) -> Mmc1 {
+        Mmc1::build(image, cpu_cycle_ticks, Kind::Huang)
+    }
+
+    /// multiasic.py's `HostMMC1`, banking through `host`.
+    pub fn translated(image: RomImage, cpu_cycle_ticks: i64, host: super::multiasic::Host) -> Mmc1 {
+        Mmc1::build(image, cpu_cycle_ticks, Kind::Translated(host))
     }
 
     pub fn nes_event(image: RomImage, cpu_cycle_ticks: i64) -> Mmc1 {
@@ -120,7 +137,8 @@ impl Mmc1 {
         mmc1
     }
 
-    fn update(&mut self) {
+    /// `_update` (multiasic's `HostMMC1.refresh`).
+    pub fn update(&mut self) {
         if let Kind::Event(event) = &mut self.kind {
             let held = self.chr0 & 0x10 != 0;
             if held && !event.timer_held && event.saw_running {
@@ -173,6 +191,8 @@ impl Mmc1 {
             let banks = (128 / size_kib) as i64;
             self.b
                 .map_prg(window, size_kib, bank.rem_euclid(banks) + outer * banks);
+        } else if let Kind::Translated(host) = self.kind {
+            super::multiasic::translate_prg(&mut self.b, &host, window, size_kib, bank);
         } else {
             self.b.map_prg(window, size_kib, bank);
         }
@@ -184,6 +204,8 @@ impl Mmc1 {
             let banks = (128 / size_kib) as i64;
             self.b
                 .map_chr(window, size_kib, bank.rem_euclid(banks) + outer * banks);
+        } else if let Kind::Translated(host) = self.kind {
+            super::multiasic::translate_chr(&mut self.b, &host, window, size_kib, bank);
         } else {
             self.b.map_chr(window, size_kib, bank);
         }
@@ -216,6 +238,18 @@ impl Mmc1 {
             }
             return;
         }
+        if matches!(self.kind, Kind::Huang) {
+            let written = self.prg_bank;
+            self.prg_bank = (written & 0x10) | (written & 0x0F) >> 1;
+            self.mmc1_update_prg(control);
+            self.prg_bank = written;
+            return;
+        }
+        self.mmc1_update_prg(control);
+    }
+
+    /// `MMC1._update_prg`.
+    fn mmc1_update_prg(&mut self, control: u8) {
         let mmc1a = matches!(self.kind, Kind::Mmc1a);
         let outer = if self.chr_bit_is_prg_a18() {
             (self.chr0 & 0x10) as i64

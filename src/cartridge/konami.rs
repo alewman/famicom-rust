@@ -708,6 +708,7 @@ impl Vrc6 {
         self.expansion = level as f64 * self.gain;
     }
 
+    #[allow(clippy::needless_range_loop)] // the window is the register's index
     fn update_chr(&mut self) {
         let r = self.chr_registers;
         let mode = self.banking & 3;
