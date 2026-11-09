@@ -1021,8 +1021,7 @@ impl Ppu {
             if n == 0 && sprite0 {
                 flags |= IS_SPRITE0;
             }
-            let mut x = start;
-            for bit in (0..8).rev() {
+            for (x, bit) in (start..).zip((0..8).rev()) {
                 if x >= WIDTH {
                     break;
                 }
@@ -1035,7 +1034,6 @@ impl Ppu {
                 if pixel != 0 && self.sprite_line[at] == 0 {
                     self.sprite_line[at] = flags | pixel;
                 }
-                x += 1;
             }
         }
         self.plan = plan;
