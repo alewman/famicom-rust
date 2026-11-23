@@ -1,8 +1,9 @@
 # famicom-rust
 
 A Rust Famicom / NES board transcribed from
-[famicom-python](https://github.com/alewman/famicom-python) (frozen at the tag
-`famicom-rust-pin-1`, `fe89099`) on [6502-rust](https://github.com/alewman/6502-rust)'s
+[famicom-python](https://github.com/alewman/famicom-python) (transcribed at
+`fe89099`, the old tag `famicom-rust-pin-1`; gated since 2026-11-23 against
+`e3e1474`, see below) on [6502-rust](https://github.com/alewman/6502-rust)'s
 RP2A03, and proven equivalent to it by a lockstep gate: both boards run the
 same cartridge and their traces are compared frame by frame, every CPU bus
 cycle (address, value, direction and master-clock tick), the picture, the
@@ -32,10 +33,27 @@ of a `-fast` fork.
 
 | What | Version |
 | --- | --- |
-| famicom-python (the reference) | tag `famicom-rust-pin-1` (`fe89099`) |
-| 6502-rust | `71747eb` (its NMOS core is 6502-python `9dc34bd`'s, the revision the reference pins) |
+| famicom-python (the reference) | `e3e1474` (its main of 2026-11-23), pinned by commit in `scripts/fetch_famicompython.sh` |
+| 6502-rust | `71747eb` (its NMOS core is 6502-python `9dc34bd`'s; the reference pins `e73f471`, the same tree after a history rewrite) |
+| ym2413-rust (the VRC7's FM) | `94df223`, the restarted core, written from documents; the reference pins ym2413-python `67fdb1e` |
 | nes-test-roms | christopherpow `95d8f62` (the reference's pin) |
 | nes20db | 2026-09-26 (the reference's pin, read at run time, never committed) |
+
+**The repin of 2026-11-23.** The reference was the tag `famicom-rust-pin-1`
+(`47d33c1`, `fe89099` before famicom-python's history rewrite), whose pyproject
+pinned the archived ym2413-python `13df60c`, a translation of GPL code. It is now
+famicom-python `e3e1474`, whose cores are all public pins (6502-python `e73f471`,
+ym2413-python `67fdb1e`, ay8910-python `e9420aa`; z80-python 0.4.0). Every rung
+below was run again against it, the reference caches made afresh: all identical
+(the regenerated reference traces are byte-for-byte the old caches', 902 of 902;
+rung 3's outcomes differ only by two new header fields, `vs_ppu` and
+`vs_hardware`). The board does **not** yet carry what famicom-python added
+after `47d33c1`, and no case here exercises it: the Vs. System (mapper 99,
+`vs.py`, `dual.py`, the RP2C03/RP2C04/RC2C05 rows, the Namco 108 protection
+chips), the PlayChoice-10 (`playchoice.py`, `supervisor.py` on z80-python), the
+Sunsoft 5B's sound (mapper 69 on ay8910-python's YM2149: silent on the gate's
+two FME-7 dumps, which never program it, so they agree), mapper 559, and the
+provenance rewording of several mapper docstrings.
 
 The ladder is the brief's (`docs/` of the handoff), in its order, and then save states:
 
