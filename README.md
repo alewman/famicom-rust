@@ -3,7 +3,7 @@
 A Rust Famicom / NES board transcribed from
 [famicom-python](https://github.com/alewman/famicom-python) (transcribed at
 `fe89099`, the old tag `famicom-rust-pin-1`; gated since 2026-11-23 against
-`e3e1474`, see below) on [6502-rust](https://github.com/alewman/6502-rust)'s
+`b3dbf1b`, see below) on [6502-rust](https://github.com/alewman/6502-rust)'s
 RP2A03, and proven equivalent to it by a lockstep gate: both boards run the
 same cartridge and their traces are compared frame by frame, every CPU bus
 cycle (address, value, direction and master-clock tick), the picture, the
@@ -33,10 +33,10 @@ of a `-fast` fork.
 
 | What | Version |
 | --- | --- |
-| famicom-python (the reference) | `e3e1474` (its main of 2026-11-23), pinned by commit in `scripts/fetch_famicompython.sh` |
+| famicom-python (the reference) | `b3dbf1b` (its main of 2026-11-23), pinned by commit in `scripts/fetch_famicompython.sh` |
 | 6502-rust | `71747eb` (its NMOS core is 6502-python `9dc34bd`'s; the reference pins `e73f471`, the same tree after a history rewrite) |
 | ym2413-rust (the VRC7's FM) | `94df223`, the restarted core, written from documents; the reference pins ym2413-python `67fdb1e` |
-| ay8910-rust (the Sunsoft 5B's sound) | `9b670a7`, a transcription of ay8910-python `a3bb485`; the reference pins `e9420aa`, whose `src/` is the same but for the SPDX lines `a3bb485` added (compared file by file against the reference's install, 2026-11-23) |
+| ay8910-rust (the Sunsoft 5B's sound) | `9b670a7`, a transcription of ay8910-python `a3bb485`, which the reference pins (since `b3dbf1b`; it pinned `e9420aa` before, whose `src/` is the same but for the SPDX lines) |
 | nes-test-roms | christopherpow `95d8f62` (the reference's pin) |
 | nes20db | 2026-09-26 (the reference's pin, read at run time, never committed) |
 
@@ -50,14 +50,21 @@ below was run again against it, the reference caches made afresh: all identical
 rung 3's outcomes differ only by two new header fields, `vs_ppu` and
 `vs_hardware`).
 
+**The repin to `b3dbf1b` (2026-11-23).** famicom-python `b3dbf1b` pins z80-python
+`b59c80b` by commit (was the 0.4.0 release; only its PlayChoice-10 supervisor uses it)
+and ay8910-python `a3bb485` (was `e9420aa`, the same `src/` but for SPDX lines), so the
+5B's reference is exactly what ay8910-rust transcribes. Every rung, made afresh against
+it: the regenerated reference traces are byte-for-byte the old caches', 918 of 918, and
+rung 3's outcomes and rung 4's test list are unchanged; no Rust code changed.
+
 Carried since (2026-11-23): the Sunsoft 5B's sound (mapper 69 on ay8910-rust,
 with cases that program it: rainwarrior's nes-audio-tests and Gimmick!), mapper
 559, and the reference's provenance rewording of the mapper docstrings. The
 board does **not** yet carry, and no case here exercises: the Vs. System
 (mapper 99, `vs.py`, `dual.py`, the RP2C03/RP2C04/RC2C05 rows, the Namco 108
 protection chips) and the PlayChoice-10 (`playchoice.py`, `supervisor.py` on
-z80-python 0.4.0, which no Rust Z80 transcribes: z80-rust is z80-python
-`b59c80b`, after 0.4.0's EI-delay and reset fixes).
+z80-python `b59c80b` since the reference's `b3dbf1b`, the commit z80-rust
+transcribes; before it the reference ran the 0.4.0 release, which no Rust Z80 does).
 
 The ladder is the brief's (`docs/` of the handoff), in its order, and then save states:
 

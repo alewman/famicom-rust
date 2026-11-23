@@ -1,7 +1,7 @@
 # Provenance (licence audit 2026-11-13)
 
 This crate is a transcription of famicom-python (tag `famicom-rust-pin-1`, `fe89099`, now
-gated against `e3e1474`) and **inherits famicom-python's verdicts** (its
+gated against `b3dbf1b`) and **inherits famicom-python's verdicts** (its
 `docs/provenance.md`): the same facts, the same citations, the same open items, carried into
 the Rust docstrings. Transcribing our own MIT Python into Rust is fine; whatever
 famicom-python must cite, re-source or rewrite, this crate must too, in the same places.
