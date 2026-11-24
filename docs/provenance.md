@@ -1,7 +1,7 @@
 # Provenance (licence audit 2026-11-13)
 
 This crate is a transcription of famicom-python (tag `famicom-rust-pin-1`, `fe89099`, now
-gated against `b3dbf1b`) and **inherits famicom-python's verdicts** (its
+gated against `c52a6d3`) and **inherits famicom-python's verdicts** (its
 `docs/provenance.md`): the same facts, the same citations, the same open items, carried into
 the Rust docstrings. Transcribing our own MIT Python into Rust is fine; whatever
 famicom-python must cite, re-source or rewrite, this crate must too, in the same places.
@@ -35,10 +35,14 @@ history. No GPL or LGPL source was opened.
 | `scripts/`, `probes/`, `scripts/inputs/` | our harness, our probe source (`eval_turn_off.s`), input scripts | | clean |
 | `scripts/cases-5b.tsv` | rainwarrior's nes-audio-tests, run from the reference's fetched `reference/`, never committed (licence: "may be freely redistributed and modified for any purpose") | permissive | clean |
 
-| `vs.rs`, `dual.rs`, `machine.rs`'s Vs. rows, `namco.rs`'s protection chips, `video.rs`'s `RGB_DAC`, `cartridge/vs.rs` (2026-11-23) | transcribed from the reference's `vs.py`, `dual.py`, `machine.py`, `namco.py`, `video.py`, `cartridge/vs.py` at `b3dbf1b`: the NESdev wiki, and MAME's BSD-3 `vsnes.cpp` and `ppu2c0x.cpp` (the protection chips' bytes, the RC2C05-01's identifier, coin timing) | our MIT; facts from BSD-3 files | **inherits the reference's verdict, cite**: its provenance table asks for MAME's BSD-3 notice with the holders' names (a NOTICE file or a line beside each); neither the reference nor this crate has that notice yet, so it is owed in both, the reference first |
+| `vs.rs`, `dual.rs`, `machine.rs`'s Vs. rows, `namco.rs`'s protection chips, `video.rs`'s `RGB_DAC`, `cartridge/vs.rs` (2026-11-23) | transcribed from the reference's `vs.py`, `dual.py`, `machine.py`, `namco.py`, `video.py`, `cartridge/vs.py` at `b3dbf1b`: the NESdev wiki, and MAME's BSD-3 `vsnes.cpp` and `ppu2c0x.cpp` (the protection chips' bytes, the RC2C05-01's identifier, coin timing) | our MIT; tables and a value from BSD-3 files | **cited** (2026-11-23): MAME's BSD-3 notice with the holders' names is in `NOTICE.md`, carried from the reference's (famicom-python `c52a6d3`); `namco.rs` and `machine.rs` say `MIT AND BSD-3-Clause` with the source on their second line, as do `peripherals.rs` (`SUBOR_MATRIX`) and `waixing.rs` (the GAL table) |
+| `playchoice.rs`, `supervisor.rs`, `machine.rs`'s PlayChoice-10 row, `board.rs`'s `idle_cycle`, `state.rs`'s cabinet states (2026-11-23) | transcribed from the reference's `playchoice.py`, `supervisor.py`, `machine.py`, `board.py`, `state.py` at `c52a6d3`: Nintendo's PCH1-CPU schematic, the NESdev wiki, and MAME's BSD-3 `playch10.cpp` and `rp5h01.cpp` (the BIOS SHA-1s, the screen's weights, the RP5H01) | our MIT; tables from BSD-3 files | **cited**: `supervisor.rs` says `MIT AND BSD-3-Clause`, notice in `NOTICE.md` |
+| `z80-rust` (the PlayChoice-10's supervisor, 2026-11-23) | our core, pinned by git at `7c61e5a`, a transcription of z80-python `b59c80b`, which the reference pins | MIT | clean (audited with the cores) |
+| Nintendo's PlayChoice-10 BIOS | MAME's `playch10` set, read at run time from `$MAME_ROMPATH` (or `FAMICOM_PC10_BIOS`), checked by SHA-1, never committed | Nintendo's | clean (never shipped) |
+| `scripts/cases-pc10.tsv`, `scripts/inputs/pc10/`, `scripts/make_pc10_cases.py` | case names and input scripts; the images are assembled at run time from MAME's sets by the reference's `scripts/pc10_images.py`, outside the repository (`$PC10_IMAGES_DIR`), never committed | | clean |
 | `scripts/cases-vs.tsv`, `scripts/inputs/vs/`, `scripts/make_vs_cases.py` | case names and input scripts; the images are assembled at run time from MAME's ROM sets (`$MAME_ROMPATH`) by the reference's `scripts/vs_images.py`, outside the repository (`$VS_IMAGES_DIR`), never committed | | clean |
 
-Counts: clean 8, cite 1 (plus the inherited verdicts).
+Counts: clean 12, cited 2 (plus the inherited verdicts).
 
 ## The VRC7 and its history (the repository is public)
 
