@@ -12,7 +12,11 @@
 //! callables are reached through the [`Frame`] each bus call receives; the
 //! cartridge is owned by the PPU (`ppu.cart`); the bus observers are one
 //! optional log of packed cycles ([`Board::bus_log`]), the lockstep gate's
-//! tap.
+//! tap. The reference's Vs. mainboard is both its `vs` and its `expansion`;
+//! here it is [`Board::vs`] alone, called where the expansion device would be
+//! while no other device is plugged there (as the reference's `expansion` is
+//! the mainboard until something replaces it), and saved in the expansion's
+//! place in a state.
 
 use crate::apu::{AnalogueStage, Apu};
 use crate::cartridge::Cartridge;
@@ -21,6 +25,7 @@ use crate::joypad::StandardController;
 use crate::machine::Machine;
 use crate::peripherals::{ExpansionDevice, PortDevice};
 use crate::ppu::Ppu;
+use crate::vs::{Side, VsMainboard, VsStick};
 use sixfiveohtwo::{Bus, Frame};
 
 /// When the PPU sees a register read or write: two dots into its CPU cycle.
@@ -41,6 +46,10 @@ pub struct Board {
     pub analogue: AnalogueStage,
     pub pads: [Box<dyn PortDevice>; 2],
     pub expansion: Option<Box<dyn ExpansionDevice>>,
+    /// A Vs. System mainboard (vs.rs): it stands where the expansion-port
+    /// device does, drives every line of $4016/$4017, and answers
+    /// $4020-$7FFF before the ROM sockets do. None on any other console.
+    pub vs: Option<Box<VsMainboard>>,
     pub microphone: bool,
     has_microphone: bool,
     open_lines: [u8; 2],
@@ -57,6 +66,9 @@ pub struct Board {
     strobe: Option<u8>,
     irq: bool,
     nmi: bool,
+    /// One more source on the wired-OR /IRQ line: the other side's OUT1 on
+    /// a Vs. DualSystem (dual.rs). False on every other machine.
+    pub external_irq: bool,
     ppu_access: i64,
     snoop_reads: bool,
     latches_reads: bool,
@@ -100,20 +112,33 @@ impl Board {
             &machine.audio_high_pass_hz,
             machine.audio_low_pass_hz,
         );
+        let mut pads: [Box<dyn PortDevice>; 2] = [
+            Box::new(StandardController::default()),
+            Box::new(StandardController::default()),
+        ];
+        let mut open_lines = [0xE0 | machine.pad_open_bus.0, 0xE0 | machine.pad_open_bus.1];
+        let mut vs = None;
+        if let Some(side) = machine.vs_side {
+            vs = Some(Box::new(VsMainboard::new(
+                Side::from_name(side),
+                timing.master_hz,
+                None,
+            )));
+            pads = [Box::new(VsStick::default()), Box::new(VsStick::default())];
+            open_lines = [0, 0];
+        }
         Board {
             cycle_ticks: timing.cpu_divider,
             ram: [power.ram_fill; 0x800],
             ppu,
             apu,
             analogue,
-            pads: [
-                Box::new(StandardController::default()),
-                Box::new(StandardController::default()),
-            ],
+            pads,
             expansion: None,
+            vs,
             microphone: false,
             has_microphone: machine.microphone,
-            open_lines: [0xE0 | machine.pad_open_bus.0, 0xE0 | machine.pad_open_bus.1],
+            open_lines,
             t: 0,
             data_bus: 0,
             internal_bus: 0,
@@ -126,6 +151,7 @@ impl Board {
             strobe: None,
             irq: false,
             nmi: false,
+            external_irq: false,
             ppu_access: timing.ppu_access_ticks - timing.cpu_divider,
             snoop_reads,
             latches_reads,
@@ -158,8 +184,17 @@ impl Board {
         if self.machine.reset_resets_ppu {
             self.ppu.reset();
         }
+        if let Some(vs) = self.vs.as_mut() {
+            vs.reset();
+        }
         let t = self.t;
         self.ppu.cart.m2_gap(t);
+    }
+
+    /// The mainboard pulls /IRQ low, or lets go (the CPU sees it at the
+    /// next cycle's end).
+    pub fn set_external_irq(&mut self, asserted: bool) {
+        self.external_irq = asserted;
     }
 
     /// The host rate for [`Board::take_samples`] (44,100 Hz by default).
@@ -194,6 +229,8 @@ impl Board {
                 }
                 if let Some(expansion) = self.expansion.as_mut() {
                     expansion.set_out(out, &self.ppu);
+                } else if let Some(vs) = self.vs.as_mut() {
+                    vs.set_out(out, self.ppu.cart.as_mut());
                 }
             }
         }
@@ -202,6 +239,8 @@ impl Board {
             self.pads[oe as usize].clock(&self.ppu);
             if let Some(expansion) = self.expansion.as_mut() {
                 expansion.clock(oe as usize, &self.ppu);
+            } else if let Some(vs) = self.vs.as_mut() {
+                vs.clock(oe as usize);
             }
             self.pad_oe = -1;
         }
@@ -214,7 +253,7 @@ impl Board {
             let t = self.t;
             self.ppu.cart.m2(t);
         }
-        let irq = self.apu.irq || self.ppu.cart.irq();
+        let irq = self.apu.irq || self.ppu.cart.irq() || self.external_irq;
         if irq != self.irq {
             self.irq = irq;
             if irq {
@@ -266,6 +305,11 @@ impl Board {
             auto.observe(self, false, address, value);
             self.auto_disk = Some(auto);
         }
+        if address == 0x4017 {
+            if let Some(vs) = self.vs.as_mut() {
+                vs.fed = t; // the DualSystem's watchdog (dual.rs)
+            }
+        }
         value
     }
 
@@ -287,6 +331,14 @@ impl Board {
             self.ram[address as usize & 0x7FF] = value;
         } else if (0x4000..0x4020).contains(&address) {
             self.write_io(address, value);
+        } else if (0x4020..0x8000).contains(&address) {
+            if let Some(vs) = self.vs.as_mut() {
+                if address < 0x6000 {
+                    vs.write_coin_counter(value);
+                } else {
+                    vs.write_ram(address, value);
+                }
+            }
         }
         self.ppu.cart.cpu_write(address, value, t);
         self.end_cycle(frame);
@@ -315,7 +367,21 @@ impl Board {
         }
         self.ppu.run_to(t);
         if address >= 0x4020 {
-            let value = match self.ppu.cart.cpu_read(address, t) {
+            let read = match self.vs.as_mut() {
+                // The Vs. mainboard: its RAM at $6000 (open bus when the other
+                // side holds it); below, a read clocks the coin counter with
+                // whatever the bus holds, and a daughterboard's chip may answer.
+                Some(vs) if address < 0x8000 => {
+                    if address >= 0x6000 {
+                        vs.read_ram(address).map(u16::from)
+                    } else {
+                        vs.write_coin_counter(self.data_bus);
+                        self.ppu.cart.cpu_read(address, t)
+                    }
+                }
+                _ => self.ppu.cart.cpu_read(address, t),
+            };
+            let value = match read {
                 None => {
                     self.undriven = true;
                     self.data_bus
@@ -358,6 +424,8 @@ impl Board {
         let mut bits = self.pads[port].read(&self.ppu);
         if let Some(expansion) = self.expansion.as_mut() {
             bits |= expansion.read(port, &self.ppu);
+        } else if let Some(vs) = self.vs.as_mut() {
+            bits |= vs.read(port, self.t);
         }
         if port == 0 && self.microphone && self.has_microphone {
             bits |= 4;
@@ -519,7 +587,12 @@ impl Board {
             analogue: bincode::serialize(&self.analogue).expect("the analogue stage serializes"),
             cart: self.ppu.cart.save_state(),
             pads: [self.pads[0].save_state(), self.pads[1].save_state()],
-            expansion: self.expansion.as_ref().map(|device| device.save_state()),
+            // The Vs. mainboard is the reference's `expansion`: saved in its place.
+            expansion: match (&self.expansion, &self.vs) {
+                (Some(device), _) => Some(device.save_state()),
+                (None, Some(vs)) => Some(crate::state::Snapshot::save_state(vs.as_ref())),
+                (None, None) => None,
+            },
             microphone: self.microphone,
             t: self.t,
             data_bus: self.data_bus,
@@ -549,28 +622,36 @@ impl Board {
         let apu: Apu = bincode::deserialize(&fields.apu).map_err(|e| e.to_string())?;
         let analogue: AnalogueStage =
             bincode::deserialize(&fields.analogue).map_err(|e| e.to_string())?;
-        if fields.expansion.is_some() != self.expansion.is_some() {
+        let plugged = self.expansion.is_some() || self.vs.is_some();
+        if fields.expansion.is_some() != plugged {
             return Err("a state with other devices plugged".into());
         }
         let kept_pads = [self.pads[0].save_state(), self.pads[1].save_state()];
         let kept_expansion = self.expansion.as_ref().map(|device| device.save_state());
+        let kept_vs = self.vs.clone();
         let loaded = (|| {
             for (pad, saved) in self.pads.iter_mut().zip(&fields.pads) {
                 pad.load_state(saved)?;
             }
             if let (Some(device), Some(saved)) = (self.expansion.as_mut(), &fields.expansion) {
                 device.load_state(saved)?;
+            } else if let (Some(vs), Some(saved)) = (self.vs.as_mut(), &fields.expansion) {
+                crate::state::Snapshot::load_state(vs.as_mut(), saved)?;
             }
             // The cartridge stays this system's own object; its state is loaded into it.
             self.ppu.cart.load_state(&fields.cart)
         })();
         if let Err(error) = loaded {
             for (pad, kept) in self.pads.iter_mut().zip(&kept_pads) {
-                pad.load_state(kept).expect("a device takes back its own state");
+                pad.load_state(kept)
+                    .expect("a device takes back its own state");
             }
             if let (Some(device), Some(kept)) = (self.expansion.as_mut(), &kept_expansion) {
-                device.load_state(kept).expect("a device takes back its own state");
+                device
+                    .load_state(kept)
+                    .expect("a device takes back its own state");
             }
+            self.vs = kept_vs;
             return Err(error);
         }
         std::mem::swap(&mut ppu.cart, &mut self.ppu.cart);

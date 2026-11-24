@@ -35,7 +35,10 @@ history. No GPL or LGPL source was opened.
 | `scripts/`, `probes/`, `scripts/inputs/` | our harness, our probe source (`eval_turn_off.s`), input scripts | | clean |
 | `scripts/cases-5b.tsv` | rainwarrior's nes-audio-tests, run from the reference's fetched `reference/`, never committed (licence: "may be freely redistributed and modified for any purpose") | permissive | clean |
 
-Counts: clean 7 (plus the inherited verdicts).
+| `vs.rs`, `dual.rs`, `machine.rs`'s Vs. rows, `namco.rs`'s protection chips, `video.rs`'s `RGB_DAC`, `cartridge/vs.rs` (2026-11-23) | transcribed from the reference's `vs.py`, `dual.py`, `machine.py`, `namco.py`, `video.py`, `cartridge/vs.py` at `b3dbf1b`: the NESdev wiki, and MAME's BSD-3 `vsnes.cpp` and `ppu2c0x.cpp` (the protection chips' bytes, the RC2C05-01's identifier, coin timing) | our MIT; facts from BSD-3 files | **inherits the reference's verdict, cite**: its provenance table asks for MAME's BSD-3 notice with the holders' names (a NOTICE file or a line beside each); neither the reference nor this crate has that notice yet, so it is owed in both, the reference first |
+| `scripts/cases-vs.tsv`, `scripts/inputs/vs/`, `scripts/make_vs_cases.py` | case names and input scripts; the images are assembled at run time from MAME's ROM sets (`$MAME_ROMPATH`) by the reference's `scripts/vs_images.py`, outside the repository (`$VS_IMAGES_DIR`), never committed | | clean |
+
+Counts: clean 8, cite 1 (plus the inherited verdicts).
 
 ## The VRC7 and its history (the repository is public)
 
