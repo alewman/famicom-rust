@@ -119,7 +119,8 @@ unit tests, transcribed (`tests/playchoice.rs`, 26, the three with the real
 BIOS run when `MAME_ROMPATH` and `PC10_IMAGES_DIR` are set). Not carried: the
 reference window's PlayChoice-10 keys and second screen (`frontend.py`).
 
-The ladder is the brief's (`docs/` of the handoff), in its order, and then save states:
+The ladder is the brief's (`docs/` of the handoff), in its order, and then save states
+(the latest run, with the commit it was measured at: [docs/status.md](docs/status.md)):
 
 | Rung | What | Result | Script |
 | --- | --- | --- | --- |
