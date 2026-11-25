@@ -2,8 +2,8 @@
 
 A Rust Famicom / NES board transcribed from
 [famicom-python](https://github.com/alewman/famicom-python) (transcribed at
-`fe89099`, the old tag `famicom-rust-pin-1`; gated since 2026-11-23 against
-`c52a6d3`, see below) on [6502-rust](https://github.com/alewman/6502-rust)'s
+`fe89099`, the old tag `famicom-rust-pin-1`; gated since 2026-11-24 against
+`b5dbd2f`, whose `src/` is `c52a6d3`'s, see below) on [6502-rust](https://github.com/alewman/6502-rust)'s
 RP2A03, and proven equivalent to it by a lockstep gate: both boards run the
 same cartridge and their traces are compared frame by frame, every CPU bus
 cycle (address, value, direction and master-clock tick), the picture, the
@@ -33,7 +33,7 @@ of a `-fast` fork.
 
 | What | Version |
 | --- | --- |
-| famicom-python (the reference) | `c52a6d3` (its main of 2026-11-23), pinned by commit in `scripts/fetch_famicompython.sh` |
+| famicom-python (the reference) | `b5dbd2f` (its main of 2026-11-24; `src/` as at `c52a6d3`), pinned by commit in `scripts/fetch_famicompython.sh` |
 | z80-rust (the PlayChoice-10's supervisor) | `7c61e5a`, a transcription of z80-python `b59c80b`, which the reference pins |
 | 6502-rust | `71747eb` (its NMOS core is 6502-python `9dc34bd`'s; the reference pins `e73f471`, the same tree after a history rewrite) |
 | ym2413-rust (the VRC7's FM) | `94df223`, the restarted core, written from documents; the reference pins ym2413-python `67fdb1e` |
@@ -83,6 +83,18 @@ Vs. image the reference's `scripts/vs_images.py` assembles from MAME's sets
 (`frontend.py`'s coin keys, `--dip` and the DualSystem's second screen;
 `host.rs` is the window's input half for the home consoles).
 
+**The repin to `b5dbd2f` (2026-11-24).** famicom-python `fa30248` adds
+`tests/pc10_watchdog.hex`, a supervisor program of its own (68 bytes, no firmware)
+that lets the PlayChoice-10's watchdog run out every boot, which the real BIOS
+never does; `1d64fd9` and `fb3a045` before it changed tooling and documents. No
+file under `src/` changed since `c52a6d3`, so the cached traces stay. The program
+is copied to `scripts/inputs/pc10/watchdog.hex` by `make_pc10_cases.py`, and both
+tracers take it with `--bios-program FILE` (the BIOS's program replaced, the set's
+characters and colours kept): the case `pc10-watchdog-Super_Mario_Bros`, 600
+slices, 54 watchdog resets, is the gate's only run through the Z80's reset (the
+latches cleared SDCS first, the game held, the counter held by NMI EI and by DOG
+DI). Its unit test is transcribed (`our_supervisor_program_lets_the_watchdog_run_out`).
+
 **The repin to `c52a6d3` (2026-11-23).** famicom-python `c52a6d3` finds the
 PlayChoice-10's BIOS through `MAME_ROMPATH` and carries MAME's BSD-3 notice
 (`NOTICE.md`, here too, with the `MIT AND BSD-3-Clause` lines on `namco.rs`,
@@ -115,7 +127,7 @@ instruction, in order, with SDCS as it stood), `supervisor.rs` says how.
 Proven by the lockstep gate on every image the reference's
 `scripts/pc10_images.py` assembles from MAME's sets (rung 6 below), by save
 states of every image saved mid-game, and by the reference's PlayChoice-10
-unit tests, transcribed (`tests/playchoice.rs`, 26, the three with the real
+unit tests, transcribed (`tests/playchoice.rs`, 27 since 2026-11-24, the three with the real
 BIOS run when `MAME_ROMPATH` and `PC10_IMAGES_DIR` are set). Not carried: the
 reference window's PlayChoice-10 keys and second screen (`frontend.py`).
 
@@ -129,7 +141,7 @@ The ladder is the brief's (`docs/` of the handoff), in its order, and then save 
 | 3 | The reference's test ROM tables (its `pytest -m slow` cases: CPU, PPU, APU, mappers, FDS, PAL) through a transcription of its harness: verdict, CPU cycles, instructions and detail text against the reference's own outcomes | 197 of 197 agree; the reference passes 197 | `rung3.sh` |
 | 4 | AccuracyCoin, all tests, as the reference's `scripts/accuracycoin.py` runs them | 147 of 147 pass, on the reference's 126,984,584 CPU cycles and 4,264 frames (4.7 s against its 315 s) | `rung4.sh` |
 | 5 | Every mapper the reference builds (296 of 296; `tests/mapper_coverage.rs`; 99, the Vs. System's sockets, and the Vs. Namco 108 boards run in rung 6), in lockstep on dumps that use it: up to two dumps of every board class the reference builds for the local dumps (scripts/mapper_dumps.py indexes them), 600 slices with Start pressed now and then; the FDS on three disks, NES and Famicom; Lagrange Point's VRC7 FM music (ym2413-rust) on the Famicom, 3,000 slices; AutoDisk (`fds_auto.rs`, the reference's `fds_auto.py`, the sides changed as the program asks) on two disks that ask for side B and one that waits for a disk the dump lacks; the Sunsoft 5B's sound, `scripts/cases-5b.tsv`: rainwarrior's six 5B ROMs (`db_5b`, `clip_5b`, `envelope_5b`, `noise_5b`, `phase_5b`, `sweep_5b`) and *Gimmick!* (Japan), 3,000 slices, on the Famicom, which routes the cartridge's sound, and two on the NES-001; mapper 559 on its one dump, `scripts/cases-559.tsv` | 581 of 581, 6 of 6, 1 of 1, 3 of 3, 9 of 9 and 2 of 2 identical. The board-class table is 600 slices, as every recorded run used it and its traces are cached; `rung5.sh` asked for 900 and wrote a table no run used until 2026-11-23, and now writes the 600-slice one (`external/cases-rung5.tsv`) | `rung5.sh` |
-| 6 | The machine rows (PAL and Dendy on ten test ROMs; AccuracyCoin's run-all on PAL, Dendy, Famicom, AV Famicom, NES-101; the Vs. rows on home test ROMs, `--rgb` judging each RGB PPU's colours: no skipped dot, OAM stress, the letterless 2A03's noise, the RC2C05-02's swapped registers and identifier, AccuracyCoin on the RP2C03B with a reset, the RP2C04-0002 and the RC2C05-03), the peripherals and the Vs. System in lockstep | machine rows 33 of 33 identical; peripherals 54 of 54 identical (every device class of `peripherals.py`, driven by scripted inputs: Zapper, Vaus, Power Pad, keyboards and data recorder, mice, R.O.B. ...); the host input (`host.rs`, the input half of the reference's window `frontend.py`: its device choice, players and `_apply_inputs`, on a stand-in pygame) driving every device from one player script, the window's settings written beside each frame: 36 of 36 identical; the Vs. System, `scripts/cases-vs.tsv` (`scripts/make_vs_cases.py`): every image the reference's `scripts/vs_images.py` assembles from MAME's sets, 65 of nes20db's 74 (43 UniSystem, 22 DualSystem), 900 slices each on the row `machine_for` picks, with MAME's DIP switches, coins in both acceptors, the panel's buttons, play on the sticks and the service button (the Vs. Zapper aimed and fired in its four games; both sides of the DualSystem, its watchdog firing once in *Vs. Tennis* set 3), `--rgb`, plus Vs. Super Mario Bros. reset mid-game: 66 of 66 identical; the PlayChoice-10, `scripts/cases-pc10.tsv` (`scripts/make_pc10_cases.py`): every image the reference's `scripts/pc10_images.py` assembles from MAME's sets, 56 of nes20db's 65, in the cabinet with the dual-monitor BIOS for 1,320 slices (the BIOS's boot, PROM check and attract mode; a coin, Enter, play on the panel or the gun until the time is up and the game is stopped at one of its interrupts; the menu after), each line holding the Z80's state, a CRC of every access of its buses, its latches, screen and watchdog, the cabinet's lines, the game's fields and its masked picture and sound, `--rgb`; plus *Super Mario Bros.* in attract mode on MAME's default switches and three games on the one-monitor BIOS with Channel and Reset pressed: 60 of 60 identical | `rung6.sh` (the Vs. cases need `VS_IMAGES_DIR`, the PlayChoice-10's `PC10_IMAGES_DIR` and the BIOS) |
+| 6 | The machine rows (PAL and Dendy on ten test ROMs; AccuracyCoin's run-all on PAL, Dendy, Famicom, AV Famicom, NES-101; the Vs. rows on home test ROMs, `--rgb` judging each RGB PPU's colours: no skipped dot, OAM stress, the letterless 2A03's noise, the RC2C05-02's swapped registers and identifier, AccuracyCoin on the RP2C03B with a reset, the RP2C04-0002 and the RC2C05-03), the peripherals and the Vs. System in lockstep | machine rows 33 of 33 identical; peripherals 54 of 54 identical (every device class of `peripherals.py`, driven by scripted inputs: Zapper, Vaus, Power Pad, keyboards and data recorder, mice, R.O.B. ...); the host input (`host.rs`, the input half of the reference's window `frontend.py`: its device choice, players and `_apply_inputs`, on a stand-in pygame) driving every device from one player script, the window's settings written beside each frame: 36 of 36 identical; the Vs. System, `scripts/cases-vs.tsv` (`scripts/make_vs_cases.py`): every image the reference's `scripts/vs_images.py` assembles from MAME's sets, 65 of nes20db's 74 (43 UniSystem, 22 DualSystem), 900 slices each on the row `machine_for` picks, with MAME's DIP switches, coins in both acceptors, the panel's buttons, play on the sticks and the service button (the Vs. Zapper aimed and fired in its four games; both sides of the DualSystem, its watchdog firing once in *Vs. Tennis* set 3), `--rgb`, plus Vs. Super Mario Bros. reset mid-game: 66 of 66 identical; the PlayChoice-10, `scripts/cases-pc10.tsv` (`scripts/make_pc10_cases.py`): every image the reference's `scripts/pc10_images.py` assembles from MAME's sets, 56 of nes20db's 65, in the cabinet with the dual-monitor BIOS for 1,320 slices (the BIOS's boot, PROM check and attract mode; a coin, Enter, play on the panel or the gun until the time is up and the game is stopped at one of its interrupts; the menu after), each line holding the Z80's state, a CRC of every access of its buses, its latches, screen and watchdog, the cabinet's lines, the game's fields and its masked picture and sound, `--rgb`; plus *Super Mario Bros.* in attract mode on MAME's default switches, three games on the one-monitor BIOS with Channel and Reset pressed, and *Super Mario Bros.* under the reference's own supervisor program that lets the watchdog reset the Z80 every boot (`--bios-program`, 600 slices): 61 of 61 identical | `rung6.sh` (the Vs. cases need `VS_IMAGES_DIR`, the PlayChoice-10's `PC10_IMAGES_DIR` and the BIOS) |
 | — | Save states (`state.rs`, from famicom-python `c497645`'s `state.py`): saved at frame 60 plus a random number of cycles, loaded into a fresh system and into one that had run elsewhere, each continues as the run that was not interrupted (bus cycles, picture, audio, registers, master clock). Format version 2 since 2026-11-23 (the VRC7's restarted chip, the 5B): a state of another version is refused before it is decoded, and a state that fails to load leaves the console as it was (`tests/state_failed_load.rs`) | 363 of 363 dumps, one of every board class; the 5B on the Famicom (*Gimmick!*, four of the 5B ROMs) and mapper 559, 6 of 6; every Vs. UniSystem image saved at frame 300 with a coin's contact still closed (`scripts/inputs/vs-state.txt`; the DualSystem has no states in the reference), 43 of 43; every PlayChoice-10 image in the cabinet, saved at frame 900 (mid-game) plus a number of steps, both processors, both pictures and both clocks compared to frame 1000: 56 of 56 (and the three one-monitor cases, 3 of 3) | `famicom-state-roundtrip`, `famicom-pc10-states` |
 
 A slice is one PPU frame (`System::run_frames(1)`); the trace line holds the
