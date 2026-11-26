@@ -131,6 +131,16 @@ echo "$out" | grep -v ": identical"
 same=$(echo "$out" | grep -c ": identical")
 echo "$same of ${#pc10[@]} PlayChoice-10 images round-trip"
 [ "$same" = "${#pc10[@]}" ] || failed=1
+step "save states: PlayChoice-10 saved while the watchdog counts (our supervisor program)"
+wd=0
+for at in 40 43 49 52; do
+    out=$(nice "$BIN/famicom-pc10-states" --bios-program "$HERE/inputs/pc10/watchdog.hex" \
+        --at $at --to $((at + 40)) "$PC10_IMAGES_DIR/Super Mario Bros..nes" 2>&1)
+    echo "$out"
+    case $out in *": identical"*) wd=$((wd + 1)) ;; esac
+done
+echo "$wd of 4 watchdog-counting saves round-trip"
+[ "$wd" = 4 ] || failed=1
 
 step "done"
 if [ "$failed" = 0 ]; then echo "LADDER GREEN"; else echo "LADDER RED"; fi

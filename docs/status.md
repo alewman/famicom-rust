@@ -34,8 +34,15 @@ again on `cargo test --test playchoice` (27 of 27) and the PlayChoice-10 table.
 
 - Seeded faults are famicom-rust-fast's (`scripts/seeded_faults.py`, run there on the
   shared code, the PlayChoice-10's included); this tier has no fault script of its own.
-- No save state is taken while the watchdog counts: `famicom-pc10-states` runs the
-  real BIOS, which never lets it (a `--bios-program` there would close it).
+- Branch `pc10-watchdog-states` (2026-11-25, not yet on `main`): save states taken while
+  the watchdog counts. `famicom-pc10-states --bios-program FILE` runs our own supervisor
+  program (`scripts/inputs/pc10/watchdog.hex`); four saves on *Super Mario Bros.* (`--at`
+  40, 43, 49, 52, 40 frames each; the counter at 4, 7, 2 and 5 of 8, boots 4 and 5, so
+  the game stopped and running) round-trip, 4 of 4, and the ladder and rung 6 now run
+  them. `tests/playchoice.rs` transcribes the reference's
+  `test_a_save_state_taken_while_the_watchdog_counts` (28 of 28). The full ladder has not
+  run on the branch (a shared machine; no code under `src/` other than the binary's flag
+  changed): owed before the merge to `main`. famicom-rust-fast takes it by merge after.
 - Not carried: the reference window's Vs. and PlayChoice-10 inputs and screens
   (`frontend.py`).
 - The PlayChoice-10 is the reference's first pass, uncertified there: the traces match
